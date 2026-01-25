@@ -1,0 +1,49 @@
+typeorm migration:generate -n MigrationName
+
+npm run typeorm migration:generate -- -n TaskMigration
+
+
+typeorm migration:run
+
+
+ npm run migration:create --name=todo-migrations
+
+ npm run migration:generate
+
+ ├── src/
+│   ├── auth/                        // Nuevo servicio de autenticación
+│   │   ├── application/             // Capa de aplicación
+│   │   │   ├── commands/            // Comandos de aplicación
+│   │   │   │   ├── login.command.ts         // Comando para iniciar sesión
+│   │   │   │   └── register.command.ts      // Comando para registrar usuario
+│   │   │   ├── dto/                 // DTOs (Data Transfer Objects)
+│   │   │   │   ├── login-dto.ts              // DTO para datos de inicio de sesión
+│   │   │   │   └── register-dto.ts           // DTO para datos de registro de usuario
+│   │   │   ├── handlers/            // Manejadores de comandos
+│   │   │   │   ├── login.handler.ts         // Manejador para iniciar sesión
+│   │   │   │   └── register.handler.ts      // Manejador para registrar usuario
+│   │   │   └── queries/             // Consultas (si es necesario)
+│   │   │       └── check-email-exists.query.ts   // Consulta para verificar si el correo electrónico ya existe
+│   │   ├── domain/                  // Capa de dominio
+│   │   │   ├── entities/            // Entidades de dominio
+│   │   │   │   └── user.entity.ts            // Entidad de usuario
+│   │   │   ├── events/              // Eventos de dominio (si es necesario)
+│   │   │   │   └── UserRegisteredEvent.ts    // Evento para usuario registrado
+│   │   │   ├── exceptions/          // Excepciones de dominio
+│   │   │   │   └── UserNotFoundException.ts  // Excepción para usuario no encontrado
+│   │   │   └── repositories/        // Interfaces de repositorios
+│   │   │       └── IUserRepository.ts        // Interfaz de repositorio de usuario
+│   │   ├── infrastructure/          // Capa de infraestructura
+│   │   │   ├── api/                 // Controladores API
+│   │   │   │   ├── auth.controller.spec.ts   // Pruebas para el controlador de autenticación
+│   │   │   │   └── auth.controller.ts        // Controlador de autenticación
+│   │   │   ├── config/              // Configuración
+│   │   │   │   ├── auth.module.ts          // Módulo de autenticación
+│   │   │   │   └── jwt.strategy.ts         // Estrategia JWT (si es necesario)
+│   │   │   ├── database/             // Configuración de base de datos (si es necesario)
+│   │   │   │   └── migrations/       // Migraciones de base de datos (si es necesario)
+│   │   │   └── persistence/          // Implementación del repositorio
+│   │   │       └── userRepository.ts       // Implementación del repositorio de usuario
+│   │   └── auth.module.ts           // Módulo de autenticación
+│   │
+└── ...

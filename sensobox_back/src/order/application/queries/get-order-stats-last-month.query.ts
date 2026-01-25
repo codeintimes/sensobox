@@ -1,0 +1,1 @@
+export class GetOrderStatsLastMonthQuery {constructor(public readonly companyName: string) {}}
