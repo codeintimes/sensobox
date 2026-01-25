@@ -14,8 +14,13 @@
 - En el menú lateral izquierdo, haz clic en **"Users"** (Usuarios)
 - O directamente: https://console.aws.amazon.com/iam/home#/users
 
-### 4. Seleccionar tu usuario
-- Haz clic en tu nombre de usuario (o crea uno nuevo si no tienes)
+### 4. Crear o seleccionar tu usuario
+- Si estás creando un nuevo usuario:
+  - En el paso "Políticas de permisos", busca y selecciona una política:
+    - **Para desarrollo/pruebas**: `AdministratorAccess` (acceso completo)
+    - **Para producción**: Políticas específicas según necesites (ej: `AmazonEC2FullAccess`, `AmazonS3FullAccess`)
+  - Haz clic en "Siguiente" y luego "Crear usuario"
+- Si ya tienes un usuario, haz clic en tu nombre de usuario
 
 ### 5. Crear Access Key
 - Haz clic en la pestaña **"Security credentials"** (Credenciales de seguridad)

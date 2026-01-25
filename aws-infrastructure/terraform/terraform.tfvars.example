@@ -1,0 +1,6 @@
+aws_region                = "eu-west-1"
+frontend_bucket_name      = "inspections-frontend-codeintimes"
+backend_assets_bucket_name = "inspections-backend-assets-codeintimes"
+github_repo_frontend      = "codeintimes/inspections-front"
+github_repo_backend       = "codeintimes/inspections-back"
+

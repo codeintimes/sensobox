@@ -1,7 +1,8 @@
 
-
-// const API_BASE_URL = 'http://ec2-18-144-101-87.us-west-1.compute.amazonaws.com:4000';
-const API_BASE_URL = 'http://localhost:4000';
+// API Base URL - puede ser configurada mediante variable de entorno
+// En producción, se usa REACT_APP_API_URL desde GitHub Secrets
+// En desarrollo, usa localhost por defecto
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
 
 const API_ORDERS = {
   ORDERS: `${API_BASE_URL}/orders`,

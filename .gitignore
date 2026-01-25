@@ -67,6 +67,10 @@ database.sqlite
 .aws/
 *.pem
 *.key
+*-key.pem
+sensobox-key.pem
+ec2-info.txt
+s3-cloudfront-info.txt
 
 # GitHub token (por si acaso)
 *_token*
@@ -92,3 +96,8 @@ pids/
 # Diagnostic reports
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
+# Deployment artifacts
+backend-deploy.tar.gz
+deploy_key.pem
+inspections-back/
+inspections-front/
