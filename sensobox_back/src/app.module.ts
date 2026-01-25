@@ -4,12 +4,14 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 // import {OpiModule}  from './opi/opi.module'; // Asegúrate de que la ruta sea correcta
 import { OrderModule } from './order/order.module'; // Asegúrate de que la ruta sea correcta
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
     AuthModule,
     // OpiModule,
     OrderModule,
+    AdminModule,
   ],
 })
 export class AppModule {}
