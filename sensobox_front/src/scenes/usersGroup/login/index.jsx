@@ -1,10 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Box, Button, TextField, Container, Paper, Typography, InputAdornment } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Box, Button, TextField, Container, Paper, Typography, InputAdornment, IconButton } from '@mui/material';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Header from '../../../components/Header';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
@@ -17,29 +19,28 @@ const Login = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(false);
   const { t } = useTranslation();
 
   const handleLoginSubmit = async (values, { setSubmitting }) => {
     console.log(values);
+    console.log('API URL:', API_USERS.USERS);
     setSubmitting(true);
   
     // Construct the login URL using the current URL scheme
     const loginUrl = `${API_USERS.USERS}/login`;
   
-    console.log(loginUrl);
+    console.log('Login URL:', loginUrl);
   
     try {
-      const jwt = localStorage.getItem("jwtToken");
-  
-      // Send POST request using Axios
+      // No enviar JWT en el login, solo las credenciales
       const response = await axios.post(loginUrl, values, {
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${jwt}`
+          'Content-Type': 'application/json'
         }
       });
   
-      console.log(response.data);
+      console.log('Login response:', response.data);
   
       const data = response.data;
   
@@ -47,7 +48,7 @@ const Login = ({ setIsAuthenticated }) => {
         localStorage.setItem('jwtToken', data.token);
         localStorage.setItem('userData', JSON.stringify(data.user));
         setIsAuthenticated(true);
-        console.log("JSON.stringify(data.user)", JSON.stringify(data.user))
+        console.log("User data saved:", JSON.stringify(data.user))
   
         const role = data.user.role;
   
@@ -63,6 +64,12 @@ const Login = ({ setIsAuthenticated }) => {
       }
     } catch (error) {
       console.error("Error during login:", error);
+      console.error("Error details:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        url: loginUrl
+      });
       setOpen(true);
     } finally {
       setSubmitting(false);
@@ -104,13 +111,33 @@ const Login = ({ setIsAuthenticated }) => {
                     variant="outlined"
                     label={t('login.password_label')}
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={formik.values.password}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     error={formik.touched.password && Boolean(formik.errors.password)}
                     helperText={formik.touched.password && formik.errors.password}
-                    InputProps={{ startAdornment: (<InputAdornment position="start"><LockIcon /></InputAdornment>), style: { backgroundColor: theme.palette.background.paper } }}
+                    InputProps={{ 
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockIcon />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={() => setShowPassword(!showPassword)}
+                            onMouseDown={(e) => e.preventDefault()}
+                            edge="end"
+                            style={{ color: theme.palette.text.secondary }}
+                          >
+                            {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                      style: { backgroundColor: theme.palette.background.paper } 
+                    }}
                     InputLabelProps={{ style: { color: theme.palette.text.primary } }}
                   />
                   <Button
