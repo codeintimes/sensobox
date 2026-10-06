@@ -1,4 +1,4 @@
-// Panel de demo (overlay fuera del repo): mismos datos del backend (GET /orders), presentados como
+// Panel de producción: mismos datos del backend (GET /orders), presentados como
 // indicadores con su comparación, producción en curso en tiempo real, desviaciones y gráficas semanales.
 import React, { useEffect, useMemo, useState } from "react";
 import { Box, Typography, LinearProgress, useMediaQuery } from "@mui/material";
@@ -6,6 +6,8 @@ import { ResponsiveBar } from "@nivo/bar";
 import { ResponsiveLine } from "@nivo/line";
 import axios from "axios";
 import { API_ORDERS } from "../../../config/config";
+import { useTranslation } from "react-i18next";
+import { nf, pct, fmtDate, fmtDateTime, fmtLongDate } from "../../../utils/format";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import TrendingDownIcon from "@mui/icons-material/TrendingDown";
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
@@ -17,9 +19,6 @@ import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 
 const C = { brand: "#4F46E5", brandSoft: "#EEF2FF", ok: "#059669", okSoft: "#ECFDF5", bad: "#DC2626", badSoft: "#FEF2F2", warn: "#D97706", warnSoft: "#FFFBEB", text: "#111827", muted: "#6B7280", line: "#E5E7EB" };
 const D = 24 * 3600e3;
-const nf = (n, d = 0) => Number(n || 0).toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d });
-const fmtDate = (d) => new Date(d).toLocaleDateString("es-ES", { day: "numeric", month: "short" });
-const fmtDateTime = (d) => new Date(d).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 const merma = (o) => (o.initialQuantity ? (o.initialQuantity - o.finalQuantity) / o.initialQuantity : 0);
 const desvT = (o) => (o.processingTime ? o.processingTimeDifference / o.processingTime : 0);
 const weekStart = (d) => { const x = new Date(d); const day = (x.getDay() + 6) % 7; x.setHours(0, 0, 0, 0); x.setDate(x.getDate() - day); return x.getTime(); };
@@ -54,7 +53,7 @@ function Kpi({ icon, label, value, unit, delta, goodWhenUp, foot }) {
       <Box display="flex" alignItems="center" gap="6px" flexWrap="wrap" sx={{ fontSize: 12.5, color: C.muted }}>
         <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: "2px", color, fontWeight: 700, background: color === C.muted ? "#F3F4F6" : good ? C.okSoft : C.badSoft, borderRadius: "999px", px: "8px", py: "2px" }}>
           {up ? <TrendingUpIcon sx={{ fontSize: 16 }} /> : <TrendingDownIcon sx={{ fontSize: 16 }} />}
-          {up ? "+" : ""}{nf(delta * 100, 1)} %
+          {pct(delta * 100, 1, true)}
         </Box>
         <span>{foot}</span>
       </Box>
@@ -63,6 +62,7 @@ function Kpi({ icon, label, value, unit, delta, goodWhenUp, foot }) {
 }
 
 const Dashboard = () => {
+  const { t, i18n } = useTranslation();
   const [orders, setOrders] = useState(null);
   const [error, setError] = useState(null);
   const isNarrow = useMediaQuery("(max-width:1100px)");
@@ -80,8 +80,8 @@ const Dashboard = () => {
       } catch (e) { if (alive) setError(e.message); }
     };
     load();
-    const t = setInterval(load, 4000); // tiempo real: el panel se refresca solo
-    return () => { alive = false; clearInterval(t); };
+    const timer = setInterval(load, 4000); // tiempo real: el panel se refresca solo
+    return () => { alive = false; clearInterval(timer); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -117,18 +117,18 @@ const Dashboard = () => {
     }
     const ws = Object.keys(weeks).map(Number).sort((a, b) => a - b).filter((w) => w <= now);
     const label = (w) => fmtDate(w);
-    const barData = ws.map((w) => ({ semana: label(w), Pedidos: weeks[w].pedidos }));
-    const mermaLine = [{ id: "Merma", data: ws.filter((w) => weeks[w].ini).map((w) => ({ x: label(w), y: +(((weeks[w].ini - weeks[w].fin) / weeks[w].ini) * 100).toFixed(2) })) },
-      { id: "Retraso", data: ws.filter((w) => weeks[w].plan).map((w) => ({ x: label(w), y: +(((weeks[w].real - weeks[w].plan) / weeks[w].plan) * 100).toFixed(2) })) }];
+    const barData = ws.map((w) => ({ semana: label(w), [t("dashboard.series.orders")]: weeks[w].pedidos }));
+    const mermaLine = [{ id: t("dashboard.series.waste"), data: ws.filter((w) => weeks[w].ini).map((w) => ({ x: label(w), y: +(((weeks[w].ini - weeks[w].fin) / weeks[w].ini) * 100).toFixed(2) })) },
+      { id: t("dashboard.series.delay"), data: ws.filter((w) => weeks[w].plan).map((w) => ({ x: label(w), y: +(((weeks[w].real - weeks[w].plan) / weeks[w].plan) * 100).toFixed(2) })) }];
     return { k, enCurso, pendientes, retrasados, desviaciones, barData, mermaLine };
-  }, [orders]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orders, i18n.language]);
 
-  if (error) return <Box m="24px"><Card><Typography color="error">No se han podido cargar los datos.</Typography></Card></Box>;
+  if (error) return <Box m="24px"><Card><Typography color="error">{t("dashboard.loadError")}</Typography></Card></Box>;
   if (!s) return <Box m="24px" sx={{ color: C.muted }}><LinearProgress sx={{ borderRadius: 4 }} /></Box>;
   const { k } = s;
   const rel = (a, b) => (b ? a / b - 1 : 0);
-  const today0 = new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
-  const today = today0.charAt(0).toUpperCase() + today0.slice(1);
+  const today = fmtLongDate(new Date());
   const nivoTheme = { fontFamily: "Inter, sans-serif", fontSize: 11, textColor: C.muted, grid: { line: { stroke: "#EEF0F4" } }, axis: { ticks: { text: { fill: C.muted } } }, tooltip: { container: { fontSize: 12, borderRadius: 8 } } };
   const tickEvery = (arr, n) => arr.filter((_, i) => i % n === 0).map((d) => d.semana || d.x);
 
@@ -137,23 +137,23 @@ const Dashboard = () => {
       <Box display="flex" justifyContent="space-between" alignItems="flex-end" mb="20px" flexWrap="wrap" gap="10px">
         <Box>
           <Typography sx={{ fontSize: 13, color: C.muted }}>{today}</Typography>
-          <Typography sx={{ fontSize: 26, fontWeight: 700, letterSpacing: "-.02em", color: C.text }}>Panel de producción</Typography>
+          <Typography sx={{ fontSize: 26, fontWeight: 700, letterSpacing: "-.02em", color: C.text }}>{t("dashboard.title")}</Typography>
         </Box>
         <Box sx={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: 12.5, color: C.ok, background: C.okSoft, borderRadius: "999px", px: "12px", py: "6px", fontWeight: 600 }}>
-          <FiberManualRecordIcon sx={{ fontSize: 10, animation: "sbPulse 1.6s infinite" }} /> En directo · se actualiza solo
+          <FiberManualRecordIcon sx={{ fontSize: 10, animation: "sbPulse 1.6s infinite" }} /> {t("dashboard.live")}
         </Box>
       </Box>
 
       <Box className="sb-kpis" display="grid" gridTemplateColumns={isNarrow ? "repeat(2, 1fr)" : "repeat(4, 1fr)"} gap="16px" mb="16px">
-        <Kpi icon={<Inventory2OutlinedIcon fontSize="small" />} label="Pedidos (30 días)" value={nf(k.pedidos)} delta={rel(k.pedidos, k.pedidosPrev)} goodWhenUp foot="vs. media mensual" />
-        <Kpi icon={<PrecisionManufacturingOutlinedIcon fontSize="small" />} label="Unidades encargadas" value={nf(k.unidades / 1000, 0)} unit="mil" delta={rel(k.unidades, k.unidadesPrev)} goodWhenUp foot="vs. media mensual" />
-        <Kpi icon={<ContentCutOutlinedIcon fontSize="small" />} label="Merma media" value={nf(k.merma * 100, 1)} unit="%" delta={rel(k.merma, k.mermaPrev)} foot={`antes ${nf(k.mermaPrev * 100, 1)} %`} />
-        <Kpi icon={<TimerOutlinedIcon fontSize="small" />} label="Desvío de tiempo" value={(k.tiempo >= 0 ? "+" : "") + nf(k.tiempo * 100, 1)} unit="%" delta={k.tiempo - k.tiempoPrev} foot={`antes ${k.tiempoPrev >= 0 ? "+" : ""}${nf(k.tiempoPrev * 100, 1)} %`} />
+        <Kpi icon={<Inventory2OutlinedIcon fontSize="small" />} label={t("dashboard.kpi.orders")} value={nf(k.pedidos)} delta={rel(k.pedidos, k.pedidosPrev)} goodWhenUp foot={t("dashboard.kpi.vsMonthly")} />
+        <Kpi icon={<PrecisionManufacturingOutlinedIcon fontSize="small" />} label={t("dashboard.kpi.units")} value={nf(k.unidades / 1000, 0)} unit={t("dashboard.kpi.thousand")} delta={rel(k.unidades, k.unidadesPrev)} goodWhenUp foot={t("dashboard.kpi.vsMonthly")} />
+        <Kpi icon={<ContentCutOutlinedIcon fontSize="small" />} label={t("dashboard.kpi.waste")} value={nf(k.merma * 100, 1)} unit="%" delta={rel(k.merma, k.mermaPrev)} foot={t("dashboard.kpi.before", { v: pct(k.mermaPrev * 100, 1) })} />
+        <Kpi icon={<TimerOutlinedIcon fontSize="small" />} label={t("dashboard.kpi.timeDeviation")} value={(k.tiempo >= 0 ? "+" : "") + nf(k.tiempo * 100, 1)} unit="%" delta={k.tiempo - k.tiempoPrev} foot={t("dashboard.kpi.before", { v: pct(k.tiempoPrev * 100, 1, true) })} />
       </Box>
 
       <Box display="grid" gridTemplateColumns={isNarrow ? "1fr" : "1.25fr 1fr"} gap="16px" mb="16px">
         <Card className="sb-encurso">
-          <CardTitle title="En producción ahora" sub="Lo que registran los técnicos aparece aquí al momento" right={<Box sx={{ fontSize: 12.5, fontWeight: 700, color: C.brand, background: C.brandSoft, borderRadius: "999px", px: "10px", py: "3px" }}>{s.enCurso.length} órdenes</Box>} />
+          <CardTitle title={t("dashboard.inProduction.title")} sub={t("dashboard.inProduction.subtitle")} right={<Box sx={{ fontSize: 12.5, fontWeight: 700, color: C.brand, background: C.brandSoft, borderRadius: "999px", px: "10px", py: "3px", whiteSpace: "nowrap" }}>{t("dashboard.inProduction.count", { count: s.enCurso.length })}</Box>} />
           <Box sx={{ maxHeight: 316, overflow: "auto", mr: "-8px", pr: "8px" }}>
             {s.enCurso.map((o) => {
               const p = Math.min(1, (o.quantityProcessed || 0) / o.productionQuantity);
@@ -162,7 +162,7 @@ const Dashboard = () => {
                   <Box display="flex" justifyContent="space-between" gap="10px">
                     <Box sx={{ minWidth: 0 }}>
                       <Typography sx={{ fontWeight: 600, fontSize: 13.5, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{o.workName}</Typography>
-                      <Typography sx={{ fontSize: 12, color: C.muted }}>Nº {o.orderNumber} · {o.clientName} · {o.technician.split(" ").slice(0, 2).join(" ")}</Typography>
+                      <Typography sx={{ fontSize: 12, color: C.muted }}>{t("order.numberShort", { n: o.orderNumber })} · {o.clientName} · {o.technician.split(" ").slice(0, 2).join(" ")}</Typography>
                     </Box>
                     <Typography sx={{ fontSize: 13, fontWeight: 700, color: C.text, whiteSpace: "nowrap" }}>{nf(o.quantityProcessed)} <Box component="span" sx={{ color: C.muted, fontWeight: 500 }}>/ {nf(o.productionQuantity)}</Box></Typography>
                   </Box>
@@ -173,18 +173,18 @@ const Dashboard = () => {
           </Box>
         </Card>
         <Card className="sb-desviaciones">
-          <CardTitle title="Desviaciones" sub="Órdenes con merma > 7 % o más de un 30 % de tiempo sobre lo previsto" right={<WarningAmberRoundedIcon sx={{ color: C.warn }} />} />
+          <CardTitle title={t("dashboard.deviations.title")} sub={t("dashboard.deviations.subtitle", { waste: pct(7, 0), time: pct(30, 0) })} right={<WarningAmberRoundedIcon sx={{ color: C.warn }} />} />
           <Box sx={{ maxHeight: 316, overflow: "auto", mr: "-8px", pr: "8px" }}>
-            {s.desviaciones.length === 0 && <Typography sx={{ color: C.muted, fontSize: 13 }}>Sin desviaciones en las últimas semanas.</Typography>}
-            {s.desviaciones.slice(0, 12).map(({ o, m, t }) => (
+            {s.desviaciones.length === 0 && <Typography sx={{ color: C.muted, fontSize: 13 }}>{t("dashboard.deviations.none")}</Typography>}
+            {s.desviaciones.slice(0, 12).map(({ o, m, t: dt }) => (
               <Box key={o._id} display="flex" justifyContent="space-between" alignItems="center" gap="10px" sx={{ py: "9px", borderTop: `1px solid ${C.line}`, "&:first-of-type": { borderTop: 0, pt: 0 } }}>
                 <Box sx={{ minWidth: 0 }}>
                   <Typography sx={{ fontWeight: 600, fontSize: 13.5, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{o.workName}</Typography>
-                  <Typography sx={{ fontSize: 12, color: C.muted }}>Nº {o.orderNumber} · {o.clientName} · {fmtDate(o.processingDateFinal)}</Typography>
+                  <Typography sx={{ fontSize: 12, color: C.muted }}>{t("order.numberShort", { n: o.orderNumber })} · {o.clientName} · {fmtDate(o.processingDateFinal)}</Typography>
                 </Box>
                 <Box display="flex" gap="6px" flexShrink={0}>
-                  {m > 0.07 && <Box sx={{ fontSize: 12, fontWeight: 700, color: C.bad, background: C.badSoft, borderRadius: "8px", px: "8px", py: "3px" }}>merma {nf(m * 100, 1)} %</Box>}
-                  {t > 0.3 && <Box sx={{ fontSize: 12, fontWeight: 700, color: C.warn, background: C.warnSoft, borderRadius: "8px", px: "8px", py: "3px" }}>tiempo +{nf(t * 100, 0)} %</Box>}
+                  {m > 0.07 && <Box sx={{ fontSize: 12, fontWeight: 700, color: C.bad, background: C.badSoft, borderRadius: "8px", px: "8px", py: "3px", whiteSpace: "nowrap" }}>{t("dashboard.deviations.waste", { v: pct(m * 100, 1) })}</Box>}
+                  {dt > 0.3 && <Box sx={{ fontSize: 12, fontWeight: 700, color: C.warn, background: C.warnSoft, borderRadius: "8px", px: "8px", py: "3px", whiteSpace: "nowrap" }}>{t("dashboard.deviations.time", { v: pct(dt * 100, 0, true) })}</Box>}
                 </Box>
               </Box>
             ))}
@@ -194,18 +194,18 @@ const Dashboard = () => {
 
       <Box display="grid" gridTemplateColumns={isNarrow ? "1fr" : "1fr 1fr"} gap="16px" mb="16px">
         <Card className="sb-chart-merma">
-          <CardTitle title="Merma y retraso por semana" sub="Porcentaje sobre lo planificado · órdenes terminadas" />
+          <CardTitle title={t("dashboard.charts.wasteDelay")} sub={t("dashboard.charts.wasteDelaySub")} />
           <Box height={isNarrow ? 220 : 250}>
             <ResponsiveLine data={s.mermaLine} theme={nivoTheme} colors={[C.bad, C.warn]} margin={{ top: 10, right: 16, bottom: 46, left: 40 }}
               xScale={{ type: "point" }} yScale={{ type: "linear", min: "auto", max: "auto" }} curve="monotoneX" lineWidth={2.5} pointSize={5} pointColor="#fff" pointBorderWidth={2} pointBorderColor={{ from: "serieColor" }}
-              enableGridX={false} axisLeft={{ tickSize: 0, tickPadding: 8, format: (v) => `${v} %`, tickValues: 5 }} axisBottom={{ tickSize: 0, tickPadding: 10, tickValues: tickEvery(s.mermaLine[0].data, isNarrow ? 4 : 2) }}
-              useMesh legends={[{ anchor: "bottom", direction: "row", translateY: 44, itemWidth: 90, itemHeight: 16, symbolSize: 10, symbolShape: "circle", itemTextColor: C.muted }]} />
+              enableGridX={false} yFormat={(v) => pct(v, 1)} axisLeft={{ tickSize: 0, tickPadding: 8, format: (v) => pct(v, 0), tickValues: 5 }} axisBottom={{ tickSize: 0, tickPadding: 10, tickValues: tickEvery(s.mermaLine[0].data, isNarrow ? 4 : 2) }}
+              useMesh legends={[{ anchor: "bottom", direction: "row", translateY: 44, itemWidth: 110, itemHeight: 16, symbolSize: 10, symbolShape: "circle", itemTextColor: C.muted }]} />
           </Box>
         </Card>
         <Card className="sb-chart-pedidos">
-          <CardTitle title="Pedidos por semana" sub="Desde julio" />
+          <CardTitle title={t("dashboard.charts.ordersPerWeek")} sub={t("dashboard.charts.since", { date: s.barData.length ? s.barData[0].semana : "—" })} />
           <Box height={isNarrow ? 220 : 250}>
-            <ResponsiveBar data={s.barData} keys={["Pedidos"]} indexBy="semana" theme={nivoTheme} colors={[C.brand]} margin={{ top: 10, right: 10, bottom: 46, left: 36 }} padding={0.35} borderRadius={4}
+            <ResponsiveBar data={s.barData} keys={[t("dashboard.series.orders")]} indexBy="semana" theme={nivoTheme} colors={[C.brand]} margin={{ top: 10, right: 10, bottom: 46, left: 36 }} padding={0.35} borderRadius={4}
               enableLabel={false} axisLeft={{ tickSize: 0, tickPadding: 8, tickValues: 5 }} axisBottom={{ tickSize: 0, tickPadding: 10, tickValues: tickEvery(s.barData, isNarrow ? 4 : 2) }} gridYValues={5} />
           </Box>
         </Card>
@@ -213,7 +213,7 @@ const Dashboard = () => {
 
       <Box display="grid" gridTemplateColumns={isNarrow ? "1fr" : "1fr 1fr"} gap="16px">
         <Card className="sb-pendientes">
-          <CardTitle title="Próximas órdenes" sub="Pendientes de empezar, por fecha prevista" right={<Box sx={{ fontSize: 12.5, fontWeight: 700, color: C.brand, background: C.brandSoft, borderRadius: "999px", px: "10px", py: "3px" }}>{s.pendientes.length}</Box>} />
+          <CardTitle title={t("dashboard.upcoming.title")} sub={t("dashboard.upcoming.subtitle")} right={<Box sx={{ fontSize: 12.5, fontWeight: 700, color: C.brand, background: C.brandSoft, borderRadius: "999px", px: "10px", py: "3px" }}>{s.pendientes.length}</Box>} />
           {s.pendientes.slice(0, 6).map((o) => (
             <Box key={o._id} display="flex" justifyContent="space-between" alignItems="center" gap="10px" sx={{ py: "9px", borderTop: `1px solid ${C.line}`, "&:first-of-type": { borderTop: 0, pt: 0 } }}>
               <Box sx={{ minWidth: 0 }}>
@@ -225,15 +225,15 @@ const Dashboard = () => {
           ))}
         </Card>
         <Card className="sb-retrasados" sx={{ borderColor: s.retrasados.length ? "#FECACA" : C.line }}>
-          <CardTitle title="Retrasadas" sub="Debían haber empezado y siguen pendientes" right={<Box sx={{ fontSize: 12.5, fontWeight: 700, color: C.bad, background: C.badSoft, borderRadius: "999px", px: "10px", py: "3px" }}>{s.retrasados.length}</Box>} />
-          {s.retrasados.length === 0 && <Typography sx={{ color: C.muted, fontSize: 13 }}>Nada retrasado.</Typography>}
+          <CardTitle title={t("dashboard.late.title")} sub={t("dashboard.late.subtitle")} right={<Box sx={{ fontSize: 12.5, fontWeight: 700, color: C.bad, background: C.badSoft, borderRadius: "999px", px: "10px", py: "3px" }}>{s.retrasados.length}</Box>} />
+          {s.retrasados.length === 0 && <Typography sx={{ color: C.muted, fontSize: 13 }}>{t("dashboard.late.none")}</Typography>}
           {s.retrasados.slice(0, 6).map((o) => (
             <Box key={o._id} display="flex" justifyContent="space-between" alignItems="center" gap="10px" sx={{ py: "9px", borderTop: `1px solid ${C.line}`, "&:first-of-type": { borderTop: 0, pt: 0 } }}>
               <Box sx={{ minWidth: 0 }}>
                 <Typography sx={{ fontWeight: 600, fontSize: 13.5, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{o.clientName}</Typography>
                 <Typography sx={{ fontSize: 12, color: C.muted }}>{o.workName} · {o.technician.split(" ").slice(0, 2).join(" ")}</Typography>
               </Box>
-              <Typography sx={{ fontSize: 12.5, color: C.bad, fontWeight: 700, whiteSpace: "nowrap" }}>{Math.max(1, Math.round((Date.now() - new Date(o.processingDate)) / D))} días</Typography>
+              <Typography sx={{ fontSize: 12.5, color: C.bad, fontWeight: 700, whiteSpace: "nowrap" }}>{t("dashboard.late.days", { count: Math.max(1, Math.round((Date.now() - new Date(o.processingDate)) / D)) })}</Typography>
             </Box>
           ))}
         </Card>

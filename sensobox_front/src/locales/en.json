@@ -1,0 +1,527 @@
+{
+  "orders": {
+    "title": "Production orders",
+    "subtitle": "Every order on the shop floor, with its status up to date",
+    "searchPlaceholder": "Search no. or client…",
+    "columns": {
+      "orderNumber": "No.",
+      "clientName": "Client",
+      "companyName": "Plant",
+      "productionQuantity": "Quantity",
+      "colors": "Inks",
+      "processes": "Processes",
+      "specialFinishes": "Finish",
+      "technician": "Technician",
+      "palletsNumber": "Pallets",
+      "processingDate": "Planned date",
+      "processingTime": "Planned hours",
+      "initialQuantity": "Input qty",
+      "finalQuantity": "Good qty",
+      "createdAt": "Created",
+      "updatedAt": "Updated",
+      "status": "Status",
+      "edit": "Edit",
+      "opiInitialEdit": "Start order",
+      "opiFinalEdit": "Finish order",
+      "editSelector": "Edit order",
+      "delete": "Delete order",
+      "download": "Download PDF",
+      "materialArea": "Area",
+      "materialWeight": "Weight",
+      "quantityProcessed": "Done",
+      "material": "Material",
+      "workName": "Job",
+      "workType": "Type",
+      "processingDateInitial": "Start",
+      "processingDateFinal": "End",
+      "errorPercentage": "Scrap"
+    },
+    "status": {
+      "pending": "Pending",
+      "processing": "In production",
+      "processed": "Completed",
+      "shipping": "Shipped"
+    },
+    "material": {
+      "length_required": "Length is required",
+      "length_positive": "Length must be a positive number",
+      "width_required": "Width is required",
+      "width_positive": "Width must be a positive number",
+      "update_material_area": "Order material",
+      "update_area_subtitle": "Material area and weight for order {{orderNumber}}",
+      "length_meters": "Length (metres)",
+      "width_meters": "Width (metres)",
+      "calculated_area": "Calculated area",
+      "update_fail": "The material could not be saved",
+      "weight_kg": "Weight (kg)",
+      "weight_required": "Weight is required",
+      "weight_positive": "Weight must be a positive number",
+      "submit_area_weight_order_id": "Save material"
+    },
+    "currentQuantity": {
+      "quantityProcessed": "Units done",
+      "title": "Log progress",
+      "subtitle": "Units produced so far. The office sees it instantly.",
+      "buttons": {
+        "update": "Save progress"
+      },
+      "soFar": "You had done {{done}} of {{total}} units."
+    },
+    "dialog": {
+      "confirmDeleteTitle": "Confirm deletion",
+      "confirmDeleteText": "Are you sure you want to delete this order? This cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    }
+  },
+  "users": {
+    "title": "Users",
+    "subtitle": "User list",
+    "titleClients": "Clients",
+    "subtitleClients": "Companies you manufacture for and their contact person",
+    "titleAdmins": "Administration",
+    "subtitleAdmins": "People with full access",
+    "titleClientsEco": "ECO clients",
+    "subtitleClientsECO": "CO2 emissions per client",
+    "titleEmployees": "Technicians",
+    "subtitleEmployees": "Shop-floor team",
+    "role": {
+      "admin": "Administrator",
+      "technician": "Technician",
+      "client": "Client"
+    },
+    "editClient": {
+      "updateUser": "Update user"
+    },
+    "editUser": {
+      "title": "Edit user",
+      "subtitle": "Update the user's details"
+    },
+    "columns": {
+      "email": "Email",
+      "role": "Role",
+      "name": "Name",
+      "companyName": "Company",
+      "clientName": "Company",
+      "totalQuantity": "Total quantity",
+      "eco": "ECO status",
+      "ecoEmissions": "CO2/unit",
+      "totalEmissions": "Total CO2",
+      "createdAt": "Created",
+      "updatedAt": "Updated",
+      "password": "Password",
+      "contactName": "Contact",
+      "contactPhone": "Phone",
+      "contactEmail": "Contact email",
+      "ecoStatus": "ECO status"
+    },
+    "dialog": {
+      "confirmDeleteTitle": "Confirm deletion",
+      "confirmDeleteText": "Are you sure you want to delete this user?",
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "ecoImageAlt": "Client ECO image"
+  },
+  "createUser": {
+    "title": "New user",
+    "subtitle": "Add a person and choose what they can see",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "role": "Role",
+    "createButton": "Create user",
+    "clientName": "Company name",
+    "contactName": "Contact person",
+    "contactPhone": "Contact phone",
+    "contactEmail": "Contact email",
+    "messages": {
+      "companyMissing": "Your company could not be found. Please sign in again.",
+      "emailExists": "A user with that email already exists.",
+      "createFail": "The user could not be created: {{error}}"
+    }
+  },
+  "roles": {
+    "admin": "Administrator",
+    "technician": "Technician",
+    "client": "Client"
+  },
+  "dashboard": {
+    "title": "Production dashboard",
+    "live": "Live · updates by itself",
+    "loadError": "The data could not be loaded.",
+    "series": {
+      "waste": "Scrap",
+      "delay": "Delay",
+      "orders": "Orders"
+    },
+    "kpi": {
+      "orders": "Orders (30 days)",
+      "units": "Units ordered",
+      "thousand": "k",
+      "waste": "Average scrap",
+      "timeDeviation": "Time deviation",
+      "vsMonthly": "vs. monthly average",
+      "before": "previously {{v}}"
+    },
+    "inProduction": {
+      "title": "In production now",
+      "subtitle": "What technicians log shows up here instantly",
+      "count_one": "{{count}} order",
+      "count_other": "{{count}} orders"
+    },
+    "deviations": {
+      "title": "Deviations",
+      "subtitle": "Orders with scrap > {{waste}} or over {{time}} more time than planned",
+      "none": "No deviations in recent weeks.",
+      "waste": "scrap {{v}}",
+      "time": "time {{v}}"
+    },
+    "charts": {
+      "wasteDelay": "Scrap and delay per week",
+      "wasteDelaySub": "Percentage over plan · completed orders",
+      "ordersPerWeek": "Orders per week",
+      "since": "Since {{date}}"
+    },
+    "upcoming": {
+      "title": "Upcoming orders",
+      "subtitle": "Not started yet, by planned date"
+    },
+    "late": {
+      "title": "Overdue",
+      "subtitle": "Should have started and are still pending",
+      "none": "Nothing overdue.",
+      "days_one": "{{count}} day",
+      "days_other": "{{count}} days"
+    }
+  },
+  "popUp": {
+    "login_error_title": "Could not sign in",
+    "incorrect_password": "Wrong email or password. Please try again.",
+    "close_button": "Close",
+    "connection_error": "Could not reach the server. Please try again in a few seconds."
+  },
+  "login": {
+    "title": "Sign in",
+    "email_label": "Email",
+    "email_error": "Invalid email address",
+    "email_required": "Required",
+    "password_label": "Password",
+    "password_required": "Required",
+    "password_min": "Password must be at least 8 characters",
+    "login_button": "Sign in",
+    "togglePassword": "Show or hide password"
+  },
+  "ecoForm": {
+    "ecoStatus": "ECO status",
+    "ecoEmissions": "Emissions (g CO2/unit)",
+    "updateEcoData": "Update",
+    "activated": "Enabled",
+    "deactivated": "Disabled"
+  },
+  "common": {
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "close": "Close",
+    "notAvailable": "This feature is not available yet."
+  },
+  "createOrder": {
+    "title": "New production order",
+    "subtitle": "Fill in the details and the technician gets it instantly",
+    "form": {
+      "orderNumber": "Order no.",
+      "clientName": "Client",
+      "workName": "Job",
+      "workType": "Job type",
+      "productionQuantity": "Quantity",
+      "colors": "Inks",
+      "processes": "Processes",
+      "specialFinishes": "Special finish",
+      "palletsNumber": "Pallets",
+      "technician": "Technician",
+      "processingDate": "Planned date",
+      "processingTime": "Planned hours",
+      "createOrderButton": "Create order"
+    },
+    "messages": {
+      "createFail": "The order could not be created",
+      "companyNameMissing": "Your company could not be found. Please sign in again.",
+      "orderNumberExists": "An order with that number already exists."
+    }
+  },
+  "validation": {
+    "invalidEmail": "Invalid email address",
+    "requiredEmail": "Email is required",
+    "passwordMin": "Password must be at least 6 characters",
+    "requiredPassword": "Password is required",
+    "requiredContactName": "Contact name is required",
+    "requiredContactPhone": "Contact phone is required",
+    "requiredContactEmail": "Contact email is required",
+    "required": "This field is required",
+    "positive": "The number must be positive",
+    "minZero": "The number must be zero or more",
+    "requiredName": "Name is required",
+    "invalidName": "Invalid name: letters, spaces, hyphens and apostrophes only",
+    "requiredClientName": "Client name is required",
+    "invalidContactEmail": "Invalid contact email",
+    "passwordMin8": "Password must be at least 8 characters"
+  },
+  "updateOrders": {
+    "title": "Edit order",
+    "subtitle": "Change the order details",
+    "edit": "Update",
+    "messages": {
+      "updateSuccess": "Order updated",
+      "updateFail": "The order could not be updated"
+    }
+  },
+  "opiInitialForm": {
+    "title": "Start order",
+    "subtitle": "Units you load on the machine and start time",
+    "labels": {
+      "initialQuantity": "Input units",
+      "processingDateInitial": "Start"
+    },
+    "buttons": {
+      "update": "Start order"
+    }
+  },
+  "createFinalOpi": {
+    "title": "Finish order",
+    "subtitle": "Good units and end time: scrap and actual time are calculated automatically",
+    "labels": {
+      "finalQuantity": "Good units",
+      "processingDateFinal": "End"
+    },
+    "buttons": {
+      "update": "Finish order"
+    },
+    "startedWith": "You started with {{n}} units",
+    "wastePreview": "Scrap: {{n}} units ({{pct}})"
+  },
+  "editClientEco": {
+    "headerTitle": "Edit ECO client",
+    "headerSubtitle": "Client emission data",
+    "validationMessages": {
+      "ecoStatusRequired": "ECO status is required",
+      "ecoEmissionsRequired": "Emissions are required"
+    }
+  },
+  "calendar": {
+    "title": "Calendar",
+    "subtitle": "Planned, start and end dates of every order",
+    "today": "Today",
+    "month": "Month",
+    "week": "Week",
+    "day": "Day",
+    "list": "List",
+    "more": "+{{n}} more",
+    "event": {
+      "start": "Start no. {{n}} · {{client}}",
+      "end": "End no. {{n}} · {{client}}",
+      "planned": "No. {{n}} · {{client}}"
+    }
+  },
+  "app": {
+    "productionControl": "production control",
+    "clientPortal": "client portal",
+    "logout": "Sign out",
+    "notifications": "Notifications",
+    "openMenu": "Open menu",
+    "language": "Language",
+    "tagline": "Production control, without spreadsheets."
+  },
+  "nav": {
+    "production": "Production",
+    "dashboard": "Dashboard",
+    "orders": "Orders",
+    "calendar": "Calendar",
+    "analysis": "Analysis",
+    "quantities": "Quantities and scrap",
+    "ordersByPeriod": "Customer orders",
+    "processTimes": "Process times",
+    "team": "Team",
+    "clients": "Clients",
+    "technicians": "Technicians",
+    "help": "Help",
+    "workshop": "Shop floor",
+    "myOrders": "My orders",
+    "myPurchaseOrders": "My orders",
+    "tracking": "Tracking",
+    "clientOrdersByPeriod": "Orders by period"
+  },
+  "roleLong": {
+    "admin": "Administration",
+    "technician": "Shop-floor technician",
+    "client": "Client"
+  },
+  "order": {
+    "numberLong": "Order no. {{n}}",
+    "numberShort": "No. {{n}}",
+    "units": "{{n}} units",
+    "hours": "{{n}} h"
+  },
+  "table": {
+    "new": "New",
+    "newOrder": "New order",
+    "newClient": "New client",
+    "newTechnician": "New technician",
+    "newUser": "New user",
+    "more": "More actions"
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "admin": {
+      "subtitle": "Administration",
+      "items": [
+        {
+          "q": "How do I create a production order?",
+          "a": "In “Orders”, press the “+” button. Enter the client, the job, the quantity, the processes and finishes, the technician in charge, the planned date and the estimated hours. The technician sees it straight away in their list."
+        },
+        {
+          "q": "What does each status mean?",
+          "a": "Pending: not started yet. In production: the technician has logged the start and is recording output. Completed: with final quantities and times. Shipped: it has left for the client."
+        },
+        {
+          "q": "Where do scrap and time deviation come from?",
+          "a": "When starting the order the technician enters the input units; when finishing it, the good units and the end time. Sensobox calculates the scrap (units lost) and compares actual hours with planned hours."
+        },
+        {
+          "q": "What appears under “Deviations”?",
+          "a": "Completed orders with more than 7% scrap or that took over 30% longer than planned. It helps you spot in time a machine, a material or a job that is going off track."
+        },
+        {
+          "q": "Can I filter or export orders?",
+          "a": "Yes. In the orders table you can search by number or client, filter by any column, choose which columns to show and export to CSV to send it to accounting."
+        },
+        {
+          "q": "How do I add a client or a technician?",
+          "a": "From “Clients” or “Technicians”, with the “+” button. Each person gets their own login and only sees what concerns them: technicians their orders, clients their own orders."
+        }
+      ]
+    },
+    "technician": {
+      "subtitle": "Shop-floor technicians",
+      "items": [
+        {
+          "q": "Which orders do I see?",
+          "a": "Only the ones assigned to you, sorted by planned date. New ones appear as soon as the office creates them."
+        },
+        {
+          "q": "How do I start an order?",
+          "a": "On the order card, press “Start”. Enter the input units (sheets or metres you load on the machine) and the start time."
+        },
+        {
+          "q": "How do I log what I have produced?",
+          "a": "With “Log progress” you update the units done so far. The office sees it on the dashboard instantly, no phone calls needed."
+        },
+        {
+          "q": "How do I close an order?",
+          "a": "With “Finish”: good units and end time. Sensobox calculates the scrap and the actual time against the planned time."
+        },
+        {
+          "q": "Where do I record the material?",
+          "a": "Under “Material”, with length, width and weight. That way the consumption of every job is recorded."
+        }
+      ]
+    },
+    "client": {
+      "subtitle": "Clients",
+      "items": [
+        {
+          "q": "What can I see in the portal?",
+          "a": "Your orders and where each one stands: pending, in production, completed or shipped, with quantities and dates."
+        },
+        {
+          "q": "How often is it updated?",
+          "a": "In real time: as soon as the shop floor logs progress, you see it here."
+        },
+        {
+          "q": "Can I see my orders by date?",
+          "a": "Yes. “Calendar” shows the planned date of each order and “Orders by period” shows how they evolve."
+        },
+        {
+          "q": "Who do I ask about an order?",
+          "a": "Your usual contact at the plant. Give them the order number shown in the list."
+        }
+      ]
+    }
+  },
+  "weekly": {
+    "period": "Period",
+    "client": "Client",
+    "allClients": "All clients",
+    "worstWeek": "Worst week",
+    "limitLine": "Red line: {{n}} limit",
+    "periods": {
+      "lastMonth": "Last month",
+      "last3Months": "Last 3 months",
+      "last6Months": "Last 6 months",
+      "lastYear": "Last year"
+    },
+    "quantities": {
+      "title": "Quantities and scrap",
+      "subtitle": "Input units versus good units, per week",
+      "series": {
+        "a": "Input units",
+        "b": "Good units"
+      },
+      "unitValue": "{{n}}k units",
+      "ratioName": "Scrap",
+      "periodRatio": "Scrap in period",
+      "mainTitle": "Input units and good units",
+      "mainSubtitle": "In thousands of units",
+      "ratioTitle": "Scrap per week"
+    },
+    "times": {
+      "title": "Process times",
+      "subtitle": "Planned hours versus actual hours, per week",
+      "series": {
+        "a": "Planned hours",
+        "b": "Actual hours"
+      },
+      "unitValue": "{{n}} h",
+      "ratioName": "Time deviation",
+      "periodRatio": "Time deviation in period",
+      "mainTitle": "Planned hours and actual hours",
+      "mainSubtitle": "In machine hours",
+      "ratioTitle": "Time deviation per week"
+    },
+    "orders": {
+      "title": "Orders by period",
+      "subtitle": "Orders received each week and units ordered",
+      "series": {
+        "a": "Orders"
+      },
+      "ratioName": "Units ordered (thousands)",
+      "mainTitle": "Orders per week",
+      "mainSubtitle": "Number of orders",
+      "ratioTitle": "Units ordered (thousands)",
+      "ratioSubtitle": "Thousands of units per week",
+      "stats": {
+        "orders": "Orders",
+        "unitsOrdered": "Units ordered",
+        "thousands": "{{n}}k",
+        "weeklyAverage": "Weekly average",
+        "clients": "Clients"
+      }
+    }
+  },
+  "techOrders": {
+    "title": "My orders",
+    "subtitle": "What is assigned to you, by priority",
+    "tabTodo": "To do",
+    "tabDone": "Completed",
+    "search": "Search no., client or job",
+    "finishedAt": "Completed {{date}}",
+    "plannedAt": "Planned {{date}}",
+    "start": "Start",
+    "progress": "Log progress",
+    "finish": "Finish",
+    "empty": "No orders in this list."
+  },
+  "pie": {
+    "title": "Split by client",
+    "subtitle": "Units per client"
+  }
+}

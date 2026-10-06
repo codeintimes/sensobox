@@ -1,8 +1,7 @@
-// Copia del original con retoques de demo (overlay fuera del repo): estado en píldora, merma en color,
+// Versión rediseñada: estado en píldora, merma en color,
 // columnas secundarias ocultas por defecto y orden por número descendente.
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../../theme";
-import { mockDataOrders } from "../../../data/mockData";
 import Header from "../../../components/Header";
 import EditIcon from "@mui/icons-material/Edit";
 import DownloadIcon from "@mui/icons-material/Download";
@@ -24,6 +23,7 @@ import { API_ORDERS } from "../../../config/config";
 import Popover from '@mui/material/Popover';
 import axios from 'axios';
 import { StatusChip, nf } from "../../../components/OrderBits";
+import { pct, fmtDateTime } from "../../../utils/format";
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
 import HourglassEmptyOutlinedIcon from "@mui/icons-material/HourglassEmptyOutlined";
@@ -111,8 +111,6 @@ const OrdersAdmin = () => {
       order.orderNumber.toString().toLowerCase().includes(searchText.toLowerCase()) ||
       order.clientName.toLowerCase().includes(searchText.toLowerCase())
   );
-
-  console.log("filteredData", filteredData)
   const handlequantityProcessed = (id) => {
 
     const orderToEdit = orders.find((order) => order._id === id);
@@ -127,16 +125,16 @@ const OrdersAdmin = () => {
 
     try {
       const jwt = localStorage.getItem("jwtToken");
-      const url = `${API_ORDERS.ORDERS}/${id}/download-pdf`;
+      const url = `${API_ORDERS.ORDERS}/download-pdf/${id}`;
       const response = await axios.get(url, {
+        responseType: 'blob',
         headers: {
           'Authorization': `Bearer ${jwt}`
         }
       });
 
-
       handleClose();
-      const blob = await response.blob();
+      const blob = response.data;
       const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = downloadUrl;
@@ -335,10 +333,10 @@ const OrdersAdmin = () => {
       minWidth: 50,
       renderCell: (params) => (
         <Typography onClick={(event) => handleCellClick(params, event)}>
-          {params.value} m²
+          {nf(params.value, 1)} m²
         </Typography>
       ),
-      valueFormatter: ({ value }) => `${value} m²`,
+      valueFormatter: ({ value }) => `${nf(value, 1)} m²`,
     },
     {
       field: "materialWeight",
@@ -348,7 +346,7 @@ const OrdersAdmin = () => {
       minWidth: 60,
       renderCell: (params) => (
         <Typography onClick={(event) => handleCellClick(params, event)}>
-          {params.value} Kg
+          {`${nf(params.value, 1)} kg`}
         </Typography>
       ),
       // valueFormatter: ({ value }) => `${value} Kg`,
@@ -363,7 +361,7 @@ const OrdersAdmin = () => {
           {params.value}
         </Typography>
       ),
-      valueGetter: (params) => params.row.processingDate ? new Date(params.row.processingDate).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "",
+      valueGetter: (params) => params.row.processingDate ? fmtDateTime(params.row.processingDate) : "",
       valueFormatter: ({ value }) => value,
     },
     {
@@ -415,7 +413,7 @@ const OrdersAdmin = () => {
       minWidth: 90,
       valueGetter: (params) => (params.row.status >= 3 && params.row.initialQuantity ? (params.row.initialQuantity - params.row.finalQuantity) / params.row.initialQuantity : null),
       renderCell: (params) => params.value == null ? <Typography sx={{ color: "#9CA3AF" }}>—</Typography> : (
-        <Typography sx={{ fontWeight: 600, color: params.value > 0.07 ? "#DC2626" : "#047857" }}>{nf(params.value * 100, 1)} %</Typography>
+        <Typography sx={{ fontWeight: 600, color: params.value > 0.07 ? "#DC2626" : "#047857" }}>{pct(params.value * 100, 1)}</Typography>
       ),
     },
     {
@@ -429,7 +427,7 @@ const OrdersAdmin = () => {
           {params.value}
         </Typography>
       ),
-      valueGetter: (params) => params.row.processingDateInitial ? new Date(params.row.processingDateInitial).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "",
+      valueGetter: (params) => params.row.processingDateInitial ? fmtDateTime(params.row.processingDateInitial) : "",
       valueFormatter: ({ value }) => value,
     },
     {
@@ -443,7 +441,7 @@ const OrdersAdmin = () => {
           {params.value}
         </Typography>
       ),
-      valueGetter: (params) => params.row.processingDateFinal ? new Date(params.row.processingDateFinal).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "",
+      valueGetter: (params) => params.row.processingDateFinal ? fmtDateTime(params.row.processingDateFinal) : "",
       valueFormatter: ({ value }) => value,
     },
     {
@@ -456,7 +454,7 @@ const OrdersAdmin = () => {
           {params.value}
         </Typography>
       ),
-      valueGetter: (params) => params.row.createdAt ? new Date(params.row.createdAt).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "N/A",
+      valueGetter: (params) => params.row.createdAt ? fmtDateTime(params.row.createdAt) : "—",
     },
     {
       field: "updatedAt",
@@ -468,7 +466,7 @@ const OrdersAdmin = () => {
           {params.value}
         </Typography>
       ),
-      valueGetter: (params) => new Date(params.row.updatedAt).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }),
+      valueGetter: (params) => fmtDateTime(params.row.updatedAt),
     },
 
     {
@@ -481,7 +479,7 @@ const OrdersAdmin = () => {
       renderCell: (cellValues) => (
         <>
           <IconButton
-            aria-label="more"
+            aria-label={t("table.more")}
             aria-controls="long-menu"
             aria-haspopup="true"
             onClick={(event) => handleClick(event, cellValues.id)}
@@ -506,6 +504,9 @@ const OrdersAdmin = () => {
             </MenuItem>
             <MenuItem onClick={() => handleEditMaterial(currentId)}>
               {t("orders.columns.material")}
+            </MenuItem>
+            <MenuItem onClick={() => handleDownloadPdf(currentId)}>
+              {t("orders.columns.download")}
             </MenuItem>
             <MenuItem onClick={() => handleEditOrder(currentId)}>
               {t("orders.columns.editSelector")}
@@ -545,16 +546,13 @@ const OrdersAdmin = () => {
   };
 
   const handleEditOrder = (id) => {
-    console.log("11111111111", id)
     const orderToEdit = orders.find((order) => order._id === id);
-    console.log("11111111111", id, orderToEdit)
     if (!orderToEdit) {
       console.error("Orden no encontrada");
       return;
     }
     handleClose();
     //setSelectedOrder(orderToEdit);
-    console.log("11111111111", id, orderToEdit)
     navigate(`/editOrder/${id}`, { state: { order: orderToEdit } });
   };
 

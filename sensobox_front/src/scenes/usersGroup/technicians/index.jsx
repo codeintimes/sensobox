@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { fmtNumericDate, fmtDateTime, nf, pct } from "../../../utils/format";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
@@ -167,11 +168,11 @@ const Employees = () => {
     { field: "email", headerName: t("users.columns.email"), flex: 1.5 },
     {
       field: "createdAt", headerName: t("users.columns.createdAt"), flex: 1,
-      valueFormatter: ({ value }) => value ? new Date(value).toLocaleDateString() : ""
+      valueFormatter: ({ value }) => fmtNumericDate(value)
     },
     {
       field: "updatedAt", headerName: t("users.columns.updatedAt"), flex: 1,
-      valueFormatter: ({ value }) => value ? new Date(value).toLocaleDateString() : ""
+      valueFormatter: ({ value }) => fmtNumericDate(value)
     },
 
     {
@@ -376,10 +377,10 @@ const Employees = () => {
               <strong>{t("users.columns.companyName")}:</strong> {user.companyName}
             </Typography>
             <Typography variant="body1" color={theme.palette.text.secondary}>
-              <strong>{t("users.columns.createdAt")}:</strong> {new Date(user.createdAt).toLocaleDateString()}
+              <strong>{t("users.columns.createdAt")}:</strong> {fmtNumericDate(user.createdAt)}
             </Typography>
             <Typography variant="body1" color={theme.palette.text.secondary}>
-              <strong>{t("users.columns.updatedAt")}:</strong> {new Date(user.updatedAt).toLocaleDateString()}
+              <strong>{t("users.columns.updatedAt")}:</strong> {fmtNumericDate(user.updatedAt)}
             </Typography>
             <Box display="flex" justifyContent="space-between">
               <IconButton onClick={() => handleEditUser(user._id)}>

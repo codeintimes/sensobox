@@ -1,4 +1,4 @@
-// Copia del original con retoques de demo (overlay fuera del repo): tarjeta, técnico como desplegable
+// Versión rediseñada: tarjeta, técnico como desplegable
 // y fecha prevista con hora.
 import { Formik } from "formik";
 import * as yup from "yup";

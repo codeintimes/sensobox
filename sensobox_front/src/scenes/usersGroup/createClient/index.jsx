@@ -30,25 +30,24 @@ const CreateUser = () => {
   };
 
   const userSchema = yup.object().shape({
-    name: yup.string().required("Name is required").matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s'-]+$/, "Invalid name; only letters, spaces, hyphens, and apostrophes are allowed"),
-    clientName: yup.string().required("Client name is required"), // Validación para el nuevo campo clientName
-    email: yup.string().email("Invalid email").required("Email is required"),
-    password: yup.string().min(8, "Password must be at least 8 characters long").required("Password is required"),
+    name: yup.string().required(t("validation.requiredName")).matches(/^[\p{L}\s'.-]+$/u, t("validation.invalidName")),
+    clientName: yup.string().required(t("validation.requiredClientName")), // Validación para el nuevo campo clientName
+    email: yup.string().email(t("validation.invalidEmail")).required(t("validation.requiredEmail")),
+    password: yup.string().min(8, t("validation.passwordMin8")).required(t("validation.requiredPassword")),
     // role: yup.string().required("Role is required"),
-    contactName: yup.string().required("Contact name is required"),
-    contactPhone: yup.string().required("Contact phone is required"),
-    contactEmail: yup.string().email("Invalid contact email").required("Contact email is required")
+    contactName: yup.string().required(t("validation.requiredContactName")),
+    contactPhone: yup.string().required(t("validation.requiredContactPhone")),
+    contactEmail: yup.string().email(t("validation.invalidContactEmail")).required(t("validation.requiredContactEmail"))
   });
 
   const handleFormSubmit = async (values) => {
-    console.log("values",values)
     try {
       const jwt = localStorage.getItem("jwtToken");
       const userData = JSON.parse(localStorage.getItem('userData'));
       const companyName = userData ? userData.companyName : '';
   
       if (!companyName) {
-        alert('Company name is missing. Please log in again.');
+        alert(t('createUser.messages.companyMissing'));
         return;
       }
   
@@ -57,22 +56,20 @@ const CreateUser = () => {
         companyName: companyName,
         role: "client"
       };
-  console.log("payload",payload)
       const response = await axios.post(`${API_USERS.USERS}/register`, payload, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${jwt}`
         }
       });
-  console.log("response",response)
       navigate('/clients');
   
     } catch (error) {
       if (error.response && error.response.status === 409) {
-        alert('El correo electrónico ya existe');
+        alert(t('createUser.messages.emailExists'));
       } else {
         console.error('Error creating user:', error);
-        alert('Error creating user: ' + error.message);
+        alert(t('createUser.messages.createFail', { error: error.response?.data?.message || error.message }));
       }
     }
   };

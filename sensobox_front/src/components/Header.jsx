@@ -1,4 +1,4 @@
-// Cabecera de página de demo (overlay fuera del repo)
+// Cabecera de página
 import React from 'react';
 import { Typography, Box } from "@mui/material";
 

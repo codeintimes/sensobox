@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { fmtNumericDate, fmtDateTime, nf, pct } from "../../../utils/format";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
@@ -162,11 +163,11 @@ const Clients = () => {
     { field: "contactEmail", headerName: t("users.columns.contactEmail"), flex: 1.5 },
     {
       field: "createdAt", headerName: t("users.columns.createdAt"), flex: 0.7,
-      valueFormatter: ({ value }) => value ? new Date(value).toLocaleDateString() : ""
+      valueFormatter: ({ value }) => fmtNumericDate(value)
     },
     {
       field: "updatedAt", headerName: t("users.columns.updatedAt"), flex: 0.7,
-      valueFormatter: ({ value }) => value ? new Date(value).toLocaleDateString() : ""
+      valueFormatter: ({ value }) => fmtNumericDate(value)
     },
     {
       field: "edit", headerName: "", sortable: false, filterable: false, flex: 0.2,

@@ -11,6 +11,7 @@ import Header from '../../../components/Header';
 import { SensoboxLogo } from '../../global/Sidebar';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
+import LanguageSelector from '../../../components/LanguageSelector';
 import { API_USERS } from "../../../config/config";
 import axios from 'axios';
 
@@ -20,18 +21,15 @@ const Login = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [errorKey, setErrorKey] = React.useState('popUp.incorrect_password');
   const [showPassword, setShowPassword] = React.useState(false);
   const { t } = useTranslation();
 
   const handleLoginSubmit = async (values, { setSubmitting }) => {
-    console.log(values);
-    console.log('API URL:', API_USERS.USERS);
     setSubmitting(true);
   
     // Construct the login URL using the current URL scheme
     const loginUrl = `${API_USERS.USERS}/login`;
-  
-    console.log('Login URL:', loginUrl);
   
     try {
       // No enviar JWT en el login, solo las credenciales
@@ -41,15 +39,12 @@ const Login = ({ setIsAuthenticated }) => {
         }
       });
   
-      console.log('Login response:', response.data);
-  
       const data = response.data;
   
       if (data.token) {
         localStorage.setItem('jwtToken', data.token);
         localStorage.setItem('userData', JSON.stringify(data.user));
         setIsAuthenticated(true);
-        console.log("User data saved:", JSON.stringify(data.user))
   
         const role = data.user.role;
   
@@ -71,6 +66,7 @@ const Login = ({ setIsAuthenticated }) => {
         status: error.response?.status,
         url: loginUrl
       });
+      setErrorKey(error.response?.status === 401 ? 'popUp.incorrect_password' : 'popUp.connection_error');
       setOpen(true);
     } finally {
       setSubmitting(false);
@@ -80,9 +76,9 @@ const Login = ({ setIsAuthenticated }) => {
   return (
     <div className="sb-login" style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '24px 16px', boxSizing: 'border-box', background: 'radial-gradient(900px 520px at 85% -10%, rgba(99,102,241,.22), transparent 60%), radial-gradient(700px 480px at -10% 110%, rgba(16,185,129,.14), transparent 60%), #F3F4F8' }}>
       <Container component="main" maxWidth="xs" disableGutters>
-        <Box display="flex" justifyContent="center" mb="22px"><SensoboxLogo size={40} /></Box>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb="22px"><SensoboxLogo size={40} /><LanguageSelector compact /></Box>
         <Paper elevation={0} sx={{ p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: 'column', alignItems: 'stretch', borderRadius: '18px', border: '1px solid #E5E7EB', boxShadow: '0 20px 50px -24px rgba(17,24,39,.25)' }}>
-          <Header title="Inicia sesión" subtitle="Control de producción, sin hojas de cálculo." />
+          <Header title={t("login.title")} subtitle={t("app.tagline")} />
           <Formik
             initialValues={{ email: '', password: '' }}
             validationSchema={yup.object({
@@ -128,7 +124,7 @@ const Login = ({ setIsAuthenticated }) => {
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
-                            aria-label="toggle password visibility"
+                            aria-label={t("login.togglePassword")}
                             onClick={() => setShowPassword(!showPassword)}
                             onMouseDown={(e) => e.preventDefault()}
                             edge="end"
@@ -168,7 +164,7 @@ const Login = ({ setIsAuthenticated }) => {
         <DialogTitle style={{ color: theme.palette.secondary.main }}>{t('popUp.login_error_title')}</DialogTitle>
         <DialogContent>
           <DialogContentText style={{ color: theme.palette.text.secondary }}>
-            {t('popUp.incorrect_password')}
+            {t(errorKey)}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

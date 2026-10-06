@@ -1,4 +1,4 @@
-// Copia del original con retoques de demo (overlay fuera del repo): solo fechas previstas de lo pendiente
+// Versión rediseñada: solo fechas previstas de lo pendiente
 // y en curso, con «+N más» por día, para que el mes se lea.
 import { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
@@ -20,6 +20,15 @@ import { tokens } from "../../../theme";
 import { API_ORDERS } from "../../../config/config";
 import { useTranslation } from "react-i18next";
 import axios from 'axios';
+import esLocale from "@fullcalendar/core/locales/es";
+import enGbLocale from "@fullcalendar/core/locales/en-gb";
+import nlLocale from "@fullcalendar/core/locales/nl";
+import deLocale from "@fullcalendar/core/locales/de";
+import frLocale from "@fullcalendar/core/locales/fr";
+import { currentLang } from "../../../i18n";
+import { nf } from "../../../utils/format";
+
+const FC_LOCALES = [esLocale, enGbLocale, nlLocale, deLocale, frLocale];
 
 const Calendar = () => {
   const theme = useTheme();
@@ -49,7 +58,6 @@ const Calendar = () => {
 
       if (userData.role === 'client') {
         const url = `${API_ORDERS.ORDERS}/company?companyName=${encodeURIComponent(companyName)}&clientName=${encodeURIComponent(clientName)}`;
-        console.log("URL construida:", url);
         response = await axios.get(url, {
           headers: {
             'Authorization': `Bearer ${jwt}`
@@ -57,7 +65,6 @@ const Calendar = () => {
         });
       } else {
         const url = `${API_ORDERS.ORDERS}/company?companyName=${encodeURIComponent(companyName)}`;
-        console.log("URL construida:", url);
         response = await axios.get(url, {
           headers: {
             'Authorization': `Bearer ${jwt}`
@@ -83,7 +90,7 @@ const Calendar = () => {
     return orders.map(order => [
       {
         id: `${order.orderNumber}-start`,
-        title: `Inicio Nº ${order.orderNumber} · ${order.clientName}`,
+        title: t('calendar.event.start', { n: order.orderNumber, client: order.clientName }),
         start: order.processingDateInitial,
         end: order.processingDateInitial,
         backgroundColor: '#10B981', borderColor: '#10B981',
@@ -91,7 +98,7 @@ const Calendar = () => {
       },
       {
         id: `${order.orderNumber}-end`,
-        title: `Fin Nº ${order.orderNumber} · ${order.clientName}`,
+        title: t('calendar.event.end', { n: order.orderNumber, client: order.clientName }),
         start: order.processingDateFinal,
         end: order.processingDateFinal,
         backgroundColor: '#94A3B8', borderColor: '#94A3B8',
@@ -99,7 +106,7 @@ const Calendar = () => {
       },
       {
         id: `${order.orderNumber}-processing`,
-        title: `Nº ${order.orderNumber} · ${order.clientName}`,
+        title: t('calendar.event.planned', { n: order.orderNumber, client: order.clientName }),
         start: order.processingDate,
         end: order.processingDate,
         backgroundColor: '#6366F1', borderColor: '#6366F1',
@@ -137,7 +144,8 @@ const Calendar = () => {
           backgroundColor={colors.primary[400]}
         >
           <FullCalendar
-          locale="es" // Establece el locale en español
+            locales={FC_LOCALES}
+            locale={currentLang() === "en" ? "en-gb" : currentLang()}
             height="75vh"
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
             // headerToolbar={{
@@ -147,7 +155,7 @@ const Calendar = () => {
             // }}
             initialView="dayGridMonth"
             dayMaxEvents={3}
-            moreLinkText={(n) => `+${n} más`}
+            moreLinkText={(n) => t('calendar.more', { n })}
             eventDisplay="block"
             events={formatEvents(orders)}
             eventClick={handleEventClick}
@@ -182,7 +190,7 @@ const Calendar = () => {
       >
         <Paper style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: 20, maxWidth: 400, width: '80%' }}>
           <Typography id="event-details-title" variant="h6" component="h2">
-            {selectedEvent?.title}
+            {selectedEvent && t('order.numberLong', { n: selectedEvent.orderNumber })}
           </Typography>
           <Typography id="event-details-description" sx={{ mt: 2 }}>
             {t('orders.columns.orderNumber')}: {selectedEvent?.orderNumber}<br />
@@ -191,11 +199,11 @@ const Calendar = () => {
             {t('orders.columns.technician')}: {selectedEvent?.technician}<br />
             {t('orders.columns.workName')}: {selectedEvent?.workName}<br />
             {t('orders.columns.workType')}: {selectedEvent?.workType}<br />
-            {t('orders.columns.productionQuantity')}: {selectedEvent?.productionQuantity}<br />
+            {t('orders.columns.productionQuantity')}: {nf(selectedEvent?.productionQuantity)}<br />
             {t('orders.columns.colors')}: {selectedEvent?.colors}<br />
             {t('orders.columns.processes')}: {selectedEvent?.processes}<br />
             {t('orders.columns.specialFinishes')}: {selectedEvent?.specialFinishes}<br />
-            {t('orders.columns.palletsNumber')}: {selectedEvent?.palletsNumber || 'N/A'}
+            {t('orders.columns.palletsNumber')}: {selectedEvent?.palletsNumber || '—'}
           </Typography>
           <Button onClick={handleCloseModal} style={{ marginTop: 20 }}>{t('common.close')}</Button>
         </Paper>

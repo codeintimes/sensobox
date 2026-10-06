@@ -29,7 +29,7 @@ const CreateUser = () => {
   };
 
   const userSchema = yup.object().shape({
-    name: yup.string().required(t("validation.requiredName")).matches(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s'-]+$/, t("validation.invalidName")),
+    name: yup.string().required(t("validation.requiredName")).matches(/^[\p{L}\s'.-]+$/u, t("validation.invalidName")),
     email: yup.string().email(t("validation.invalidEmail")).required(t("validation.requiredEmail")),
     password: yup.string().min(6, t("validation.passwordMin")).required(t("validation.requiredPassword")),
     // role: yup.string().required(t("validation.requiredRole")),
@@ -44,7 +44,7 @@ const CreateUser = () => {
       const companyName = userData ? userData.companyName : '';
   
       if (!companyName) {
-        alert('Company name is missing. Please log in again.');
+        alert(t('createUser.messages.companyMissing'));
         return;
       }
   
@@ -54,7 +54,6 @@ const CreateUser = () => {
         clientName: companyName,
         role: "admin"
       };
-      console.log("payload", payload);
       
       const response = await axios.post(`${API_USERS.USERS}/register`, payload, {
         headers: {
@@ -62,15 +61,13 @@ const CreateUser = () => {
           'Authorization': `Bearer ${jwt}`
         }
       });
-  
-      console.log("User created successfully:", response);
       navigate('/admins');
     } catch (error) {
       if (error.response && error.response.status === 409) {
-        alert('El correo electrónico ya existe');
+        alert(t('createUser.messages.emailExists'));
       } else {
         console.error('Error creating user:', error);
-        alert('Error creating user: ' + error.message);
+        alert(t('createUser.messages.createFail', { error: error.response?.data?.message || error.message }));
       }
     }
   };

@@ -1,0 +1,527 @@
+{
+  "orders": {
+    "title": "Ordres de fabrication",
+    "subtitle": "Tous les ordres de l'atelier, avec leur statut à jour",
+    "searchPlaceholder": "Rechercher n° ou client…",
+    "columns": {
+      "orderNumber": "N°",
+      "clientName": "Client",
+      "companyName": "Atelier",
+      "productionQuantity": "Quantité",
+      "colors": "Encres",
+      "processes": "Procédés",
+      "specialFinishes": "Finition",
+      "technician": "Technicien",
+      "palletsNumber": "Palettes",
+      "processingDate": "Date prévue",
+      "processingTime": "Heures prévues",
+      "initialQuantity": "Qté engagée",
+      "finalQuantity": "Qté conforme",
+      "createdAt": "Créé",
+      "updatedAt": "Mis à jour",
+      "status": "Statut",
+      "edit": "Modifier",
+      "opiInitialEdit": "Démarrer l'ordre",
+      "opiFinalEdit": "Terminer l'ordre",
+      "editSelector": "Modifier l'ordre",
+      "delete": "Supprimer l'ordre",
+      "download": "Télécharger le PDF",
+      "materialArea": "Surface",
+      "materialWeight": "Poids",
+      "quantityProcessed": "Réalisé",
+      "material": "Matière",
+      "workName": "Travail",
+      "workType": "Type",
+      "processingDateInitial": "Début",
+      "processingDateFinal": "Fin",
+      "errorPercentage": "Rebut"
+    },
+    "status": {
+      "pending": "En attente",
+      "processing": "En production",
+      "processed": "Terminé",
+      "shipping": "Expédié"
+    },
+    "material": {
+      "length_required": "La longueur est obligatoire",
+      "length_positive": "La longueur doit être un nombre positif",
+      "width_required": "La largeur est obligatoire",
+      "width_positive": "La largeur doit être un nombre positif",
+      "update_material_area": "Matière de l'ordre",
+      "update_area_subtitle": "Surface et poids de la matière de l'ordre {{orderNumber}}",
+      "length_meters": "Longueur (mètres)",
+      "width_meters": "Largeur (mètres)",
+      "calculated_area": "Surface calculée",
+      "update_fail": "Impossible d'enregistrer la matière",
+      "weight_kg": "Poids (kg)",
+      "weight_required": "Le poids est obligatoire",
+      "weight_positive": "Le poids doit être un nombre positif",
+      "submit_area_weight_order_id": "Enregistrer la matière"
+    },
+    "currentQuantity": {
+      "quantityProcessed": "Unités réalisées",
+      "title": "Saisir l'avancement",
+      "subtitle": "Unités produites jusqu'ici. Le bureau le voit aussitôt.",
+      "buttons": {
+        "update": "Enregistrer"
+      },
+      "soFar": "Vous en étiez à {{done}} sur {{total}} unités."
+    },
+    "dialog": {
+      "confirmDeleteTitle": "Confirmer la suppression",
+      "confirmDeleteText": "Voulez-vous vraiment supprimer cet ordre ? Cette action est irréversible.",
+      "cancel": "Annuler",
+      "confirm": "Confirmer"
+    }
+  },
+  "users": {
+    "title": "Utilisateurs",
+    "subtitle": "Liste des utilisateurs",
+    "titleClients": "Clients",
+    "subtitleClients": "Entreprises pour lesquelles vous fabriquez et leur contact",
+    "titleAdmins": "Administration",
+    "subtitleAdmins": "Personnes ayant un accès complet",
+    "titleClientsEco": "Clients ECO",
+    "subtitleClientsECO": "Émissions de CO2 par client",
+    "titleEmployees": "Techniciens",
+    "subtitleEmployees": "Équipe d'atelier",
+    "role": {
+      "admin": "Administrateur",
+      "technician": "Technicien",
+      "client": "Client"
+    },
+    "editClient": {
+      "updateUser": "Mettre à jour"
+    },
+    "editUser": {
+      "title": "Modifier l'utilisateur",
+      "subtitle": "Mettez à jour les données de l'utilisateur"
+    },
+    "columns": {
+      "email": "E-mail",
+      "role": "Rôle",
+      "name": "Nom",
+      "companyName": "Entreprise",
+      "clientName": "Entreprise",
+      "totalQuantity": "Quantité totale",
+      "eco": "Statut ECO",
+      "ecoEmissions": "CO2/unité",
+      "totalEmissions": "CO2 total",
+      "createdAt": "Créé",
+      "updatedAt": "Mis à jour",
+      "password": "Mot de passe",
+      "contactName": "Contact",
+      "contactPhone": "Téléphone",
+      "contactEmail": "E-mail de contact",
+      "ecoStatus": "Statut ECO"
+    },
+    "dialog": {
+      "confirmDeleteTitle": "Confirmer la suppression",
+      "confirmDeleteText": "Voulez-vous vraiment supprimer cet utilisateur ?",
+      "cancel": "Annuler",
+      "confirm": "Confirmer"
+    },
+    "ecoImageAlt": "Image ECO du client"
+  },
+  "createUser": {
+    "title": "Nouvel utilisateur",
+    "subtitle": "Ajoutez une personne et choisissez ce qu'elle peut voir",
+    "name": "Nom",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "role": "Rôle",
+    "createButton": "Créer l'utilisateur",
+    "clientName": "Nom de l'entreprise",
+    "contactName": "Personne de contact",
+    "contactPhone": "Téléphone du contact",
+    "contactEmail": "E-mail de contact",
+    "messages": {
+      "companyMissing": "Votre entreprise est introuvable. Reconnectez-vous.",
+      "emailExists": "Un utilisateur avec cet e-mail existe déjà.",
+      "createFail": "Impossible de créer l'utilisateur : {{error}}"
+    }
+  },
+  "roles": {
+    "admin": "Administrateur",
+    "technician": "Technicien",
+    "client": "Client"
+  },
+  "dashboard": {
+    "title": "Tableau de bord de production",
+    "live": "En direct · mise à jour automatique",
+    "loadError": "Impossible de charger les données.",
+    "series": {
+      "waste": "Rebut",
+      "delay": "Retard",
+      "orders": "Commandes"
+    },
+    "kpi": {
+      "orders": "Commandes (30 jours)",
+      "units": "Unités commandées",
+      "thousand": "k",
+      "waste": "Rebut moyen",
+      "timeDeviation": "Écart de temps",
+      "vsMonthly": "vs moyenne mensuelle",
+      "before": "avant {{v}}"
+    },
+    "inProduction": {
+      "title": "En production maintenant",
+      "subtitle": "Ce que saisissent les techniciens s'affiche ici aussitôt",
+      "count_one": "{{count}} ordre",
+      "count_other": "{{count}} ordres"
+    },
+    "deviations": {
+      "title": "Écarts",
+      "subtitle": "Ordres avec rebut > {{waste}} ou plus de {{time}} de temps en plus que prévu",
+      "none": "Aucun écart ces dernières semaines.",
+      "waste": "rebut {{v}}",
+      "time": "temps {{v}}"
+    },
+    "charts": {
+      "wasteDelay": "Rebut et retard par semaine",
+      "wasteDelaySub": "Pourcentage par rapport au plan · ordres terminés",
+      "ordersPerWeek": "Commandes par semaine",
+      "since": "Depuis le {{date}}"
+    },
+    "upcoming": {
+      "title": "Prochains ordres",
+      "subtitle": "Pas encore démarrés, par date prévue"
+    },
+    "late": {
+      "title": "En retard",
+      "subtitle": "Auraient dû démarrer et sont toujours en attente",
+      "none": "Rien en retard.",
+      "days_one": "{{count}} jour",
+      "days_other": "{{count}} jours"
+    }
+  },
+  "popUp": {
+    "login_error_title": "Connexion impossible",
+    "incorrect_password": "E-mail ou mot de passe incorrect. Réessayez.",
+    "close_button": "Fermer",
+    "connection_error": "Impossible de joindre le serveur. Réessayez dans quelques secondes."
+  },
+  "login": {
+    "title": "Connexion",
+    "email_label": "E-mail",
+    "email_error": "Adresse e-mail non valide",
+    "email_required": "Obligatoire",
+    "password_label": "Mot de passe",
+    "password_required": "Obligatoire",
+    "password_min": "Le mot de passe doit contenir au moins 8 caractères",
+    "login_button": "Se connecter",
+    "togglePassword": "Afficher ou masquer le mot de passe"
+  },
+  "ecoForm": {
+    "ecoStatus": "Statut ECO",
+    "ecoEmissions": "Émissions (g CO2/unité)",
+    "updateEcoData": "Mettre à jour",
+    "activated": "Activé",
+    "deactivated": "Désactivé"
+  },
+  "common": {
+    "enabled": "Activé",
+    "disabled": "Désactivé",
+    "close": "Fermer",
+    "notAvailable": "Cette fonction n'est pas encore disponible."
+  },
+  "createOrder": {
+    "title": "Nouvel ordre de fabrication",
+    "subtitle": "Remplissez les données : le technicien le reçoit aussitôt",
+    "form": {
+      "orderNumber": "N° d'ordre",
+      "clientName": "Client",
+      "workName": "Travail",
+      "workType": "Type de travail",
+      "productionQuantity": "Quantité",
+      "colors": "Encres",
+      "processes": "Procédés",
+      "specialFinishes": "Finition spéciale",
+      "palletsNumber": "Palettes",
+      "technician": "Technicien",
+      "processingDate": "Date prévue",
+      "processingTime": "Heures prévues",
+      "createOrderButton": "Créer l'ordre"
+    },
+    "messages": {
+      "createFail": "Impossible de créer l'ordre",
+      "companyNameMissing": "Votre entreprise est introuvable. Reconnectez-vous.",
+      "orderNumberExists": "Un ordre avec ce numéro existe déjà."
+    }
+  },
+  "validation": {
+    "invalidEmail": "Adresse e-mail non valide",
+    "requiredEmail": "L'e-mail est obligatoire",
+    "passwordMin": "Le mot de passe doit contenir au moins 6 caractères",
+    "requiredPassword": "Le mot de passe est obligatoire",
+    "requiredContactName": "Le nom du contact est obligatoire",
+    "requiredContactPhone": "Le téléphone du contact est obligatoire",
+    "requiredContactEmail": "L'e-mail du contact est obligatoire",
+    "required": "Ce champ est obligatoire",
+    "positive": "Le nombre doit être positif",
+    "minZero": "Le nombre doit être supérieur ou égal à zéro",
+    "requiredName": "Le nom est obligatoire",
+    "invalidName": "Nom non valide : lettres, espaces, traits d'union et apostrophes uniquement",
+    "requiredClientName": "Le nom du client est obligatoire",
+    "invalidContactEmail": "E-mail de contact non valide",
+    "passwordMin8": "Le mot de passe doit contenir au moins 8 caractères"
+  },
+  "updateOrders": {
+    "title": "Modifier l'ordre",
+    "subtitle": "Modifiez les données de l'ordre",
+    "edit": "Mettre à jour",
+    "messages": {
+      "updateSuccess": "Ordre mis à jour",
+      "updateFail": "Impossible de mettre à jour l'ordre"
+    }
+  },
+  "opiInitialForm": {
+    "title": "Démarrer l'ordre",
+    "subtitle": "Unités chargées sur la machine et heure de début",
+    "labels": {
+      "initialQuantity": "Unités engagées",
+      "processingDateInitial": "Début"
+    },
+    "buttons": {
+      "update": "Démarrer l'ordre"
+    }
+  },
+  "createFinalOpi": {
+    "title": "Terminer l'ordre",
+    "subtitle": "Unités conformes et heure de fin : le rebut et le temps réel sont calculés automatiquement",
+    "labels": {
+      "finalQuantity": "Unités conformes",
+      "processingDateFinal": "Fin"
+    },
+    "buttons": {
+      "update": "Terminer l'ordre"
+    },
+    "startedWith": "Vous êtes parti de {{n}} unités",
+    "wastePreview": "Rebut : {{n}} unités ({{pct}})"
+  },
+  "editClientEco": {
+    "headerTitle": "Modifier le client ECO",
+    "headerSubtitle": "Données d'émissions du client",
+    "validationMessages": {
+      "ecoStatusRequired": "Le statut ECO est obligatoire",
+      "ecoEmissionsRequired": "Les émissions sont obligatoires"
+    }
+  },
+  "calendar": {
+    "title": "Calendrier",
+    "subtitle": "Dates prévues, de début et de fin de chaque ordre",
+    "today": "Aujourd'hui",
+    "month": "Mois",
+    "week": "Semaine",
+    "day": "Jour",
+    "list": "Liste",
+    "more": "+{{n}} de plus",
+    "event": {
+      "start": "Début n° {{n}} · {{client}}",
+      "end": "Fin n° {{n}} · {{client}}",
+      "planned": "N° {{n}} · {{client}}"
+    }
+  },
+  "app": {
+    "productionControl": "pilotage de la production",
+    "clientPortal": "portail client",
+    "logout": "Déconnexion",
+    "notifications": "Notifications",
+    "openMenu": "Ouvrir le menu",
+    "language": "Langue",
+    "tagline": "Le pilotage de la production, sans tableurs."
+  },
+  "nav": {
+    "production": "Production",
+    "dashboard": "Tableau de bord",
+    "orders": "Ordres",
+    "calendar": "Calendrier",
+    "analysis": "Analyse",
+    "quantities": "Quantités et rebut",
+    "ordersByPeriod": "Commandes",
+    "processTimes": "Temps de process",
+    "team": "Équipe",
+    "clients": "Clients",
+    "technicians": "Techniciens",
+    "help": "Aide",
+    "workshop": "Atelier",
+    "myOrders": "Mes ordres",
+    "myPurchaseOrders": "Mes commandes",
+    "tracking": "Suivi",
+    "clientOrdersByPeriod": "Commandes par période"
+  },
+  "roleLong": {
+    "admin": "Administration",
+    "technician": "Technicien d'atelier",
+    "client": "Client"
+  },
+  "order": {
+    "numberLong": "Ordre n° {{n}}",
+    "numberShort": "N° {{n}}",
+    "units": "{{n}} unités",
+    "hours": "{{n}} h"
+  },
+  "table": {
+    "new": "Nouveau",
+    "newOrder": "Nouvel ordre",
+    "newClient": "Nouveau client",
+    "newTechnician": "Nouveau technicien",
+    "newUser": "Nouvel utilisateur",
+    "more": "Plus d'actions"
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "admin": {
+      "subtitle": "Administration",
+      "items": [
+        {
+          "q": "Comment créer un ordre de fabrication ?",
+          "a": "Dans « Ordres », cliquez sur le bouton « + ». Indiquez le client, le travail, la quantité, les procédés et finitions, le technicien responsable, la date prévue et les heures estimées. Le technicien le voit aussitôt dans sa liste."
+        },
+        {
+          "q": "Que signifie chaque statut ?",
+          "a": "En attente : pas encore démarré. En production : le technicien a saisi le début et note ce qui est produit. Terminé : avec quantités et temps finaux. Expédié : parti chez le client."
+        },
+        {
+          "q": "D'où viennent le rebut et l'écart de temps ?",
+          "a": "Au démarrage, le technicien saisit les unités engagées ; à la fin, les unités conformes et l'heure de fin. Sensobox calcule le rebut (unités perdues) et compare les heures réelles aux heures prévues."
+        },
+        {
+          "q": "Qu'apparaît-il dans « Écarts » ?",
+          "a": "Les ordres terminés avec plus de 7 % de rebut ou ayant pris plus de 30 % de temps en plus que prévu. Cela permet de repérer à temps une machine, une matière ou un travail qui dérive."
+        },
+        {
+          "q": "Puis-je filtrer ou exporter les ordres ?",
+          "a": "Oui. Dans le tableau des ordres, vous pouvez chercher par numéro ou client, filtrer sur n'importe quelle colonne, choisir les colonnes affichées et exporter en CSV pour la comptabilité."
+        },
+        {
+          "q": "Comment ajouter un client ou un technicien ?",
+          "a": "Depuis « Clients » ou « Techniciens », avec le bouton « + ». Chaque personne reçoit son accès et ne voit que ce qui la concerne : le technicien ses ordres, le client ses commandes."
+        }
+      ]
+    },
+    "technician": {
+      "subtitle": "Techniciens d'atelier",
+      "items": [
+        {
+          "q": "Quels ordres est-ce que je vois ?",
+          "a": "Seulement ceux qui vous sont attribués, triés par date prévue. Les nouveaux apparaissent dès que le bureau les crée."
+        },
+        {
+          "q": "Comment démarrer un ordre ?",
+          "a": "Sur la carte de l'ordre, appuyez sur « Démarrer ». Saisissez les unités engagées (feuilles ou mètres chargés sur la machine) et l'heure de début."
+        },
+        {
+          "q": "Comment saisir ce que j'ai produit ?",
+          "a": "Avec « Saisir l'avancement », vous mettez à jour les unités réalisées. Le bureau le voit aussitôt sur le tableau de bord, sans appel."
+        },
+        {
+          "q": "Comment clôturer un ordre ?",
+          "a": "Avec « Terminer » : unités conformes et heure de fin. Sensobox calcule le rebut et le temps réel par rapport au temps prévu."
+        },
+        {
+          "q": "Où noter la matière ?",
+          "a": "Dans « Matière », avec la longueur, la largeur et le poids. La consommation de chaque travail est ainsi enregistrée."
+        }
+      ]
+    },
+    "client": {
+      "subtitle": "Clients",
+      "items": [
+        {
+          "q": "Que puis-je voir sur le portail ?",
+          "a": "Vos commandes et leur avancement : en attente, en production, terminée ou expédiée, avec les quantités et les dates."
+        },
+        {
+          "q": "À quelle fréquence est-ce mis à jour ?",
+          "a": "En temps réel : dès que l'atelier saisit un avancement, vous le voyez ici."
+        },
+        {
+          "q": "Puis-je voir mes commandes par date ?",
+          "a": "Oui. Le « Calendrier » indique la date prévue de chaque commande et « Commandes par période » leur évolution."
+        },
+        {
+          "q": "À qui m'adresser pour une commande ?",
+          "a": "À votre contact habituel à l'atelier. Indiquez-lui le numéro de commande affiché dans la liste."
+        }
+      ]
+    }
+  },
+  "weekly": {
+    "period": "Période",
+    "client": "Client",
+    "allClients": "Tous les clients",
+    "worstWeek": "Pire semaine",
+    "limitLine": "Ligne rouge : limite de {{n}}",
+    "periods": {
+      "lastMonth": "Dernier mois",
+      "last3Months": "3 derniers mois",
+      "last6Months": "6 derniers mois",
+      "lastYear": "Dernière année"
+    },
+    "quantities": {
+      "title": "Quantités et rebut",
+      "subtitle": "Unités engagées face aux unités conformes, par semaine",
+      "series": {
+        "a": "Unités engagées",
+        "b": "Unités conformes"
+      },
+      "unitValue": "{{n}} k unités",
+      "ratioName": "Rebut",
+      "periodRatio": "Rebut sur la période",
+      "mainTitle": "Unités engagées et unités conformes",
+      "mainSubtitle": "En milliers d'unités",
+      "ratioTitle": "Rebut par semaine"
+    },
+    "times": {
+      "title": "Temps de process",
+      "subtitle": "Heures prévues face aux heures réelles, par semaine",
+      "series": {
+        "a": "Heures prévues",
+        "b": "Heures réelles"
+      },
+      "unitValue": "{{n}} h",
+      "ratioName": "Écart de temps",
+      "periodRatio": "Écart de temps sur la période",
+      "mainTitle": "Heures prévues et heures réelles",
+      "mainSubtitle": "En heures machine",
+      "ratioTitle": "Écart de temps par semaine"
+    },
+    "orders": {
+      "title": "Commandes par période",
+      "subtitle": "Commandes reçues chaque semaine et unités commandées",
+      "series": {
+        "a": "Commandes"
+      },
+      "ratioName": "Unités commandées (milliers)",
+      "mainTitle": "Commandes par semaine",
+      "mainSubtitle": "Nombre de commandes",
+      "ratioTitle": "Unités commandées (milliers)",
+      "ratioSubtitle": "Milliers d'unités par semaine",
+      "stats": {
+        "orders": "Commandes",
+        "unitsOrdered": "Unités commandées",
+        "thousands": "{{n}} k",
+        "weeklyAverage": "Moyenne hebdomadaire",
+        "clients": "Clients"
+      }
+    }
+  },
+  "techOrders": {
+    "title": "Mes ordres",
+    "subtitle": "Ce qui vous est attribué, par priorité",
+    "tabTodo": "À faire",
+    "tabDone": "Terminés",
+    "search": "Rechercher n°, client ou travail",
+    "finishedAt": "Terminé {{date}}",
+    "plannedAt": "Prévu {{date}}",
+    "start": "Démarrer",
+    "progress": "Saisir l'avancement",
+    "finish": "Terminer",
+    "empty": "Aucun ordre dans cette liste."
+  },
+  "pie": {
+    "title": "Répartition par client",
+    "subtitle": "Unités par client"
+  }
+}

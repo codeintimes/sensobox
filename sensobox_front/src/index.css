@@ -1,4 +1,4 @@
-/* Estilos globales de la demo «Sensobox» (overlay fuera del repo) */
+/* Estilos globales de la demo «Sensobox» */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
 html, body, #root, .app, .content { min-height: 100%; width: 100%; font-family: Inter, system-ui, sans-serif; }

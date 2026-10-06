@@ -1,0 +1,527 @@
+{
+  "orders": {
+    "title": "Fertigungsaufträge",
+    "subtitle": "Alle Aufträge der Fertigung mit aktuellem Status",
+    "searchPlaceholder": "Nr. oder Kunde suchen…",
+    "columns": {
+      "orderNumber": "Nr.",
+      "clientName": "Kunde",
+      "companyName": "Betrieb",
+      "productionQuantity": "Menge",
+      "colors": "Farben",
+      "processes": "Arbeitsgänge",
+      "specialFinishes": "Veredelung",
+      "technician": "Techniker",
+      "palletsNumber": "Paletten",
+      "processingDate": "Plantermin",
+      "processingTime": "Soll-Stunden",
+      "initialQuantity": "Einsatzmenge",
+      "finalQuantity": "Gutmenge",
+      "createdAt": "Erstellt",
+      "updatedAt": "Aktualisiert",
+      "status": "Status",
+      "edit": "Bearbeiten",
+      "opiInitialEdit": "Auftrag starten",
+      "opiFinalEdit": "Auftrag abschließen",
+      "editSelector": "Auftrag bearbeiten",
+      "delete": "Auftrag löschen",
+      "download": "PDF herunterladen",
+      "materialArea": "Fläche",
+      "materialWeight": "Gewicht",
+      "quantityProcessed": "Gefertigt",
+      "material": "Material",
+      "workName": "Job",
+      "workType": "Art",
+      "processingDateInitial": "Beginn",
+      "processingDateFinal": "Ende",
+      "errorPercentage": "Ausschuss"
+    },
+    "status": {
+      "pending": "Offen",
+      "processing": "In Produktion",
+      "processed": "Fertig",
+      "shipping": "Versandt"
+    },
+    "material": {
+      "length_required": "Länge ist erforderlich",
+      "length_positive": "Die Länge muss eine positive Zahl sein",
+      "width_required": "Breite ist erforderlich",
+      "width_positive": "Die Breite muss eine positive Zahl sein",
+      "update_material_area": "Material des Auftrags",
+      "update_area_subtitle": "Fläche und Gewicht des Materials für Auftrag {{orderNumber}}",
+      "length_meters": "Länge (Meter)",
+      "width_meters": "Breite (Meter)",
+      "calculated_area": "Berechnete Fläche",
+      "update_fail": "Das Material konnte nicht gespeichert werden",
+      "weight_kg": "Gewicht (kg)",
+      "weight_required": "Gewicht ist erforderlich",
+      "weight_positive": "Das Gewicht muss eine positive Zahl sein",
+      "submit_area_weight_order_id": "Material speichern"
+    },
+    "currentQuantity": {
+      "quantityProcessed": "Gefertigte Menge",
+      "title": "Fortschritt erfassen",
+      "subtitle": "Bisher gefertigte Stückzahl. Das Büro sieht sie sofort.",
+      "buttons": {
+        "update": "Fortschritt speichern"
+      },
+      "soFar": "Bisher {{done}} von {{total}} Stück gefertigt."
+    },
+    "dialog": {
+      "confirmDeleteTitle": "Löschen bestätigen",
+      "confirmDeleteText": "Diesen Auftrag wirklich löschen? Das lässt sich nicht rückgängig machen.",
+      "cancel": "Abbrechen",
+      "confirm": "Bestätigen"
+    }
+  },
+  "users": {
+    "title": "Benutzer",
+    "subtitle": "Benutzerliste",
+    "titleClients": "Kunden",
+    "subtitleClients": "Firmen, für die Sie fertigen, und ihre Ansprechpartner",
+    "titleAdmins": "Verwaltung",
+    "subtitleAdmins": "Personen mit Vollzugriff",
+    "titleClientsEco": "ECO-Kunden",
+    "subtitleClientsECO": "CO2-Emissionen je Kunde",
+    "titleEmployees": "Techniker",
+    "subtitleEmployees": "Team in der Fertigung",
+    "role": {
+      "admin": "Administrator",
+      "technician": "Techniker",
+      "client": "Kunde"
+    },
+    "editClient": {
+      "updateUser": "Benutzer aktualisieren"
+    },
+    "editUser": {
+      "title": "Benutzer bearbeiten",
+      "subtitle": "Benutzerdaten aktualisieren"
+    },
+    "columns": {
+      "email": "E-Mail",
+      "role": "Rolle",
+      "name": "Name",
+      "companyName": "Firma",
+      "clientName": "Firma",
+      "totalQuantity": "Gesamtmenge",
+      "eco": "ECO-Status",
+      "ecoEmissions": "CO2/Stück",
+      "totalEmissions": "CO2 gesamt",
+      "createdAt": "Erstellt",
+      "updatedAt": "Aktualisiert",
+      "password": "Passwort",
+      "contactName": "Ansprechpartner",
+      "contactPhone": "Telefon",
+      "contactEmail": "Kontakt-E-Mail",
+      "ecoStatus": "ECO-Status"
+    },
+    "dialog": {
+      "confirmDeleteTitle": "Löschen bestätigen",
+      "confirmDeleteText": "Diesen Benutzer wirklich löschen?",
+      "cancel": "Abbrechen",
+      "confirm": "Bestätigen"
+    },
+    "ecoImageAlt": "ECO-Bild des Kunden"
+  },
+  "createUser": {
+    "title": "Neuer Benutzer",
+    "subtitle": "Person anlegen und festlegen, was sie sehen darf",
+    "name": "Name",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "role": "Rolle",
+    "createButton": "Benutzer anlegen",
+    "clientName": "Firmenname",
+    "contactName": "Ansprechpartner",
+    "contactPhone": "Telefon Ansprechpartner",
+    "contactEmail": "Kontakt-E-Mail",
+    "messages": {
+      "companyMissing": "Ihre Firma wurde nicht gefunden. Bitte erneut anmelden.",
+      "emailExists": "Es gibt bereits einen Benutzer mit dieser E-Mail-Adresse.",
+      "createFail": "Der Benutzer konnte nicht angelegt werden: {{error}}"
+    }
+  },
+  "roles": {
+    "admin": "Administrator",
+    "technician": "Techniker",
+    "client": "Kunde"
+  },
+  "dashboard": {
+    "title": "Produktions-Dashboard",
+    "live": "Live · aktualisiert sich selbst",
+    "loadError": "Die Daten konnten nicht geladen werden.",
+    "series": {
+      "waste": "Ausschuss",
+      "delay": "Verzug",
+      "orders": "Aufträge"
+    },
+    "kpi": {
+      "orders": "Aufträge (30 Tage)",
+      "units": "Bestellte Menge",
+      "thousand": "Tsd.",
+      "waste": "Ø Ausschuss",
+      "timeDeviation": "Zeitabweichung",
+      "vsMonthly": "ggü. Monatsmittel",
+      "before": "vorher {{v}}"
+    },
+    "inProduction": {
+      "title": "Jetzt in Produktion",
+      "subtitle": "Was die Techniker erfassen, erscheint hier sofort",
+      "count_one": "{{count}} Auftrag",
+      "count_other": "{{count}} Aufträge"
+    },
+    "deviations": {
+      "title": "Abweichungen",
+      "subtitle": "Aufträge mit Ausschuss > {{waste}} oder über {{time}} mehr Zeit als geplant",
+      "none": "Keine Abweichungen in den letzten Wochen.",
+      "waste": "Ausschuss {{v}}",
+      "time": "Zeit {{v}}"
+    },
+    "charts": {
+      "wasteDelay": "Ausschuss und Verzug pro Woche",
+      "wasteDelaySub": "Prozent über Plan · abgeschlossene Aufträge",
+      "ordersPerWeek": "Aufträge pro Woche",
+      "since": "Seit {{date}}"
+    },
+    "upcoming": {
+      "title": "Nächste Aufträge",
+      "subtitle": "Noch nicht begonnen, nach Plantermin"
+    },
+    "late": {
+      "title": "Überfällig",
+      "subtitle": "Hätten schon beginnen sollen und sind noch offen",
+      "none": "Nichts überfällig.",
+      "days_one": "{{count}} Tag",
+      "days_other": "{{count}} Tage"
+    }
+  },
+  "popUp": {
+    "login_error_title": "Anmeldung fehlgeschlagen",
+    "incorrect_password": "E-Mail oder Passwort falsch. Bitte erneut versuchen.",
+    "close_button": "Schließen",
+    "connection_error": "Server nicht erreichbar. Bitte in ein paar Sekunden erneut versuchen."
+  },
+  "login": {
+    "title": "Anmelden",
+    "email_label": "E-Mail",
+    "email_error": "Ungültige E-Mail-Adresse",
+    "email_required": "Pflichtfeld",
+    "password_label": "Passwort",
+    "password_required": "Pflichtfeld",
+    "password_min": "Das Passwort muss mindestens 8 Zeichen haben",
+    "login_button": "Anmelden",
+    "togglePassword": "Passwort ein- oder ausblenden"
+  },
+  "ecoForm": {
+    "ecoStatus": "ECO-Status",
+    "ecoEmissions": "Emissionen (g CO2/Stück)",
+    "updateEcoData": "Aktualisieren",
+    "activated": "Aktiviert",
+    "deactivated": "Deaktiviert"
+  },
+  "common": {
+    "enabled": "Aktiviert",
+    "disabled": "Deaktiviert",
+    "close": "Schließen",
+    "notAvailable": "Diese Funktion ist noch nicht verfügbar."
+  },
+  "createOrder": {
+    "title": "Neuer Fertigungsauftrag",
+    "subtitle": "Daten ausfüllen – der Techniker erhält ihn sofort",
+    "form": {
+      "orderNumber": "Auftragsnr.",
+      "clientName": "Kunde",
+      "workName": "Job",
+      "workType": "Jobart",
+      "productionQuantity": "Menge",
+      "colors": "Farben",
+      "processes": "Arbeitsgänge",
+      "specialFinishes": "Sonderveredelung",
+      "palletsNumber": "Paletten",
+      "technician": "Techniker",
+      "processingDate": "Plantermin",
+      "processingTime": "Soll-Stunden",
+      "createOrderButton": "Auftrag anlegen"
+    },
+    "messages": {
+      "createFail": "Der Auftrag konnte nicht angelegt werden",
+      "companyNameMissing": "Ihre Firma wurde nicht gefunden. Bitte erneut anmelden.",
+      "orderNumberExists": "Ein Auftrag mit dieser Nummer existiert bereits."
+    }
+  },
+  "validation": {
+    "invalidEmail": "Ungültige E-Mail-Adresse",
+    "requiredEmail": "E-Mail ist erforderlich",
+    "passwordMin": "Das Passwort muss mindestens 6 Zeichen haben",
+    "requiredPassword": "Passwort ist erforderlich",
+    "requiredContactName": "Ansprechpartner ist erforderlich",
+    "requiredContactPhone": "Telefon des Ansprechpartners ist erforderlich",
+    "requiredContactEmail": "Kontakt-E-Mail ist erforderlich",
+    "required": "Dieses Feld ist erforderlich",
+    "positive": "Die Zahl muss positiv sein",
+    "minZero": "Die Zahl muss null oder größer sein",
+    "requiredName": "Name ist erforderlich",
+    "invalidName": "Ungültiger Name: nur Buchstaben, Leerzeichen, Bindestriche und Apostrophe",
+    "requiredClientName": "Kundenname ist erforderlich",
+    "invalidContactEmail": "Ungültige Kontakt-E-Mail",
+    "passwordMin8": "Das Passwort muss mindestens 8 Zeichen haben"
+  },
+  "updateOrders": {
+    "title": "Auftrag bearbeiten",
+    "subtitle": "Auftragsdaten ändern",
+    "edit": "Aktualisieren",
+    "messages": {
+      "updateSuccess": "Auftrag aktualisiert",
+      "updateFail": "Der Auftrag konnte nicht aktualisiert werden"
+    }
+  },
+  "opiInitialForm": {
+    "title": "Auftrag starten",
+    "subtitle": "Auf die Maschine geladene Menge und Startzeit",
+    "labels": {
+      "initialQuantity": "Einsatzmenge",
+      "processingDateInitial": "Beginn"
+    },
+    "buttons": {
+      "update": "Auftrag starten"
+    }
+  },
+  "createFinalOpi": {
+    "title": "Auftrag abschließen",
+    "subtitle": "Gutmenge und Endzeit: Ausschuss und Ist-Zeit werden automatisch berechnet",
+    "labels": {
+      "finalQuantity": "Gutmenge",
+      "processingDateFinal": "Ende"
+    },
+    "buttons": {
+      "update": "Auftrag abschließen"
+    },
+    "startedWith": "Einsatzmenge: {{n}} Stück",
+    "wastePreview": "Ausschuss: {{n}} Stk. ({{pct}})"
+  },
+  "editClientEco": {
+    "headerTitle": "ECO-Kunden bearbeiten",
+    "headerSubtitle": "Emissionsdaten des Kunden",
+    "validationMessages": {
+      "ecoStatusRequired": "ECO-Status ist erforderlich",
+      "ecoEmissionsRequired": "Emissionen sind erforderlich"
+    }
+  },
+  "calendar": {
+    "title": "Kalender",
+    "subtitle": "Plan-, Start- und Endtermine jedes Auftrags",
+    "today": "Heute",
+    "month": "Monat",
+    "week": "Woche",
+    "day": "Tag",
+    "list": "Liste",
+    "more": "+{{n}} weitere",
+    "event": {
+      "start": "Beginn Nr. {{n}} · {{client}}",
+      "end": "Ende Nr. {{n}} · {{client}}",
+      "planned": "Nr. {{n}} · {{client}}"
+    }
+  },
+  "app": {
+    "productionControl": "Produktionssteuerung",
+    "clientPortal": "Kundenportal",
+    "logout": "Abmelden",
+    "notifications": "Benachrichtigungen",
+    "openMenu": "Menü öffnen",
+    "language": "Sprache",
+    "tagline": "Produktionssteuerung ohne Tabellenkalkulation."
+  },
+  "nav": {
+    "production": "Produktion",
+    "dashboard": "Dashboard",
+    "orders": "Aufträge",
+    "calendar": "Kalender",
+    "analysis": "Analyse",
+    "quantities": "Mengen und Ausschuss",
+    "ordersByPeriod": "Kundenaufträge",
+    "processTimes": "Prozesszeiten",
+    "team": "Team",
+    "clients": "Kunden",
+    "technicians": "Techniker",
+    "help": "Hilfe",
+    "workshop": "Fertigung",
+    "myOrders": "Meine Aufträge",
+    "myPurchaseOrders": "Meine Bestellungen",
+    "tracking": "Sendungsverfolgung",
+    "clientOrdersByPeriod": "Bestellungen pro Zeitraum"
+  },
+  "roleLong": {
+    "admin": "Verwaltung",
+    "technician": "Fertigungstechniker",
+    "client": "Kunde"
+  },
+  "order": {
+    "numberLong": "Auftrag Nr. {{n}}",
+    "numberShort": "Nr. {{n}}",
+    "units": "{{n}} Stk.",
+    "hours": "{{n}} Std."
+  },
+  "table": {
+    "new": "Neu",
+    "newOrder": "Neuer Auftrag",
+    "newClient": "Neuer Kunde",
+    "newTechnician": "Neuer Techniker",
+    "newUser": "Neuer Benutzer",
+    "more": "Weitere Aktionen"
+  },
+  "faq": {
+    "title": "Häufige Fragen",
+    "admin": {
+      "subtitle": "Verwaltung",
+      "items": [
+        {
+          "q": "Wie lege ich einen Fertigungsauftrag an?",
+          "a": "Unter „Aufträge“ auf die Schaltfläche „+“ klicken. Kunde, Job, Menge, Arbeitsgänge und Veredelungen, zuständigen Techniker, Plantermin und geschätzte Stunden eingeben. Der Techniker sieht den Auftrag sofort in seiner Liste."
+        },
+        {
+          "q": "Was bedeuten die einzelnen Status?",
+          "a": "Offen: noch nicht begonnen. In Produktion: Der Techniker hat den Start erfasst und meldet laufend die gefertigte Menge. Fertig: mit Endmengen und Endzeiten. Versandt: ist auf dem Weg zum Kunden."
+        },
+        {
+          "q": "Woher kommen Ausschuss und Zeitabweichung?",
+          "a": "Beim Starten erfasst der Techniker die Einsatzmenge, beim Abschließen die Gutmenge und die Endzeit. Sensobox berechnet den Ausschuss (verlorene Stück) und vergleicht Ist- mit Soll-Stunden."
+        },
+        {
+          "q": "Was steht unter „Abweichungen“?",
+          "a": "Abgeschlossene Aufträge mit mehr als 7 % Ausschuss oder mehr als 30 % längerer Dauer als geplant. So erkennen Sie rechtzeitig eine Maschine, ein Material oder einen Job, der aus dem Ruder läuft."
+        },
+        {
+          "q": "Kann ich Aufträge filtern oder exportieren?",
+          "a": "Ja. In der Auftragstabelle können Sie nach Nummer oder Kunde suchen, nach jeder Spalte filtern, die sichtbaren Spalten wählen und als CSV für die Buchhaltung exportieren."
+        },
+        {
+          "q": "Wie füge ich einen Kunden oder Techniker hinzu?",
+          "a": "Unter „Kunden“ oder „Techniker“ mit der Schaltfläche „+“. Jede Person erhält einen eigenen Zugang und sieht nur, was sie betrifft: der Techniker seine Aufträge, der Kunde seine Bestellungen."
+        }
+      ]
+    },
+    "technician": {
+      "subtitle": "Fertigungstechniker",
+      "items": [
+        {
+          "q": "Welche Aufträge sehe ich?",
+          "a": "Nur die Ihnen zugewiesenen, sortiert nach Plantermin. Neue Aufträge erscheinen, sobald das Büro sie anlegt."
+        },
+        {
+          "q": "Wie starte ich einen Auftrag?",
+          "a": "Auf der Auftragskarte auf „Starten“ tippen. Einsatzmenge (Bogen oder Meter, die Sie auf die Maschine laden) und Startzeit eingeben."
+        },
+        {
+          "q": "Wie erfasse ich die gefertigte Menge?",
+          "a": "Mit „Fortschritt erfassen“ aktualisieren Sie die bisher gefertigte Menge. Das Büro sieht sie sofort im Dashboard – ohne Anruf."
+        },
+        {
+          "q": "Wie schließe ich einen Auftrag ab?",
+          "a": "Mit „Abschließen“: Gutmenge und Endzeit. Sensobox berechnet den Ausschuss und die Ist-Zeit im Vergleich zur Soll-Zeit."
+        },
+        {
+          "q": "Wo erfasse ich das Material?",
+          "a": "Unter „Material“ mit Länge, Breite und Gewicht. So ist der Verbrauch jedes Jobs dokumentiert."
+        }
+      ]
+    },
+    "client": {
+      "subtitle": "Kunden",
+      "items": [
+        {
+          "q": "Was sehe ich im Portal?",
+          "a": "Ihre Bestellungen und ihren Stand: offen, in Produktion, fertig oder versandt – mit Mengen und Terminen."
+        },
+        {
+          "q": "Wie oft wird es aktualisiert?",
+          "a": "In Echtzeit: Sobald die Fertigung einen Fortschritt erfasst, sehen Sie ihn hier."
+        },
+        {
+          "q": "Kann ich meine Bestellungen nach Datum sehen?",
+          "a": "Ja. Im „Kalender“ steht der Plantermin jeder Bestellung, unter „Bestellungen pro Zeitraum“ ihre Entwicklung."
+        },
+        {
+          "q": "Wen frage ich zu einer Bestellung?",
+          "a": "Ihren gewohnten Ansprechpartner im Betrieb. Nennen Sie ihm die Bestellnummer aus der Liste."
+        }
+      ]
+    }
+  },
+  "weekly": {
+    "period": "Zeitraum",
+    "client": "Kunde",
+    "allClients": "Alle Kunden",
+    "worstWeek": "Schlechteste Woche",
+    "limitLine": "Rote Linie: Grenzwert {{n}}",
+    "periods": {
+      "lastMonth": "Letzter Monat",
+      "last3Months": "Letzte 3 Monate",
+      "last6Months": "Letzte 6 Monate",
+      "lastYear": "Letztes Jahr"
+    },
+    "quantities": {
+      "title": "Mengen und Ausschuss",
+      "subtitle": "Einsatzmenge gegenüber Gutmenge, pro Woche",
+      "series": {
+        "a": "Einsatzmenge",
+        "b": "Gutmenge"
+      },
+      "unitValue": "{{n}} Tsd. Stk.",
+      "ratioName": "Ausschuss",
+      "periodRatio": "Ausschuss im Zeitraum",
+      "mainTitle": "Einsatzmenge und Gutmenge",
+      "mainSubtitle": "In Tausend Stück",
+      "ratioTitle": "Ausschuss pro Woche"
+    },
+    "times": {
+      "title": "Prozesszeiten",
+      "subtitle": "Soll-Stunden gegenüber Ist-Stunden, pro Woche",
+      "series": {
+        "a": "Soll-Stunden",
+        "b": "Ist-Stunden"
+      },
+      "unitValue": "{{n}} Std.",
+      "ratioName": "Zeitabweichung",
+      "periodRatio": "Zeitabweichung im Zeitraum",
+      "mainTitle": "Soll- und Ist-Stunden",
+      "mainSubtitle": "In Maschinenstunden",
+      "ratioTitle": "Zeitabweichung pro Woche"
+    },
+    "orders": {
+      "title": "Aufträge pro Zeitraum",
+      "subtitle": "Pro Woche eingegangene Aufträge und bestellte Menge",
+      "series": {
+        "a": "Aufträge"
+      },
+      "ratioName": "Bestellte Menge (Tsd.)",
+      "mainTitle": "Aufträge pro Woche",
+      "mainSubtitle": "Anzahl Aufträge",
+      "ratioTitle": "Bestellte Menge (Tsd.)",
+      "ratioSubtitle": "Tausend Stück pro Woche",
+      "stats": {
+        "orders": "Aufträge",
+        "unitsOrdered": "Bestellte Menge",
+        "thousands": "{{n}} Tsd.",
+        "weeklyAverage": "Wochenmittel",
+        "clients": "Kunden"
+      }
+    }
+  },
+  "techOrders": {
+    "title": "Meine Aufträge",
+    "subtitle": "Ihre zugewiesenen Aufträge nach Priorität",
+    "tabTodo": "Offen",
+    "tabDone": "Erledigt",
+    "search": "Nr., Kunde oder Job suchen",
+    "finishedAt": "Fertig {{date}}",
+    "plannedAt": "Geplant {{date}}",
+    "start": "Starten",
+    "progress": "Fortschritt erfassen",
+    "finish": "Abschließen",
+    "empty": "Keine Aufträge in dieser Liste."
+  },
+  "pie": {
+    "title": "Verteilung nach Kunde",
+    "subtitle": "Stück pro Kunde"
+  }
+}

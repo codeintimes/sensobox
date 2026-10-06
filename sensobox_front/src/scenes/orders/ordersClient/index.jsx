@@ -1,4 +1,5 @@
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { fmtNumericDate, fmtDateTime, nf, pct } from "../../../utils/format";
 import { tokens } from "../../../theme";
 import { mockDataOrders } from "../../../data/mockData";
 import Header from "../../../components/Header";
@@ -214,7 +215,7 @@ const OrdersClient = () => {
       renderCell: isMobile
         ? (params) => (
           <Typography onClick={(event) => handleCellClick(params, event)}>
-            {params.value} Kg
+            {`${nf(params.value, 1)} kg`}
           </Typography>
         )
         : undefined, type: "number",
@@ -231,7 +232,7 @@ const OrdersClient = () => {
           </Typography>
         )
         : undefined, headerName: t("orders.columns.processingDate"), type: "dateTime", flex: 1.4, align: "center", headerAlign: "center",
-      valueGetter: (params) => params.row.processingDate ? new Date(params.row.processingDate).toLocaleString() : "",
+      valueGetter: (params) => fmtDateTime(params.row.processingDate),
       valueFormatter: ({ value }) => value,
     },
     {
@@ -309,37 +310,6 @@ const OrdersClient = () => {
     }
   };
 
-  const translationObject = {
-    toolbarDensity: t('DataGrid.toolbarDensity'),
-    toolbarDensityLabel: t('DataGrid.toolbarDensityLabel'),
-    toolbarDensityCompact: t('DataGrid.toolbarDensityCompact'),
-    toolbarDensityStandard: t('DataGrid.toolbarDensityStandard'),
-    toolbarDensityComfortable: t('DataGrid.toolbarDensityComfortable'),
-    toolbarColumns: t('DataGrid.toolbarColumns'),
-    toolbarColumnsLabel: t('DataGrid.toolbarColumnsLabel'),
-    toolbarFilters: t('DataGrid.toolbarFilters'),
-    toolbarFiltersLabel: t('DataGrid.toolbarFiltersLabel'),
-    toolbarFiltersTooltipShow: t('DataGrid.toolbarFiltersTooltipShow'),
-    toolbarFiltersTooltipHide: t('DataGrid.toolbarFiltersTooltipHide'),
-    toolbarExport: t('DataGrid.toolbarExport'),
-    toolbarExportLabel: t('DataGrid.toolbarExportLabel'),
-    toolbarExportCSV: t('DataGrid.toolbarExportCSV'),
-    toolbarExportPrint: t('DataGrid.toolbarExportPrint'),
-    toolbarExportExcel: t('DataGrid.toolbarExportExcel'),
-    columnMenuLabel: t('DataGrid.columnMenuLabel'),
-    columnMenuShowColumns: t('DataGrid.columnMenuShowColumns'),
-    columnMenuFilter: t('DataGrid.columnMenuFilter'),
-    columnMenuHideColumn: t('DataGrid.columnMenuHideColumn'),
-    columnMenuUnsort: t('DataGrid.columnMenuUnsort'),
-    columnMenuSortAsc: t('DataGrid.columnMenuSortAsc'),
-    columnMenuSortDesc: t('DataGrid.columnMenuSortDesc'),
-    noRowsLabel: t('DataGrid.noRowsLabel'),
-    footerRowSelected: t('DataGrid.footerRowSelected'),
-    footerRowSelected_plural: t('DataGrid.footerRowSelected_plural'),
-    footerTotalRows: t('DataGrid.footerTotalRows'),
-    footerTotalVisibleRows: t('DataGrid.footerTotalVisibleRows'),
-    rowsPerPage: t('DataGrid.rowsPerPage')
-  };
 
   const actionElements = (
     <Box display="flex" alignItems="center" gap={2} justifyContent="flex-end">

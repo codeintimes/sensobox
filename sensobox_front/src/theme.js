@@ -1,9 +1,16 @@
-// Tema de demo «Sensobox» (overlay fuera del repo): modo claro, tipografía Inter, paleta índigo + semánticos.
+// Tema «Sensobox»: modo claro, tipografía Inter, paleta índigo + semánticos.
 // Mantiene la misma API (tokens, themeSettings, useMode, ColorModeContext) que el theme.js original.
 import { createContext, useState, useMemo } from "react";
 import { createTheme } from "@mui/material/styles";
-import { esES as gridEsES } from "@mui/x-data-grid";
-import { esES as coreEsES } from "@mui/material/locale";
+import { esES as gridEsES, enUS as gridEnUS, nlNL as gridNlNL, deDE as gridDeDE, frFR as gridFrFR } from "@mui/x-data-grid";
+import { esES as coreEsES, enUS as coreEnUS, nlNL as coreNlNL, deDE as coreDeDE, frFR as coreFrFR } from "@mui/material/locale";
+import { useTranslation } from "react-i18next";
+import { currentLang } from "./i18n";
+
+// Textos propios de MUI (tablas, paginación, filtros) en el idioma activo
+const MUI_LOCALES = {
+  es: [gridEsES, coreEsES], en: [gridEnUS, coreEnUS], nl: [gridNlNL, coreNlNL], de: [gridDeDE, coreDeDE], fr: [gridFrFR, coreFrFR],
+};
 
 const PALETTE = {
   textContrast: { main: "#111827" },
@@ -69,6 +76,9 @@ export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 export const useMode = () => {
   const [mode, setMode] = useState("light");
   const colorMode = useMemo(() => ({ toggleColorMode: () => setMode((p) => p) }), []);
-  const theme = useMemo(() => createTheme(themeSettings(mode), gridEsES, coreEsES), [mode]);
+  const { i18n } = useTranslation();
+  const lang = currentLang();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const theme = useMemo(() => createTheme(themeSettings(mode), ...MUI_LOCALES[lang]), [mode, lang, i18n.language]);
   return [theme, colorMode];
 };

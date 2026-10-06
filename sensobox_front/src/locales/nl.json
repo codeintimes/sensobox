@@ -1,0 +1,527 @@
+{
+  "orders": {
+    "title": "Productieorders",
+    "subtitle": "Alle orders van de werkplaats, met actuele status",
+    "searchPlaceholder": "Zoek nr. of klant…",
+    "columns": {
+      "orderNumber": "Nr.",
+      "clientName": "Klant",
+      "companyName": "Bedrijf",
+      "productionQuantity": "Aantal",
+      "colors": "Inkten",
+      "processes": "Processen",
+      "specialFinishes": "Afwerking",
+      "technician": "Technicus",
+      "palletsNumber": "Pallets",
+      "processingDate": "Geplande datum",
+      "processingTime": "Geplande uren",
+      "initialQuantity": "Startaantal",
+      "finalQuantity": "Goed",
+      "createdAt": "Aangemaakt",
+      "updatedAt": "Bijgewerkt",
+      "status": "Status",
+      "edit": "Bewerken",
+      "opiInitialEdit": "Order starten",
+      "opiFinalEdit": "Order afronden",
+      "editSelector": "Order bewerken",
+      "delete": "Order verwijderen",
+      "download": "PDF downloaden",
+      "materialArea": "Oppervlakte",
+      "materialWeight": "Gewicht",
+      "quantityProcessed": "Gereed",
+      "material": "Materiaal",
+      "workName": "Opdracht",
+      "workType": "Type",
+      "processingDateInitial": "Start",
+      "processingDateFinal": "Einde",
+      "errorPercentage": "Uitval"
+    },
+    "status": {
+      "pending": "Open",
+      "processing": "In productie",
+      "processed": "Gereed",
+      "shipping": "Verzonden"
+    },
+    "material": {
+      "length_required": "Lengte is verplicht",
+      "length_positive": "Lengte moet een positief getal zijn",
+      "width_required": "Breedte is verplicht",
+      "width_positive": "Breedte moet een positief getal zijn",
+      "update_material_area": "Materiaal van de order",
+      "update_area_subtitle": "Oppervlakte en gewicht van het materiaal voor order {{orderNumber}}",
+      "length_meters": "Lengte (meter)",
+      "width_meters": "Breedte (meter)",
+      "calculated_area": "Berekende oppervlakte",
+      "update_fail": "Het materiaal kon niet worden opgeslagen",
+      "weight_kg": "Gewicht (kg)",
+      "weight_required": "Gewicht is verplicht",
+      "weight_positive": "Gewicht moet een positief getal zijn",
+      "submit_area_weight_order_id": "Materiaal opslaan"
+    },
+    "currentQuantity": {
+      "quantityProcessed": "Gereed aantal",
+      "title": "Voortgang registreren",
+      "subtitle": "Tot nu toe geproduceerde eenheden. Kantoor ziet het meteen.",
+      "buttons": {
+        "update": "Voortgang opslaan"
+      },
+      "soFar": "Je had {{done}} van {{total}} eenheden gedaan."
+    },
+    "dialog": {
+      "confirmDeleteTitle": "Verwijderen bevestigen",
+      "confirmDeleteText": "Weet je zeker dat je deze order wilt verwijderen? Dit kan niet ongedaan worden gemaakt.",
+      "cancel": "Annuleren",
+      "confirm": "Bevestigen"
+    }
+  },
+  "users": {
+    "title": "Gebruikers",
+    "subtitle": "Lijst met gebruikers",
+    "titleClients": "Klanten",
+    "subtitleClients": "Bedrijven waarvoor je produceert en hun contactpersoon",
+    "titleAdmins": "Beheer",
+    "subtitleAdmins": "Personen met volledige toegang",
+    "titleClientsEco": "ECO-klanten",
+    "subtitleClientsECO": "CO2-uitstoot per klant",
+    "titleEmployees": "Technici",
+    "subtitleEmployees": "Team op de werkvloer",
+    "role": {
+      "admin": "Beheerder",
+      "technician": "Technicus",
+      "client": "Klant"
+    },
+    "editClient": {
+      "updateUser": "Gebruiker bijwerken"
+    },
+    "editUser": {
+      "title": "Gebruiker bewerken",
+      "subtitle": "Werk de gegevens van de gebruiker bij"
+    },
+    "columns": {
+      "email": "E-mail",
+      "role": "Rol",
+      "name": "Naam",
+      "companyName": "Bedrijf",
+      "clientName": "Bedrijf",
+      "totalQuantity": "Totaal aantal",
+      "eco": "ECO-status",
+      "ecoEmissions": "CO2/eenheid",
+      "totalEmissions": "Totale CO2",
+      "createdAt": "Aangemaakt",
+      "updatedAt": "Bijgewerkt",
+      "password": "Wachtwoord",
+      "contactName": "Contactpersoon",
+      "contactPhone": "Telefoon",
+      "contactEmail": "Contact-e-mail",
+      "ecoStatus": "ECO-status"
+    },
+    "dialog": {
+      "confirmDeleteTitle": "Verwijderen bevestigen",
+      "confirmDeleteText": "Weet je zeker dat je deze gebruiker wilt verwijderen?",
+      "cancel": "Annuleren",
+      "confirm": "Bevestigen"
+    },
+    "ecoImageAlt": "ECO-afbeelding van de klant"
+  },
+  "createUser": {
+    "title": "Nieuwe gebruiker",
+    "subtitle": "Voeg iemand toe en kies wat diegene kan zien",
+    "name": "Naam",
+    "email": "E-mail",
+    "password": "Wachtwoord",
+    "role": "Rol",
+    "createButton": "Gebruiker aanmaken",
+    "clientName": "Bedrijfsnaam",
+    "contactName": "Contactpersoon",
+    "contactPhone": "Telefoon contactpersoon",
+    "contactEmail": "Contact-e-mail",
+    "messages": {
+      "companyMissing": "Je bedrijf is niet gevonden. Log opnieuw in.",
+      "emailExists": "Er bestaat al een gebruiker met dat e-mailadres.",
+      "createFail": "De gebruiker kon niet worden aangemaakt: {{error}}"
+    }
+  },
+  "roles": {
+    "admin": "Beheerder",
+    "technician": "Technicus",
+    "client": "Klant"
+  },
+  "dashboard": {
+    "title": "Productiedashboard",
+    "live": "Live · werkt zichzelf bij",
+    "loadError": "De gegevens konden niet worden geladen.",
+    "series": {
+      "waste": "Uitval",
+      "delay": "Vertraging",
+      "orders": "Orders"
+    },
+    "kpi": {
+      "orders": "Orders (30 dagen)",
+      "units": "Bestelde eenheden",
+      "thousand": "dzd.",
+      "waste": "Gemiddelde uitval",
+      "timeDeviation": "Tijdafwijking",
+      "vsMonthly": "t.o.v. maandgemiddelde",
+      "before": "eerder {{v}}"
+    },
+    "inProduction": {
+      "title": "Nu in productie",
+      "subtitle": "Wat technici registreren, zie je hier meteen",
+      "count_one": "{{count}} order",
+      "count_other": "{{count}} orders"
+    },
+    "deviations": {
+      "title": "Afwijkingen",
+      "subtitle": "Orders met uitval > {{waste}} of meer dan {{time}} extra tijd t.o.v. planning",
+      "none": "Geen afwijkingen in de afgelopen weken.",
+      "waste": "uitval {{v}}",
+      "time": "tijd {{v}}"
+    },
+    "charts": {
+      "wasteDelay": "Uitval en vertraging per week",
+      "wasteDelaySub": "Percentage t.o.v. planning · afgeronde orders",
+      "ordersPerWeek": "Orders per week",
+      "since": "Sinds {{date}}"
+    },
+    "upcoming": {
+      "title": "Komende orders",
+      "subtitle": "Nog niet gestart, op geplande datum"
+    },
+    "late": {
+      "title": "Te laat",
+      "subtitle": "Hadden al moeten starten en staan nog open",
+      "none": "Niets te laat.",
+      "days_one": "{{count}} dag",
+      "days_other": "{{count}} dagen"
+    }
+  },
+  "popUp": {
+    "login_error_title": "Inloggen mislukt",
+    "incorrect_password": "Onjuist e-mailadres of wachtwoord. Probeer het opnieuw.",
+    "close_button": "Sluiten",
+    "connection_error": "Geen verbinding met de server. Probeer het over enkele seconden opnieuw."
+  },
+  "login": {
+    "title": "Inloggen",
+    "email_label": "E-mail",
+    "email_error": "Ongeldig e-mailadres",
+    "email_required": "Verplicht",
+    "password_label": "Wachtwoord",
+    "password_required": "Verplicht",
+    "password_min": "Het wachtwoord moet minstens 8 tekens hebben",
+    "login_button": "Inloggen",
+    "togglePassword": "Wachtwoord tonen of verbergen"
+  },
+  "ecoForm": {
+    "ecoStatus": "ECO-status",
+    "ecoEmissions": "Uitstoot (g CO2/eenheid)",
+    "updateEcoData": "Bijwerken",
+    "activated": "Ingeschakeld",
+    "deactivated": "Uitgeschakeld"
+  },
+  "common": {
+    "enabled": "Ingeschakeld",
+    "disabled": "Uitgeschakeld",
+    "close": "Sluiten",
+    "notAvailable": "Deze functie is nog niet beschikbaar."
+  },
+  "createOrder": {
+    "title": "Nieuwe productieorder",
+    "subtitle": "Vul de gegevens in en de technicus ontvangt hem meteen",
+    "form": {
+      "orderNumber": "Ordernr.",
+      "clientName": "Klant",
+      "workName": "Opdracht",
+      "workType": "Soort opdracht",
+      "productionQuantity": "Aantal",
+      "colors": "Inkten",
+      "processes": "Processen",
+      "specialFinishes": "Speciale afwerking",
+      "palletsNumber": "Pallets",
+      "technician": "Technicus",
+      "processingDate": "Geplande datum",
+      "processingTime": "Geplande uren",
+      "createOrderButton": "Order aanmaken"
+    },
+    "messages": {
+      "createFail": "De order kon niet worden aangemaakt",
+      "companyNameMissing": "Je bedrijf is niet gevonden. Log opnieuw in.",
+      "orderNumberExists": "Er bestaat al een order met dat nummer."
+    }
+  },
+  "validation": {
+    "invalidEmail": "Ongeldig e-mailadres",
+    "requiredEmail": "E-mail is verplicht",
+    "passwordMin": "Het wachtwoord moet minstens 6 tekens hebben",
+    "requiredPassword": "Wachtwoord is verplicht",
+    "requiredContactName": "Naam contactpersoon is verplicht",
+    "requiredContactPhone": "Telefoon contactpersoon is verplicht",
+    "requiredContactEmail": "Contact-e-mail is verplicht",
+    "required": "Dit veld is verplicht",
+    "positive": "Het getal moet positief zijn",
+    "minZero": "Het getal moet nul of meer zijn",
+    "requiredName": "Naam is verplicht",
+    "invalidName": "Ongeldige naam: alleen letters, spaties, koppeltekens en apostrofs",
+    "requiredClientName": "Klantnaam is verplicht",
+    "invalidContactEmail": "Ongeldig contact-e-mailadres",
+    "passwordMin8": "Het wachtwoord moet minstens 8 tekens hebben"
+  },
+  "updateOrders": {
+    "title": "Order bewerken",
+    "subtitle": "Wijzig de gegevens van de order",
+    "edit": "Bijwerken",
+    "messages": {
+      "updateSuccess": "Order bijgewerkt",
+      "updateFail": "De order kon niet worden bijgewerkt"
+    }
+  },
+  "opiInitialForm": {
+    "title": "Order starten",
+    "subtitle": "Eenheden die je op de machine zet en starttijd",
+    "labels": {
+      "initialQuantity": "Startaantal",
+      "processingDateInitial": "Start"
+    },
+    "buttons": {
+      "update": "Order starten"
+    }
+  },
+  "createFinalOpi": {
+    "title": "Order afronden",
+    "subtitle": "Goede eenheden en eindtijd: uitval en werkelijke tijd worden vanzelf berekend",
+    "labels": {
+      "finalQuantity": "Goede eenheden",
+      "processingDateFinal": "Einde"
+    },
+    "buttons": {
+      "update": "Order afronden"
+    },
+    "startedWith": "Je bent gestart met {{n}} eenheden",
+    "wastePreview": "Uitval: {{n}} st. ({{pct}})"
+  },
+  "editClientEco": {
+    "headerTitle": "ECO-klant bewerken",
+    "headerSubtitle": "Uitstootgegevens van de klant",
+    "validationMessages": {
+      "ecoStatusRequired": "ECO-status is verplicht",
+      "ecoEmissionsRequired": "Uitstoot is verplicht"
+    }
+  },
+  "calendar": {
+    "title": "Kalender",
+    "subtitle": "Geplande, start- en einddatum van elke order",
+    "today": "Vandaag",
+    "month": "Maand",
+    "week": "Week",
+    "day": "Dag",
+    "list": "Lijst",
+    "more": "+{{n}} meer",
+    "event": {
+      "start": "Start nr. {{n}} · {{client}}",
+      "end": "Einde nr. {{n}} · {{client}}",
+      "planned": "Nr. {{n}} · {{client}}"
+    }
+  },
+  "app": {
+    "productionControl": "productiebeheer",
+    "clientPortal": "klantenportaal",
+    "logout": "Uitloggen",
+    "notifications": "Meldingen",
+    "openMenu": "Menu openen",
+    "language": "Taal",
+    "tagline": "Productiebeheer, zonder spreadsheets."
+  },
+  "nav": {
+    "production": "Productie",
+    "dashboard": "Dashboard",
+    "orders": "Orders",
+    "calendar": "Kalender",
+    "analysis": "Analyse",
+    "quantities": "Aantallen en uitval",
+    "ordersByPeriod": "Bestellingen",
+    "processTimes": "Procestijden",
+    "team": "Team",
+    "clients": "Klanten",
+    "technicians": "Technici",
+    "help": "Help",
+    "workshop": "Werkplaats",
+    "myOrders": "Mijn orders",
+    "myPurchaseOrders": "Mijn bestellingen",
+    "tracking": "Status volgen",
+    "clientOrdersByPeriod": "Bestellingen per periode"
+  },
+  "roleLong": {
+    "admin": "Beheer",
+    "technician": "Productietechnicus",
+    "client": "Klant"
+  },
+  "order": {
+    "numberLong": "Order nr. {{n}}",
+    "numberShort": "Nr. {{n}}",
+    "units": "{{n}} st.",
+    "hours": "{{n}} u"
+  },
+  "table": {
+    "new": "Nieuw",
+    "newOrder": "Nieuwe order",
+    "newClient": "Nieuwe klant",
+    "newTechnician": "Nieuwe technicus",
+    "newUser": "Nieuwe gebruiker",
+    "more": "Meer acties"
+  },
+  "faq": {
+    "title": "Veelgestelde vragen",
+    "admin": {
+      "subtitle": "Beheer",
+      "items": [
+        {
+          "q": "Hoe maak ik een productieorder aan?",
+          "a": "Klik in „Orders” op de knop „+”. Vul de klant, de opdracht, het aantal, de processen en afwerkingen, de verantwoordelijke technicus, de geplande datum en de geschatte uren in. De technicus ziet de order meteen in zijn lijst."
+        },
+        {
+          "q": "Wat betekent elke status?",
+          "a": "Open: nog niet gestart. In productie: de technicus heeft de start geregistreerd en noteert wat er geproduceerd wordt. Gereed: met definitieve aantallen en tijden. Verzonden: is onderweg naar de klant."
+        },
+        {
+          "q": "Waar komen uitval en tijdafwijking vandaan?",
+          "a": "Bij het starten van de order noteert de technicus het startaantal; bij het afronden de goede eenheden en de eindtijd. Sensobox berekent de uitval (verloren eenheden) en vergelijkt de werkelijke uren met de geplande uren."
+        },
+        {
+          "q": "Wat staat er bij „Afwijkingen”?",
+          "a": "Afgeronde orders met meer dan 7 % uitval of die meer dan 30 % langer duurden dan gepland. Zo zie je op tijd een machine, materiaal of opdracht die afwijkt."
+        },
+        {
+          "q": "Kan ik orders filteren of exporteren?",
+          "a": "Ja. In de ordertabel kun je zoeken op nummer of klant, op elke kolom filteren, kiezen welke kolommen je ziet en exporteren naar CSV voor de boekhouding."
+        },
+        {
+          "q": "Hoe voeg ik een klant of technicus toe?",
+          "a": "Via „Klanten” of „Technici”, met de knop „+”. Iedereen krijgt een eigen login en ziet alleen wat voor hem bedoeld is: de technicus zijn orders, de klant zijn bestellingen."
+        }
+      ]
+    },
+    "technician": {
+      "subtitle": "Productietechnici",
+      "items": [
+        {
+          "q": "Welke orders zie ik?",
+          "a": "Alleen de orders die aan jou zijn toegewezen, gesorteerd op geplande datum. Nieuwe orders verschijnen zodra kantoor ze aanmaakt."
+        },
+        {
+          "q": "Hoe start ik een order?",
+          "a": "Klik op de orderkaart op „Starten”. Noteer het startaantal (vellen of meters die je op de machine zet) en de starttijd."
+        },
+        {
+          "q": "Hoe registreer ik wat ik geproduceerd heb?",
+          "a": "Met „Voortgang registreren” werk je het aantal gereed bij. Kantoor ziet het meteen op het dashboard, zonder te bellen."
+        },
+        {
+          "q": "Hoe rond ik een order af?",
+          "a": "Met „Afronden”: goede eenheden en eindtijd. Sensobox berekent de uitval en de werkelijke tijd ten opzichte van de geplande tijd."
+        },
+        {
+          "q": "Waar noteer ik het materiaal?",
+          "a": "Bij „Materiaal”, met lengte, breedte en gewicht. Zo wordt het verbruik van elke opdracht vastgelegd."
+        }
+      ]
+    },
+    "client": {
+      "subtitle": "Klanten",
+      "items": [
+        {
+          "q": "Wat zie ik in het portaal?",
+          "a": "Je bestellingen en hoe ver elke bestelling is: open, in productie, gereed of verzonden, met aantallen en datums."
+        },
+        {
+          "q": "Hoe vaak wordt het bijgewerkt?",
+          "a": "Realtime: zodra de werkplaats voortgang registreert, zie je het hier."
+        },
+        {
+          "q": "Kan ik mijn bestellingen per datum bekijken?",
+          "a": "Ja. In „Kalender” zie je de geplande datum van elke bestelling en in „Bestellingen per periode” het verloop."
+        },
+        {
+          "q": "Bij wie kan ik terecht met vragen over een bestelling?",
+          "a": "Bij je vaste contactpersoon in de werkplaats. Geef het bestelnummer uit de lijst door."
+        }
+      ]
+    }
+  },
+  "weekly": {
+    "period": "Periode",
+    "client": "Klant",
+    "allClients": "Alle klanten",
+    "worstWeek": "Slechtste week",
+    "limitLine": "Rode lijn: grens van {{n}}",
+    "periods": {
+      "lastMonth": "Afgelopen maand",
+      "last3Months": "Afgelopen 3 maanden",
+      "last6Months": "Afgelopen 6 maanden",
+      "lastYear": "Afgelopen jaar"
+    },
+    "quantities": {
+      "title": "Aantallen en uitval",
+      "subtitle": "Startaantal tegenover goede eenheden, per week",
+      "series": {
+        "a": "Startaantal",
+        "b": "Goede eenheden"
+      },
+      "unitValue": "{{n}} dzd. st.",
+      "ratioName": "Uitval",
+      "periodRatio": "Uitval in periode",
+      "mainTitle": "Startaantal en goede eenheden",
+      "mainSubtitle": "In duizenden eenheden",
+      "ratioTitle": "Uitval per week"
+    },
+    "times": {
+      "title": "Procestijden",
+      "subtitle": "Geplande uren tegenover werkelijke uren, per week",
+      "series": {
+        "a": "Geplande uren",
+        "b": "Werkelijke uren"
+      },
+      "unitValue": "{{n}} u",
+      "ratioName": "Tijdafwijking",
+      "periodRatio": "Tijdafwijking in periode",
+      "mainTitle": "Geplande en werkelijke uren",
+      "mainSubtitle": "In machine-uren",
+      "ratioTitle": "Tijdafwijking per week"
+    },
+    "orders": {
+      "title": "Bestellingen per periode",
+      "subtitle": "Elke week ontvangen bestellingen en bestelde eenheden",
+      "series": {
+        "a": "Bestellingen"
+      },
+      "ratioName": "Bestelde eenheden (duizenden)",
+      "mainTitle": "Bestellingen per week",
+      "mainSubtitle": "Aantal bestellingen",
+      "ratioTitle": "Bestelde eenheden (duizenden)",
+      "ratioSubtitle": "Duizenden eenheden per week",
+      "stats": {
+        "orders": "Bestellingen",
+        "unitsOrdered": "Bestelde eenheden",
+        "thousands": "{{n}} dzd.",
+        "weeklyAverage": "Weekgemiddelde",
+        "clients": "Klanten"
+      }
+    }
+  },
+  "techOrders": {
+    "title": "Mijn orders",
+    "subtitle": "Wat aan jou is toegewezen, op prioriteit",
+    "tabTodo": "Te doen",
+    "tabDone": "Gereed",
+    "search": "Zoek nr., klant of opdracht",
+    "finishedAt": "Gereed {{date}}",
+    "plannedAt": "Gepland {{date}}",
+    "start": "Starten",
+    "progress": "Voortgang registreren",
+    "finish": "Afronden",
+    "empty": "Geen orders in deze lijst."
+  },
+  "pie": {
+    "title": "Verdeling per klant",
+    "subtitle": "Eenheden per klant"
+  }
+}

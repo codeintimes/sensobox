@@ -77,7 +77,7 @@ const ClientsEcoClient = () => {
           <SearchIcon />
         </IconButton>
       </Box>
-      <IconButton color="primary" onClick={() => alert("Create user functionality to be implemented")}>
+      <IconButton color="primary" onClick={() => alert(t("common.notAvailable"))}>
         <AddIcon />
       </IconButton>
     </Box>
@@ -113,9 +113,9 @@ const ClientsEcoClient = () => {
               <Typography sx={{ mt: 2 }}>
                 {t("users.columns.totalEmissions")}: {selectedUser.totalEmissions}
               </Typography>
-              <img src='https://img.freepik.com/vector-premium/diseno-plantilla-logotipo-caja-carton_316488-1516.jpg' alt="Eco Image" style={{ width: '100%', marginTop: 20 }} />
+              <img src='https://img.freepik.com/vector-premium/diseno-plantilla-logotipo-caja-carton_316488-1516.jpg' alt={t("users.ecoImageAlt")} style={{ width: '100%', marginTop: 20 }} />
               <Button onClick={handleCloseModal} startIcon={<CloseIcon />} sx={{ mt: 2 }}>
-                Close
+                {t("common.close")}
               </Button>
             </>
           )}
