@@ -1,258 +1,74 @@
+// Tema de demo «Sensobox» (overlay fuera del repo): modo claro, tipografía Inter, paleta índigo + semánticos.
+// Mantiene la misma API (tokens, themeSettings, useMode, ColorModeContext) que el theme.js original.
 import { createContext, useState, useMemo } from "react";
 import { createTheme } from "@mui/material/styles";
-export const tokens = (mode) => ({
-  ...(mode === "dark"
-    ? {
-      textContrast: {
-        main: "#ffffff",
-      },
-      orangeSoft: {
-        light: "#FFDAB9",
-        main: "#FFB347",
-        dark: "#FFA500",
-      },
-      yellowSoft: {
-        light: "#FFFFE0",
-        main: "#FFFACD",
-        dark: "#FAFAD2",
-      },
-      redSoft: {
-        light: "#FFC1C1",
-        main: "#FF9999",
-        dark: "#FF6B6B",
-      },
-      purpleSoft: {
-        light: "#E6E6FA",
-        main: "#D8BFD8",
-        dark: "#DA70D6",
-      },
-      grey: {
-        100: "#e0e0e0",
-        200: "#c2c2c2",
-        300: "#a3a3a3",
-        400: "#858585",
-        500: "#666666",
-        600: "#525252",
-        700: "#3d3d3d",
-        800: "#292929",
-        900: "#141414",
-      },
-      primary: {
-        100: "#d0d1d5",
-        200: "#a1a4ab",
-        300: "#727681",
-        400: "#1F2A40",
-        500: "#141b2d",
-        600: "#101624",
-        700: "#0c101b",
-        800: "#080b12",
-        900: "#040509",
-      },
-      greenAccent: {
-        100: "#dbf5ee",
-        200: "#b7ebde",
-        300: "#94e2cd",
-        400: "#70d8bd",
-        500: "#4cceac",
-        600: "#3da58a",
-        700: "#2e7c67",
-        800: "#1e5245",
-        900: "#0f2922",
-      },
-      redAccent: {
-        100: "#f8dcdb",
-        200: "#f1b9b7",
-        300: "#e99592",
-        400: "#e2726e",
-        500: "#db4f4a",
-        600: "#af3f3b",
-        700: "#832f2c",
-        800: "#58201e",
-        900: "#2c100f",
-      },
-      blueAccent: {
-        100: "#e1e2fe",
-        200: "#c3c6fd",
-        300: "#a4a9fc",
-        400: "#868dfb",
-        500: "#6870fa",
-        600: "#535ac8",
-        700: "#3e4396",
-        800: "#2a2d64",
-        900: "#151632",
-      },
-    }
-    : {
-      textContrast: {
-        main: "#000000",
-      },
-      orangeSoft: {
-        light: "#FFDAB9",
-        main: "#FFB347",
-        dark: "#FFA500",
-      },
-      yellowSoft: {
-        light: "#FFFFE0",
-        main: "#FFFACD",
-        dark: "#FAFAD2",
-      },
-      redSoft: {
-        light: "#FFC1C1",
-        main: "#FF9999",
-        dark: "#FF6B6B",
-      },
-      purpleSoft: {
-        light: "#E6E6FA",
-        main: "#D8BFD8",
-        dark: "#DA70D6",
-      },
-      grey: {
-        100: "#141414",
-        200: "#292929",
-        300: "#3d3d3d",
-        400: "#525252",
-        500: "#666666",
-        600: "#858585",
-        700: "#a3a3a3",
-        800: "#c2c2c2",
-        900: "#e0e0e0",
-      },
-      primary: {
-        100: "#040509",
-        200: "#080b12",
-        300: "#0c101b",
-        400: "#f2f0f0",
-        500: "#141b2d",
-        600: "#1F2A40",
-        700: "#727681",
-        800: "#a1a4ab",
-        900: "#d0d1d5",
-      },
-      greenAccent: {
-        100: "#0f2922",
-        200: "#1e5245",
-        300: "#2e7c67",
-        400: "#3da58a",
-        500: "#4cceac",
-        600: "#70d8bd",
-        700: "#94e2cd",
-        800: "#b7ebde",
-        900: "#dbf5ee",
-      },
-      redAccent: {
-        100: "#2c100f",
-        200: "#58201e",
-        300: "#832f2c",
-        400: "#af3f3b",
-        500: "#db4f4a",
-        600: "#e2726e",
-        700: "#e99592",
-        800: "#f1b9b7",
-        900: "#f8dcdb",
-      },
-      blueAccent: {
-        100: "#151632",
-        200: "#2a2d64",
-        300: "#3e4396",
-        400: "#535ac8",
-        500: "#6870fa",
-        600: "#868dfb",
-        700: "#a4a9fc",
-        800: "#c3c6fd",
-        900: "#e1e2fe",
-      },
-    }),
-});
+import { esES as gridEsES } from "@mui/x-data-grid";
+import { esES as coreEsES } from "@mui/material/locale";
 
+const PALETTE = {
+  textContrast: { main: "#111827" },
+  orangeSoft: { light: "#FFEDD5", main: "#FB923C", dark: "#EA580C" },
+  yellowSoft: { light: "#FEF9C3", main: "#FDE047", dark: "#CA8A04" },
+  redSoft: { light: "#FEE2E2", main: "#F87171", dark: "#DC2626" },
+  purpleSoft: { light: "#EDE9FE", main: "#A78BFA", dark: "#7C3AED" },
+  // texto: 100 = el más oscuro
+  grey: { 100: "#111827", 200: "#374151", 300: "#6B7280", 400: "#9CA3AF", 500: "#D1D5DB", 600: "#E5E7EB", 700: "#F3F4F6", 800: "#F9FAFB", 900: "#FFFFFF" },
+  // superficies: 400 = tarjeta, 500 = fondo de página / separadores
+  primary: { 100: "#111827", 200: "#1F2937", 300: "#374151", 400: "#FFFFFF", 500: "#F3F4F8", 600: "#E9EBF2", 700: "#D9DCE6", 800: "#C3C7D4", 900: "#A9AEBF" },
+  // éxito / acento positivo (esmeralda)
+  greenAccent: { 100: "#ECFDF5", 200: "#D1FAE5", 300: "#059669", 400: "#10B981", 500: "#059669", 600: "#059669", 700: "#D1FAE5", 800: "#A7F3D0", 900: "#ECFDF5" },
+  // alerta / negativo (coral)
+  redAccent: { 100: "#FEF2F2", 200: "#FEE2E2", 300: "#F87171", 400: "#EF4444", 500: "#DC2626", 600: "#DC2626", 700: "#FECACA", 800: "#FEE2E2", 900: "#FEF2F2" },
+  // marca (índigo)
+  blueAccent: { 100: "#EEF2FF", 200: "#E0E7FF", 300: "#A5B4FC", 400: "#6366F1", 500: "#4F46E5", 600: "#4338CA", 700: "#EEF2FF", 800: "#E0E7FF", 900: "#EEF2FF" },
+  orangeAccent: { 400: "#F59E0B", 500: "#D97706" },
+};
 
-export const themeSettings = (mode) => {
-  const colors = tokens(mode);
+export const tokens = () => PALETTE;
+
+const FONT = ["Inter", "system-ui", "-apple-system", "Segoe UI", "sans-serif"].join(",");
+
+export const themeSettings = () => {
+  const c = PALETTE;
   return {
     palette: {
-      mode: mode,
-      ...(mode === "dark"
-        ? {
-
-          primary: {
-            main: colors.primary[500],
-          },
-          secondary: {
-            main: colors.greenAccent[500],
-          },
-          neutral: {
-            dark: colors.grey[700],
-            main: colors.grey[500],
-            light: colors.grey[100],
-          },
-          background: {
-            default: colors.primary[500],
-          },
-        }
-        : {
-
-          primary: {
-            main: colors.primary[100],
-          },
-          secondary: {
-            main: colors.greenAccent[500],
-          },
-          neutral: {
-            dark: colors.grey[700],
-            main: colors.grey[500],
-            light: colors.grey[100],
-          },
-          background: {
-            default: "#fcfcfc",
-          },
-        }),
+      mode: "light",
+      primary: { main: c.blueAccent[500], dark: c.blueAccent[600], contrastText: "#fff" },
+      secondary: { main: c.blueAccent[500] },
+      success: { main: "#059669" },
+      error: { main: "#DC2626" },
+      neutral: { dark: c.grey[200], main: c.grey[300], light: c.grey[700] },
+      background: { default: c.primary[500], paper: "#FFFFFF" },
+      text: { primary: c.grey[100], secondary: c.grey[300] },
+      divider: c.grey[600],
     },
+    shape: { borderRadius: 10 },
     typography: {
-      fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-      fontSize: 12,
-      h1: {
-        fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: 40,
-      },
-      h2: {
-        fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: 32,
-      },
-      h3: {
-        fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: 24,
-      },
-      h4: {
-        fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: 20,
-      },
-      h5: {
-        fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: 16,
-      },
-      h6: {
-        fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: 14,
-      },
+      fontFamily: FONT,
+      fontSize: 13,
+      h1: { fontFamily: FONT, fontSize: 34, fontWeight: 700, letterSpacing: "-0.02em" },
+      h2: { fontFamily: FONT, fontSize: 26, fontWeight: 700, letterSpacing: "-0.02em" },
+      h3: { fontFamily: FONT, fontSize: 21, fontWeight: 700, letterSpacing: "-0.01em" },
+      h4: { fontFamily: FONT, fontSize: 18, fontWeight: 600 },
+      h5: { fontFamily: FONT, fontSize: 14.5, fontWeight: 500 },
+      h6: { fontFamily: FONT, fontSize: 13, fontWeight: 600 },
+      button: { textTransform: "none", fontWeight: 600 },
+    },
+    components: {
+      MuiButton: { styleOverrides: { root: { borderRadius: 10, boxShadow: "none" } } },
+      MuiPaper: { styleOverrides: { root: { backgroundImage: "none" } } },
+      MuiOutlinedInput: { styleOverrides: { root: { borderRadius: 10, backgroundColor: "#fff" } } },
+      MuiFilledInput: { styleOverrides: { root: { borderRadius: 10 } } },
+      MuiAccordion: { styleOverrides: { root: { borderRadius: 12, boxShadow: "0 1px 2px rgba(16,24,40,.06)", border: "1px solid #E5E7EB", "&:before": { display: "none" }, marginBottom: 12 } } },
     },
   };
 };
 
-
-export const ColorModeContext = createContext({
-  toggleColorMode: () => { },
-});
+export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
 export const useMode = () => {
-  const [mode, setMode] = useState("dark");
-
-  const colorMode = useMemo(
-    () => ({
-      toggleColorMode: () =>
-        setMode((prev) => (prev === "light" ? "dark" : "light")),
-    }),
-    []
-  );
-
-  const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+  const [mode, setMode] = useState("light");
+  const colorMode = useMemo(() => ({ toggleColorMode: () => setMode((p) => p) }), []);
+  const theme = useMemo(() => createTheme(themeSettings(mode), gridEsES, coreEsES), [mode]);
   return [theme, colorMode];
 };

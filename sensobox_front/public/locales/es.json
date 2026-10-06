@@ -1,49 +1,49 @@
 {
   "orders": {
-    "title": "PEDIDOS",
-    "subtitle": "Lista de pedidos",
-    "searchPlaceholder": "Buscar...",
+    "title": "Órdenes de producción",
+    "subtitle": "Todas las órdenes del taller, con su estado al día",
+    "searchPlaceholder": "Buscar nº o cliente…",
     "columns": {
-      "orderNumber": "N. Orden",
+      "orderNumber": "Nº",
       "clientName": "Cliente",
       "companyName": "Proveedor",
       "productionQuantity": "Cantidad",
-      "colors": "Colores",
+      "colors": "Tintas",
       "processes": "Procesos",
-      "specialFinishes": "Acab. Esp.",
+      "specialFinishes": "Acabado",
       "technician": "Técnico",
-      "palletsNumber": "Pallets",
-      "processingDate": "Fecha procesa.",
-      "processingTime": "Duración",
-      "initialQuantity": "U. Inicial",
-      "finalQuantity": "U. Final",
-      "quantityRate": "T. cantidad",
-      "processingTimeRate": "T. proceso",
+      "palletsNumber": "Palés",
+      "processingDate": "Fecha prevista",
+      "processingTime": "Horas previstas",
+      "initialQuantity": "U. inicio",
+      "finalQuantity": "U. buenas",
+      "quantityRate": "Rendimiento",
+      "processingTimeRate": "Rend. tiempo",
       "createdAt": "Creado",
       "updatedAt": "Actualizado",
       "status": "Estado",
       "edit": "Editar",
-      "opiInitialEdit": "Iniciar pedido",
-      "opiFinalEdit": "Finalizar pedido",
-      "editSelector": "Editar pedido",
-      "delete": "Borrar pedido",
+      "opiInitialEdit": "Iniciar orden",
+      "opiFinalEdit": "Finalizar orden",
+      "editSelector": "Editar orden",
+      "delete": "Borrar orden",
       "download": "Descargar PDF",
-      "editMaterial": "Editar material",
-      "materialArea": "Area",
+      "editMaterial": "Material",
+      "materialArea": "Superficie",
       "materialWeight": "Peso",
-      "quantityProcessed": "C. procesada",
-      "material": "Editar material",
-      "workName": "N. trabajo",
-      "workType": "T. trabajo",
-      "processingDateInitial": "Fecha inicio",
-      "processingDateFinal": "Fecha finalización",
-      "errorPercentage": "Perdidas"
+      "quantityProcessed": "Hecho",
+      "material": "Material",
+      "workName": "Trabajo",
+      "workType": "Tipo",
+      "processingDateInitial": "Inicio",
+      "processingDateFinal": "Fin",
+      "errorPercentage": "Merma"
     },
     "status": {
       "pending": "Pendiente",
-      "processing": "Procesando",
-      "processed": "Procesado",
-      "shipping": "Enviando"
+      "processing": "En producción",
+      "processed": "Terminada",
+      "shipping": "Enviada"
     },
     "material": {
       "length_required": "La longitud es requerida",
@@ -65,11 +65,11 @@
       "submit_area_weight_order_id": "Actualizar"
     },
     "currentQuantity": {
-      "quantityProcessed": "Cantidad Actual",
-      "title": "Editar Cantidad Actual",
-      "subtitle": "Editar la cantidad actual del pedido",
+      "quantityProcessed": "Unidades hechas",
+      "title": "Cantidad procesada",
+      "subtitle": "Anota las unidades hechas hasta ahora",
       "buttons": {
-        "update": "Actualizar"
+        "update": "Guardar avance"
       },
       "quantity_required": "La cantidad es requerida",
       "quantity_positive": "La cantidad debe ser un número positivo"
@@ -85,13 +85,13 @@
     "title": "Usuarios",
     "subtitle": "Lista de usuarios",
     "titleClients": "Clientes",
-    "subtitleClients": "Lista de clientes",
-    "titleAdmins": "Admins",
-    "subtitleAdmins": "Lista de admins",
+    "subtitleClients": "Empresas a las que fabricas y su persona de contacto",
+    "titleAdmins": "Administración",
+    "subtitleAdmins": "Personas con acceso completo",
     "titleClientsEco": "ECO/Clientes",
     "subtitleClientsECO": "Lista ECO de clientes",
-    "titleEmployees": "Empleados",
-    "subtitleEmployees": "Lista de empleados",
+    "titleEmployees": "Técnicos",
+    "subtitleEmployees": "Equipo de taller",
     "loadingOrNoUser": "Cargando o ningún usuario seleccionado",
     "role": {
       "admin": "Administrador",
@@ -120,7 +120,7 @@
       "role": "Rol",
       "name": "Nombre",
       "companyName": "Empresa",
-      "clientName": "Empresa cliente",
+      "clientName": "Empresa",
       "totalQuantity": "Cantidad Total",
       "eco": "Estado Ecológico",
       "ecoEmissions": "CO2/Unidad",
@@ -130,9 +130,9 @@
       "password": "Contraseña",
       "edit": "Editar",
       "delete": "Eliminar",
-      "contactName": "Nombre Contacto",
-      "contactPhone": "Teléfono de contacto",
-      "contactEmail": "Email de contacto",
+      "contactName": "Contacto",
+      "contactPhone": "Teléfono",
+      "contactEmail": "Correo de contacto",
       "ecoStatus": "Estado Ecológico"
     },
     "dialog": {
@@ -308,13 +308,13 @@
   "login": {
     "title": "INICIO DE SESIÓN",
     "subtitle": "Accede a tu cuenta",
-    "email_label": "Dirección de Email",
+    "email_label": "Correo electrónico",
     "email_error": "Dirección de email inválida",
     "email_required": "Requerido",
     "password_label": "Contraseña",
     "password_required": "Requerido",
     "password_min": "La contraseña debe tener al menos 8 caracteres",
-    "login_button": "Iniciar Sesión",
+    "login_button": "Entrar",
     "login_error_title": "Error de Inicio de Sesión",
     "incorrect_password": "Contraseña incorrecta. Por favor, inténtalo de nuevo.",
     "close_button": "Cerrar",
@@ -338,22 +338,22 @@
     "français": "Francés"
   },
   "createOrder": {
-    "title": "Crear Pedido",
-    "subtitle": "Completa los detalles para crear un nuevo pedido",
+    "title": "Nueva orden de producción",
+    "subtitle": "Rellena los datos y el técnico la recibe al momento",
     "form": {
-      "orderNumber": "Número de Pedido",
-      "clientName": "Nombre del Cliente",
-      "workName": "Nombre del Trabajo",
-      "workType": "Tipo de Trabajo",
-      "productionQuantity": "Cantidad de Producción",
-      "colors": "Colores",
+      "orderNumber": "Nº de orden",
+      "clientName": "Cliente",
+      "workName": "Trabajo",
+      "workType": "Tipo de trabajo",
+      "productionQuantity": "Cantidad",
+      "colors": "Tintas",
       "processes": "Procesos",
-      "specialFinishes": "Acabados Especiales",
-      "palletsNumber": "Número de Paletas",
+      "specialFinishes": "Acabado especial",
+      "palletsNumber": "Palés",
       "technician": "Técnico",
-      "processingDate": "Fecha de Procesos",
-      "processingTime": "Tiempo de Procesos",
-      "createOrderButton": "Crear Pedido"
+      "processingDate": "Fecha prevista",
+      "processingTime": "Horas previstas",
+      "createOrderButton": "Crear orden"
     },
     "messages": {
       "createSuccess": "Pedido creado exitosamente",
@@ -371,11 +371,11 @@
     "last6Months": "Últimos 6 meses",
     "lastYear": "Último año",
     "last2Years": "Últimos 2 años",
-    "graphTitle": "Gráfico de Procesos",
-    "graphSubtitle": "Tiempo de Procesos del gráfico",
-    "finalProcessingTime": "T. Proceso Final",
-    "initialProcessingTime": "T. Proceso Inicial",
-    "processingTimeRate": "Tasa T. Proceso",
+    "graphTitle": "Tiempos de proceso",
+    "graphSubtitle": "Horas previstas frente a horas reales, por semana",
+    "finalProcessingTime": "Horas reales",
+    "initialProcessingTime": "Horas previstas",
+    "processingTimeRate": "Rendimiento",
     "finalProcessingTimeTitle": "Tiempo de Proceso Final",
     "initialProcessingTimeTitle": "Tiempo de Proceso Inicial",
     "processingTimeRateTitle": "Tasa de Tiempo de Proceso",
@@ -390,22 +390,22 @@
     "last6Months": "Últimos 6 meses",
     "lastYear": "Último año",
     "last2Years": "Últimos 2 años",
-    "graphTitle": "Gráfico de Órdenes",
-    "graphSubtitle": "Tiempo de Procesos del gráfico",
+    "graphTitle": "Pedidos por periodo",
+    "graphSubtitle": "Número de pedidos recibidos",
     "finalProcessingTime": "Tiempo de Procesos Final",
     "initialProcessingTime": "Tiempo de Procesos Inicial",
     "processingTimeRate": "Tasa de Tiempo de Procesos",
-    "ordersQuantity": "Cantidad de ordenes",
+    "ordersQuantity": "Pedidos",
     "trendLineInitial": "Tendencia de Cantidad Inicial",
     "generalView": "Todos los clientes"
   },
   "quantityGraph": {
     "periodLabel": "Periodo",
-    "initialQuantity": "Cantidad Inicial",
+    "initialQuantity": "Unidades de partida",
     "trendLineInitial": "Tendencia de Cantidad Inicial",
-    "finalQuantity": "Cantidad Final",
+    "finalQuantity": "Unidades buenas",
     "trendLineFinal": "Tendencia de Cantidad Final",
-    "quantityRate": "Tasa de Cantidades",
+    "quantityRate": "Rendimiento",
     "trendLineQuantityRate": "Tendencia de Tasa de Cantidad",
     "lastDay": "Último día",
     "lastWeek": "Última semana",
@@ -414,8 +414,8 @@
     "last6Months": "Últimos 6 meses",
     "lastYear": "Último año",
     "last2Years": "Últimos 2 años",
-    "graphTitle": "Gráfico de Cantidades",
-    "graphSubtitle": "Gráfico de cantidades procesadas iniciales/finales",
+    "graphTitle": "Cantidades y merma",
+    "graphSubtitle": "Unidades de partida frente a unidades buenas, por semana",
     "generalView": "Todos los clientes"
   },
   "validation": {
@@ -431,8 +431,8 @@
     "minZero": "El número debe ser cero o más"
   },
   "sidebar": {
-    "dashboard": "Dashboard",
-    "orders": "Pedidos",
+    "dashboard": "Panel",
+    "orders": "Órdenes",
     "calendar": "Calendario",
     "quantityGraph": "Gráfico de Cantidades",
     "processingTimeGraph": "Gráfico de Procesado",
@@ -440,8 +440,8 @@
     "ordersGraph": "Gráfica de Pedidos"
   },
   "updateOrders": {
-    "title": "Actualizar Pedido",
-    "subtitle": "Actualiza los detalles del pedido",
+    "title": "Editar orden",
+    "subtitle": "Cambia los datos de la orden",
     "edit": "Actualizar",
     "messages": {
       "updateSuccess": "Pedido actualizado con éxito",
@@ -451,14 +451,14 @@
     }
   },
   "opiInitialForm": {
-    "title": "Actualizar Inicio OPI",
-    "subtitle": "Actualizar el proceso inicial de OPI",
+    "title": "Iniciar orden",
+    "subtitle": "Unidades de partida y hora de inicio",
     "labels": {
-      "initialQuantity": "Cantidad Inicial",
-      "processingDateInitial": "Fecha de inicio del proceso"
+      "initialQuantity": "Unidades de partida",
+      "processingDateInitial": "Inicio"
     },
     "buttons": {
-      "update": "Actualizar"
+      "update": "Iniciar"
     },
     "errors": {
       "initialQuantityPositive": "La cantidad inicial debe ser un número positivo",
@@ -466,14 +466,14 @@
     }
   },
   "createFinalOpi": {
-    "title": "Crear OPI Final",
-    "subtitle": "Crear nuevo OPI final",
+    "title": "Finalizar orden",
+    "subtitle": "Unidades buenas y hora de fin",
     "labels": {
-      "finalQuantity": "Cantidad Final",
-      "processingDateFinal": "Fecha de Procesos Final"
+      "finalQuantity": "Unidades buenas",
+      "processingDateFinal": "Fin"
     },
     "buttons": {
-      "update": "Actualizar"
+      "update": "Finalizar"
     },
     "errors": {
       "finalQuantityRequired": "La cantidad final es requerida",

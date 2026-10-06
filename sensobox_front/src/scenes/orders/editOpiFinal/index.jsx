@@ -1,116 +1,49 @@
-import { Box, Button, TextField, IconButton } from "@mui/material";
-import { Formik } from "formik";
-import * as yup from "yup";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import Header from "../../../components/Header";
-import { useLocation, useNavigate } from 'react-router-dom';
+// Finalizar orden (overlay fuera del repo): unidades buenas y hora de fin; el backend calcula merma y tiempo real.
+import React, { useState } from "react";
+import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import axios from "axios";
+import Header from "../../../components/Header";
 import { API_ORDERS } from "../../../config/config";
-import axios from 'axios';
-import { useTranslation } from 'react-i18next';
-import { useParams } from "react-router-dom";
+import { OrderSummary, FormCard, nowLocal, nf } from "../../../components/OrderBits";
 
-const Form = () => {
-  const isNonMobile = useMediaQuery("(min-width:600px)");
+const EditOpiFinal = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const order = location.state?.order || {};
   const { id } = useParams();
-  const { t } = useTranslation();
-  const handleGoBack = () => navigate(-1);
-
-  const initialValues = {
-    finalQuantity: order.finalQuantity || 0,
-    processingDateFinal: order.processingDateFinal ? order.processingDateFinal.split('T')[0] : "",
-  };
-  const validationSchema = yup.object().shape({
-    finalQuantity: yup.number().required(t("createFinalOpi.errors.finalQuantityRequired")).positive(t("createFinalOpi.errors.finalQuantityPositive")),
-    processingDateFinal: yup.date().required(t("createFinalOpi.errors.processingDateFinalRequired")).typeError(t("createFinalOpi.errors.processingDateFinalType")),
-  });
-
-  const handleFormSubmit = async (values) => {
-    console.log("values", values);
+  const order = useLocation().state?.order || {};
+  const [qty, setQty] = useState("");
+  const [when, setWhen] = useState(nowLocal());
+  const [busy, setBusy] = useState(false);
+  const merma = order.initialQuantity && Number(qty) > 0 ? (order.initialQuantity - Number(qty)) / order.initialQuantity : null;
+  const submit = async (e) => {
+    e.preventDefault();
+    if (!(Number(qty) > 0) || !when) return;
+    setBusy(true);
     try {
-      const jwt = localStorage.getItem("jwtToken");
-      const response = await axios.patch(`${API_ORDERS.ORDERS}/final/${id}`, values, { // Cambiado a PATCH
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${jwt}`
-        }
-      });
-      if (response.status === 200) {
-        // alert(t('updateOrders.messages.updateSuccess'));
-        navigate(-1);
-      } else {
-        throw new Error('Failed to update the order');
-      }
-    } catch (error) {
-      console.error("Failed to update OPI final", error);
-    }
+      await axios.patch(`${API_ORDERS.ORDERS}/final/${id}`, { finalQuantity: Number(qty), processingDateFinal: new Date(when).toISOString() }, { headers: { Authorization: `Bearer ${localStorage.getItem("jwtToken")}` } });
+      navigate(-1);
+    } catch (err) { console.error(err); setBusy(false); }
   };
-  
-
   return (
-    <Box m="20px">
-      <Header title={t('createFinalOpi.title')} subtitle={t('createFinalOpi.subtitle')} actionElement={
-        <IconButton onClick={handleGoBack}>
-          <ArrowBackIcon />
-        </IconButton>
-      } />
-      <Formik
-        onSubmit={handleFormSubmit}
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-      >
-        {({ values, errors, touched, handleBlur, handleChange, handleSubmit }) => (
-          <form onSubmit={handleSubmit}>
-            <Box display="flex" flexDirection="column" gap="20px">
-              <TextField
-                fullWidth
-                variant="filled"
-                type="number"
-                label={t("createFinalOpi.labels.finalQuantity")}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.finalQuantity}
-                name="finalQuantity"
-                error={!!touched.finalQuantity && !!errors.finalQuantity}
-                helperText={touched.finalQuantity && errors.finalQuantity}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="date"
-                label={t("createFinalOpi.labels.processingDateFinal")}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.processingDateFinal}
-                name="processingDateFinal"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                error={!!touched.processingDateFinal && !!errors.processingDateFinal}
-                helperText={touched.processingDateFinal && errors.processingDateFinal}
-                sx={{
-                  "& .MuiInputBase-input::-webkit-calendar-picker-indicator": {
-                    filter: "invert(1)"
-                  },
-                }}
-              />
-              <Box display="flex" justifyContent="flex-end" mt="20px">
-                <Button type="submit" color="secondary" variant="contained">
-                  {t("createFinalOpi.buttons.update")}
-                </Button>
-              </Box>
-
-            </Box>
-          </form>
-        )}
-      </Formik>
-
+    <Box sx={{ p: { xs: "16px", md: "24px 28px" }, maxWidth: 980 }}>
+      <Header title="Finalizar orden" subtitle="Unidades buenas y hora de fin: la merma y el tiempo real se calculan solos" actionElement={<IconButton onClick={() => navigate(-1)}><ArrowBackIcon /></IconButton>} />
+      <OrderSummary order={order} />
+      <FormCard>
+        <form onSubmit={submit}>
+          <Box display="grid" gridTemplateColumns={{ xs: "1fr", sm: "1fr 1fr" }} gap="14px">
+            <TextField name="finalQuantity" label="Unidades buenas" type="number" value={qty} onChange={(e) => setQty(e.target.value)} fullWidth inputProps={{ min: 0 }} />
+            <TextField name="processingDateFinal" label="Fin" type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)} fullWidth InputLabelProps={{ shrink: true }} />
+          </Box>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mt="16px" gap="12px" flexWrap="wrap">
+            <Typography className="sb-merma-preview" sx={{ fontSize: 14, color: merma == null ? "#9CA3AF" : merma > 0.07 ? "#DC2626" : "#047857", fontWeight: 600 }}>
+              {merma == null ? `Partiste de ${nf(order.initialQuantity)} unidades` : `Merma: ${nf(order.initialQuantity - Number(qty))} uds. (${nf(merma * 100, 1)} %)`}
+            </Typography>
+            <Button type="submit" variant="contained" disabled={busy} className="sb-guardar" sx={{ minWidth: 180, height: 46, borderRadius: "10px", fontSize: 15 }}>Finalizar orden</Button>
+          </Box>
+        </form>
+      </FormCard>
     </Box>
   );
 };
-
-
-export default Form;
+export default EditOpiFinal;

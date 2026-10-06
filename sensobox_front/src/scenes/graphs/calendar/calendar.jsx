@@ -1,3 +1,5 @@
+// Copia del original con retoques de demo (overlay fuera del repo): solo fechas previstas de lo pendiente
+// y en curso, con «+N más» por día, para que el mes se lea.
 import { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -81,26 +83,26 @@ const Calendar = () => {
     return orders.map(order => [
       {
         id: `${order.orderNumber}-start`,
-        title: `Inicio pedido: Nº ${order.orderNumber}`,
+        title: `Inicio Nº ${order.orderNumber} · ${order.clientName}`,
         start: order.processingDateInitial,
         end: order.processingDateInitial,
-        backgroundColor: 'green',
+        backgroundColor: '#10B981', borderColor: '#10B981',
         extendedProps: { ...order },
       },
       {
         id: `${order.orderNumber}-end`,
-        title: `Fin pedido: Nº ${order.orderNumber}`,
+        title: `Fin Nº ${order.orderNumber} · ${order.clientName}`,
         start: order.processingDateFinal,
         end: order.processingDateFinal,
-        backgroundColor: 'red',
+        backgroundColor: '#94A3B8', borderColor: '#94A3B8',
         extendedProps: { ...order },
       },
       {
         id: `${order.orderNumber}-processing`,
-        title: `Fecha prevista: Nº ${order.orderNumber}`,
+        title: `Nº ${order.orderNumber} · ${order.clientName}`,
         start: order.processingDate,
         end: order.processingDate,
-        backgroundColor: 'blue',
+        backgroundColor: '#6366F1', borderColor: '#6366F1',
         extendedProps: { ...order },
       }
     ]).flat();
@@ -144,6 +146,9 @@ const Calendar = () => {
             //   right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth",
             // }}
             initialView="dayGridMonth"
+            dayMaxEvents={3}
+            moreLinkText={(n) => `+${n} más`}
+            eventDisplay="block"
             events={formatEvents(orders)}
             eventClick={handleEventClick}
             views={{

@@ -8,6 +8,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Header from '../../../components/Header';
+import { SensoboxLogo } from '../../global/Sidebar';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 import { API_USERS } from "../../../config/config";
@@ -77,10 +78,11 @@ const Login = ({ setIsAuthenticated }) => {
   };
   
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundImage: 'url("https://img.freepik.com/fotos-premium/vista-superior-fondo-caja-carton-marron-vacia-abierta_293060-9462.jpg")', backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-      <Container component="main" maxWidth="xs">
-        <Paper elevation={6} sx={{ p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Header title={t('login.title')} subtitle={t('login.subtitle')} />
+    <div className="sb-login" style={{ minHeight: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '24px 16px', boxSizing: 'border-box', background: 'radial-gradient(900px 520px at 85% -10%, rgba(99,102,241,.22), transparent 60%), radial-gradient(700px 480px at -10% 110%, rgba(16,185,129,.14), transparent 60%), #F3F4F8' }}>
+      <Container component="main" maxWidth="xs" disableGutters>
+        <Box display="flex" justifyContent="center" mb="22px"><SensoboxLogo size={40} /></Box>
+        <Paper elevation={0} sx={{ p: { xs: 3, sm: 4 }, display: 'flex', flexDirection: 'column', alignItems: 'stretch', borderRadius: '18px', border: '1px solid #E5E7EB', boxShadow: '0 20px 50px -24px rgba(17,24,39,.25)' }}>
+          <Header title="Inicia sesión" subtitle="Control de producción, sin hojas de cálculo." />
           <Formik
             initialValues={{ email: '', password: '' }}
             validationSchema={yup.object({
@@ -104,7 +106,7 @@ const Login = ({ setIsAuthenticated }) => {
                     error={formik.touched.email && Boolean(formik.errors.email)}
                     helperText={formik.touched.email && formik.errors.email}
                     InputProps={{ startAdornment: (<InputAdornment position="start"><EmailIcon /></InputAdornment>), style: { backgroundColor: theme.palette.background.paper } }}
-                    InputLabelProps={{ style: { color: theme.palette.text.primary } }}
+                    
                   />
                   <TextField
                     fullWidth
@@ -138,14 +140,14 @@ const Login = ({ setIsAuthenticated }) => {
                       ),
                       style: { backgroundColor: theme.palette.background.paper } 
                     }}
-                    InputLabelProps={{ style: { color: theme.palette.text.primary } }}
+                    
                   />
                   <Button
                     type="submit"
                     fullWidth
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
-                    style={{ backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }}
+                    style={{ backgroundColor: '#4F46E5', color: '#fff', height: 46, fontSize: 15, borderRadius: 10 }}
                   >
                     {t('login.login_button')}
                   </Button>

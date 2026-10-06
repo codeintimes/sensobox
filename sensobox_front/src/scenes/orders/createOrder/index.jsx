@@ -1,3 +1,5 @@
+// Copia del original con retoques de demo (overlay fuera del repo): tarjeta, técnico como desplegable
+// y fecha prevista con hora.
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +20,14 @@ const CreateOrderForm = () => {
   const { t } = useTranslation();
   const userData = JSON.parse(localStorage.getItem('userData'));
   const [clients, setClients] = useState([]);
+  const [techs, setTechs] = useState([]);
+  useEffect(() => {
+    const token = localStorage.getItem('jwtToken');
+    axios.get(`${API_USERS.USERS}/clientRole`, { params: { role: 'technician', companyName: userData?.companyName }, headers: { 'Authorization': `Bearer ${token}` } })
+      .then((r) => setTechs([...new Set(r.data.map((u) => u.name))].sort()))
+      .catch((e) => console.error(e));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getClients = async () => {
     try {
@@ -123,12 +133,13 @@ const CreateOrderForm = () => {
 
 
   return (
-    <Box m="20px">
+    <Box sx={{ p: { xs: "16px", md: "24px 28px" }, maxWidth: 1180 }}>
       <Header title={t("createOrder.title")} subtitle={t("createOrder.subtitle")} actionElement={
         <IconButton onClick={handleGoBack}>
           <ArrowBackIcon />
         </IconButton>
       } />
+      <Box className="sb-card sb-form" sx={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: "16px", p: { xs: "16px", md: "24px" } }}>
       <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
         {({ values, errors, touched, handleChange, handleSubmit }) => (
           <form onSubmit={handleSubmit}>
@@ -150,6 +161,7 @@ const CreateOrderForm = () => {
                 <FormControl fullWidth>
                   <InputLabel>{t("createOrder.form.clientName")}</InputLabel>
                   <Select
+                    label={t("createOrder.form.clientName")}
                     name="clientName"
                     value={values.clientName}
                     onChange={handleChange}
@@ -246,6 +258,7 @@ const CreateOrderForm = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  select
                   fullWidth
                   label={t("createOrder.form.technician")}
                   name="technician"
@@ -253,12 +266,14 @@ const CreateOrderForm = () => {
                   onChange={handleChange}
                   error={touched.technician && Boolean(errors.technician)}
                   helperText={touched.technician && errors.technician}
-                />
+                >
+                  {(techs.includes(values.technician) || !values.technician ? techs : [values.technician, ...techs]).map((n) => <MenuItem key={n} value={n}>{n}</MenuItem>)}
+                </TextField>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
-                  type="date"
+                  type="datetime-local"
                   label={t("createOrder.form.processingDate")}
                   name="processingDate"
                   value={values.processingDate}
@@ -268,7 +283,7 @@ const CreateOrderForm = () => {
                   helperText={touched.processingDate && errors.processingDate}
                   sx={{
                     'input[type="date"]::-webkit-calendar-picker-indicator': {
-                      filter: 'invert(1)' // Inverts the color of the calendar icon to white
+                      opacity: 0.6
                     }
                   }}
                 />
@@ -301,6 +316,7 @@ const CreateOrderForm = () => {
           </form>
         )}
       </Formik>
+      </Box>
     </Box>
   );
 };

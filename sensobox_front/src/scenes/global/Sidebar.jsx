@@ -1,326 +1,111 @@
-import React, { useState, useEffect } from 'react';
-import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
-import { Box, IconButton, Typography, useTheme, useMediaQuery } from "@mui/material";
-import { Link } from "react-router-dom";
-import "react-pro-sidebar/dist/css/styles.css";
-import { tokens } from "../../theme";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import Inventory2Icon from '@mui/icons-material/Inventory2';
-import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
-import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { useTranslation } from "react-i18next";
-import AssignmentTurnedInOutlinedIcon from '@mui/icons-material/AssignmentTurnedInOutlined';
+// Menú lateral de demo (overlay fuera del repo): marca Sensobox, tarjeta del usuario y navegación por perfil.
+// En móvil (≤ 800 px) se convierte en un cajón que se abre desde el botón de menú de la barra superior.
+import React, { useEffect, useState } from "react";
+import { Box, Drawer, IconButton, Typography, useMediaQuery } from "@mui/material";
+import { Link, useLocation } from "react-router-dom";
+import SpaceDashboardOutlinedIcon from "@mui/icons-material/SpaceDashboardOutlined";
+import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import StackedLineChartOutlinedIcon from "@mui/icons-material/StackedLineChartOutlined";
+import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
+import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
+import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import EngineeringOutlinedIcon from "@mui/icons-material/EngineeringOutlined";
 
-const Item = ({ title, to, icon, selected, setSelected, setIsCollapsed, isMobile }) => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
+export const SensoboxLogo = ({ size = 32, text = true, color = "#111827" }) => (
+  <Box display="flex" alignItems="center" gap="10px">
+    <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
+      <rect width="32" height="32" rx="9" fill="#4F46E5" />
+      <path d="M16 7.5 24 12v8l-8 4.5L8 20v-8z" fill="none" stroke="#fff" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M8.4 12.2 16 16.5l7.6-4.3M16 16.5v8" fill="none" stroke="#A5B4FC" strokeWidth="2" strokeLinejoin="round" />
+    </svg>
+    {text && <Typography sx={{ fontWeight: 800, fontSize: size * 0.62, letterSpacing: "-.02em", color }}>Sensobox</Typography>}
+  </Box>
+);
 
-  const handleClick = () => {
-    setSelected(title);
-    if (isMobile) {
-      setIsCollapsed(true);
-    }
-  };
-
-  return (
-    <MenuItem
-      active={selected === title}
-      style={{
-        color: colors.grey[100],
-      }}
-      onClick={handleClick}  // Use the new handler here
-      icon={icon}
-    >
-      <Link to={to} style={{ textDecoration: 'none', color: 'inherit' }}>
-        <Typography>{title}</Typography>
-      </Link>
-    </MenuItem>
-  );
+const MENUS = {
+  admin: [
+    { section: "Producción" },
+    { title: "Panel", to: "/", icon: <SpaceDashboardOutlinedIcon /> },
+    { title: "Órdenes", to: "/ordersAdmin", icon: <Inventory2OutlinedIcon /> },
+    { title: "Calendario", to: "/calendar", icon: <CalendarMonthOutlinedIcon /> },
+    { section: "Análisis" },
+    { title: "Cantidades y merma", to: "/lineQuantityGraph", icon: <StackedLineChartOutlinedIcon /> },
+    { title: "Pedidos", to: "/lineOrdersGraph", icon: <BarChartOutlinedIcon /> },
+    { title: "Tiempos de proceso", to: "/lineProcessingGraph", icon: <TimerOutlinedIcon /> },
+    { section: "Equipo" },
+    { title: "Clientes", to: "/clients", icon: <PeopleAltOutlinedIcon /> },
+    { title: "Técnicos", to: "/technicians", icon: <EngineeringOutlinedIcon /> },
+    { title: "Ayuda", to: "/faqAdmin", icon: <HelpOutlineOutlinedIcon /> },
+  ],
+  technician: [
+    { section: "Taller" },
+    { title: "Mis órdenes", to: "/ordersTechnician", icon: <Inventory2OutlinedIcon /> },
+    { title: "Ayuda", to: "/faqTechnician", icon: <HelpOutlineOutlinedIcon /> },
+  ],
+  client: [
+    { section: "Mis pedidos" },
+    { title: "Seguimiento", to: "/ordersClient", icon: <Inventory2OutlinedIcon /> },
+    { title: "Pedidos por periodo", to: "/lineOrdersGraph", icon: <BarChartOutlinedIcon /> },
+    { title: "Calendario", to: "/calendar", icon: <CalendarMonthOutlinedIcon /> },
+    { title: "Ayuda", to: "/faqClient", icon: <HelpOutlineOutlinedIcon /> },
+  ],
 };
+const ROLE = { admin: "Administración", technician: "Técnico de taller", client: "Cliente" };
+const initials = (n = "") => n.split(" ").filter(Boolean).slice(0, 2).map((x) => x[0]).join("").toUpperCase();
 
-const Sidebar = () => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [selected, setSelected] = useState("Dashboard");
-  const user = JSON.parse(localStorage.getItem('userData')) || {};
-  const isAdmin = user?.role === 'admin';
-  const isTechnician = user?.role === 'technician';
-  const isClient = user?.role === 'client';
-  const { role, name, companyName, contactName, contactPhone, contactEmail } = JSON.parse(localStorage.getItem('userData'));
-  const { t } = useTranslation();
-  const companyNameUpperCase = companyName.toUpperCase();
-  // const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isMobile = useMediaQuery('(max-width:800px)'); // Ajustar a tu punto de interrupción deseado
-
-
-  useEffect(() => {
-    // Esta lógica asegura que el sidebar se colapse en móviles al cargar y cambiar tamaño de ventana
-    setIsCollapsed(isMobile);
-  }, [isMobile]);
-
-  // const sidebarStyle = {
-  //   width: isCollapsed && isMobile ? '80px' : 'auto', // Ajusta el ancho mínimo aquí para solo el icono
-  //   transition: 'width 0.3s'
-  // };
-
-  const sidebarStyle = {
-    // position: 'sticky',
-    top: 0,
-    left: 0,
-    position: isMobile ? 'fixed' : 'relative', // Posicionamiento fijo en móviles
-    zIndex: isMobile ? 1300 : 1, // Asegúrate de que el zIndex sea mayor que el del contenido
-    height: isMobile && isCollapsed ? '70px' : '100vh', // Ancho dinámico basado en el estado colapsado y si es móvil
-    // height: '100vh', // Altura completa para cubrir toda la vista vertical
-    transition: 'all 0.3s', // Transición suave al cambiar el tamaño
-
-  };
-
-  const sidebarStyleIcon = {
-    // position: isMobile ? 'fixed' : 'relative', // Posicionamiento fijo en móviles
-    // zIndex: isMobile ? 1300 : 1, // Asegúrate de que el zIndex sea mayor que el del contenido
-
-    height: isMobile && isCollapsed ? '10px' : 'auto', // Ancho dinámico basado en el estado colapsado y si es móvil
-    // height: '100vh', // Altura completa para cubrir toda la vista vertical
-    // transition: 'all 0.3s' // Transición suave al cambiar el tamaño
-
-    // overflow: isCollapsed ? 'hidden' : 'auto',  // Asegurarse de ocultar overflow cuando está colapsado
-  };
-
+function Content({ onNavigate }) {
+  const { pathname } = useLocation();
+  const user = JSON.parse(localStorage.getItem("userData")) || {};
+  const items = MENUS[user.role] || [];
   return (
-    <Box style={sidebarStyle}
-      sx={{
-        "& .pro-sidebar-inner": {
-          background: `${colors.primary[400]} !important`,
-        },
-        "& .pro-icon-wrapper": {
-          backgroundColor: "transparent !important",
-        },
-        "& .pro-inner-item": {
-          padding: "5px 35px 5px 20px !important",
-        },
-        "& .pro-inner-item:hover": {
-          color: "#868dfb !important",
-        },
-        "& .pro-menu-item.active": {
-          color: "#6870fa !important",
-        },
-      }}
-    >
-      <ProSidebar collapsed={isCollapsed} >
-        <Menu iconShape="square" style={sidebarStyleIcon}>
-          {/* LOGO AND MENU ICON */}
-          <MenuItem
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
-            style={{
-              margin: isMobile ? "5px 0px 0px 5px" : "10px 0 20px 0",
-              color: colors.grey[100],
-            }}
-          >
-            {(!isCollapsed) && (
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                ml="15px"
-              >
-                <Typography variant="h3" color={colors.grey[100]}>
-                  {isAdmin && t("roles.admin").toUpperCase()}
-                  {isTechnician && t("roles.technician").toUpperCase()}
-                  {isClient && t("roles.client").toUpperCase()}
-                </Typography>
-                <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
-                  <MenuOutlinedIcon />
-                </IconButton>
+    <Box className="sb-sidebar" sx={{ width: 252, height: "100%", display: "flex", flexDirection: "column", background: "#fff", borderRight: "1px solid #E5E7EB", px: "14px", py: "18px", boxSizing: "border-box" }}>
+      <Box px="8px" mb="22px"><SensoboxLogo /></Box>
+      <Box sx={{ display: "flex", alignItems: "center", gap: "10px", p: "10px", borderRadius: "12px", background: "#F7F7FB", border: "1px solid #EEF0F4", mb: "18px" }}>
+        <Box sx={{ width: 38, height: 38, borderRadius: "50%", background: "#E0E7FF", color: "#4338CA", display: "grid", placeItems: "center", fontWeight: 700, fontSize: 14, flexShrink: 0 }}>{initials(user.name)}</Box>
+        <Box sx={{ minWidth: 0 }}>
+          <Typography sx={{ fontWeight: 600, fontSize: 13.5, color: "#111827", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{user.name}</Typography>
+          <Typography sx={{ fontSize: 12, color: "#6B7280", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{ROLE[user.role]} · {user.role === "client" ? user.clientName : user.companyName}</Typography>
+        </Box>
+      </Box>
+      <Box component="nav" sx={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+        {items.map((it, i) =>
+          it.section ? (
+            <Typography key={i} sx={{ fontSize: 11, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase", color: "#9CA3AF", px: "10px", mt: i ? "14px" : 0, mb: "4px" }}>{it.section}</Typography>
+          ) : (
+            <Link key={it.to} to={it.to} onClick={onNavigate} className={"sb-nav" + (pathname === it.to ? " active" : "")} style={{ textDecoration: "none" }}>
+              <Box sx={{ display: "flex", alignItems: "center", gap: "12px", px: "10px", py: "9px", borderRadius: "10px", fontSize: 14, fontWeight: pathname === it.to ? 600 : 500,
+                color: pathname === it.to ? "#4338CA" : "#374151", background: pathname === it.to ? "#EEF2FF" : "transparent", "& svg": { fontSize: 20, color: pathname === it.to ? "#4F46E5" : "#9CA3AF" }, "&:hover": { background: "#F3F4F6" } }}>
+                {it.icon}<span>{it.title}</span>
               </Box>
-            )}
-          </MenuItem>
-
-          {(!isCollapsed) && (
-            <Box mb="25px">
-              <Box display="flex" justifyContent="center" alignItems="center">
-                <img
-                  alt="profile-user"
-                  width="100px"
-                  height="100px"
-                  src="https://img.freepik.com/vector-premium/diseno-plantilla-logotipo-caja-carton_316488-1516.jpg"
-                  style={{ cursor: "pointer", borderRadius: "50%" }}
-                />
-              </Box>
-              <Box textAlign="center">
-                <Typography
-                  variant="h2"
-                  color={colors.grey[100]}
-                  fontWeight="bold"
-                  sx={{ m: "10px 0 20px 0" }}  // Aumentado el margen inferior a 20px
-                >
-                  {name || ""}
-                </Typography>
-                <Typography
-                  variant="h5"
-                  color={colors.greenAccent[500]}
-                  sx={{ m: "0 0 5px 0" }}  // Aumentado el margen inferior a 20px
-                >
-                  {companyNameUpperCase || ""}
-                </Typography>
-                {contactName && contactPhone && contactEmail && (
-                  <Typography
-                    variant="h5"
-                    sx={{ m: "0 0 30px 0" }}  // Aumentado el margen inferior a 20px, ajusta según necesidades
-                  >
-                    <br />
-                    {contactName} <br />
-                    {contactPhone} <br />
-                    {contactEmail}
-                  </Typography>
-                )}
-              </Box>
-            </Box>
-
-          )}
-
-          <Box paddingLeft={isCollapsed ? undefined : "10%"}>
-            {(!isCollapsed || !isMobile) && (
-              <>
-                {isAdmin && (
-                  <>
-                    <Typography
-                      variant="h6"
-                      color={colors.grey[300]}
-                      sx={{ m: "15px 0 5px 20px" }}
-                    >
-                      {t("roles.admin")}
-                    </Typography>
-                    <Item
-                      title={t("sidebar.dashboard")}
-                      to="/"
-                      icon={<HomeOutlinedIcon />}
-                      selected={selected}
-                      setSelected={setSelected}
-                      setIsCollapsed={setIsCollapsed}
-                      isMobile={isMobile}
-                    />
-                    <Item
-                      title={t("sidebar.orders")}
-                      to="/ordersAdmin"
-                      icon={<Inventory2Icon />}
-                      selected={selected}
-                      setSelected={setSelected}
-                      setIsCollapsed={setIsCollapsed}
-                      isMobile={isMobile}
-                    />
-                    <Item
-                      title={t("sidebar.calendar")}
-                      to="/calendar"
-                      icon={<CalendarTodayOutlinedIcon />}
-                      selected={selected}
-                      setSelected={setSelected}
-                      setIsCollapsed={setIsCollapsed}
-                      isMobile={isMobile}
-                    />
-                    <Item
-                      title={t("sidebar.quantityGraph")}
-                      to="/lineQuantityGraph"
-                      icon={<TimelineOutlinedIcon />}
-                      selected={selected}
-                      setSelected={setSelected}
-                      setIsCollapsed={setIsCollapsed}
-                      isMobile={isMobile}
-                    />
-                    <Item
-                      title={t("sidebar.ordersGraph")}
-                      to="/lineOrdersGraph"
-                      icon={<AssignmentTurnedInOutlinedIcon />}
-                      selected={selected}
-                      setSelected={setSelected}
-                      setIsCollapsed={setIsCollapsed}
-                      isMobile={isMobile}
-                    />
-                    <Item
-                      title={t("sidebar.processingTimeGraph")}
-                      to="/lineProcessingGraph"
-                      icon={<AccessTimeIcon />}
-                      selected={selected}
-                      setSelected={setSelected}
-                      setIsCollapsed={setIsCollapsed}
-                      isMobile={isMobile}
-                    />
-                    
-
-                  </>
-                )}
-                {isTechnician && (
-                  <>
-                    <Typography
-                      variant="h6"
-                      color={colors.grey[300]}
-                      sx={{ m: "15px 0 5px 20px" }}
-                    >
-                      {t("roles.technician")}
-                    </Typography>
-
-                    <Item
-                      title={t("sidebar.orders")}
-                      to="/ordersTechnician"
-                      icon={<Inventory2Icon />}
-                      selected={selected}
-                      setSelected={setSelected}
-                      setIsCollapsed={setIsCollapsed}
-                      isMobile={isMobile}
-                    />
-                  </>
-
-                )}
-                {isClient && (
-                  <>
-                    <Typography
-                      variant="h6"
-                      color={colors.grey[300]}
-                      sx={{ m: "15px 0 5px 20px" }}
-                    >
-                      {t("roles.client")}
-                    </Typography>
-
-                    <Item
-                      title={t("sidebar.orderMonitor")}
-                      to="/ordersClient"
-                      icon={<Inventory2Icon />}
-                      selected={selected}
-                      setSelected={setSelected}
-                      setIsCollapsed={setIsCollapsed}
-                      isMobile={isMobile}
-                    />
-                    <Item
-                      title={t("sidebar.ordersGraph")}
-                      to="/lineOrdersGraph"
-                      icon={<AssignmentTurnedInOutlinedIcon />}
-                      selected={selected}
-                      setSelected={setSelected}
-                      setIsCollapsed={setIsCollapsed}
-                      isMobile={isMobile}
-                    />
-                    <Item
-                      title={t("sidebar.calendar")}
-                      to="/calendar"
-                      icon={<CalendarTodayOutlinedIcon />}
-                      selected={selected}
-                      setSelected={setSelected}
-                      setIsCollapsed={setIsCollapsed}
-                      isMobile={isMobile}
-                    />
-                  </>
-                )}
-              </>
-            )}
-          </Box>
-        </Menu>
-      </ProSidebar>
+            </Link>
+          )
+        )}
+      </Box>
+      <Box mt="auto" px="10px" sx={{ fontSize: 11.5, color: "#9CA3AF" }}>{user.companyName}</Box>
     </Box>
   );
+}
+
+const Sidebar = () => {
+  const isMobile = useMediaQuery("(max-width:800px)");
+  const [open, setOpen] = useState(false);
+  useEffect(() => { window.__sbOpenMenu = () => setOpen(true); return () => { delete window.__sbOpenMenu; }; }, []);
+  if (isMobile) {
+    return (
+      <>
+        <IconButton className="sb-menu-btn" aria-label="Abrir menú" onClick={() => setOpen(true)} sx={{ position: "fixed", top: 10, left: 10, zIndex: 1301, color: "#111827" }}>
+          <MenuRoundedIcon />
+        </IconButton>
+        <Drawer open={open} onClose={() => setOpen(false)} PaperProps={{ sx: { border: 0 } }}>
+          <Content onNavigate={() => setOpen(false)} />
+        </Drawer>
+      </>
+    );
+  }
+  return <Box sx={{ position: "sticky", top: 0, height: "100vh", flexShrink: 0 }}><Content /></Box>;
 };
 
 export default Sidebar;

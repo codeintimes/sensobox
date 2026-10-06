@@ -1,86 +1,10 @@
-import { Box, useTheme } from "@mui/material";
-import Header from "../../../components/Header";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { tokens } from "../../../theme";
-
-const FAQ = () => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
-  return (
-    <Box m="20px">
-      <Header title="FAQ" subtitle="Frequently Asked Questions Page" />
-
-      <Accordion defaultExpanded>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography color={colors.greenAccent[500]} variant="h5">
-            An Important Question
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion defaultExpanded>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography color={colors.greenAccent[500]} variant="h5">
-            Another Important Question
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion defaultExpanded>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography color={colors.greenAccent[500]} variant="h5">
-            Your Favorite Question
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion defaultExpanded>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography color={colors.greenAccent[500]} variant="h5">
-            Some Random Question
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion defaultExpanded>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography color={colors.greenAccent[500]} variant="h5">
-            The Final Question
-          </Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-    </Box>
-  );
-};
-
+import FaqList from "../../../components/FaqList";
+const ITEMS = [
+  ["¿Qué órdenes veo?", "Solo las que tienes asignadas, ordenadas por fecha prevista. Las nuevas aparecen en cuanto la oficina las da de alta."],
+  ["¿Cómo empiezo una orden?", "Abre las acciones de la orden y elige «Iniciar orden». Anota las unidades de partida (hojas o metros que cargas en máquina) y la hora de inicio."],
+  ["¿Cómo voy registrando lo producido?", "Con «Cantidad procesada» actualizas las unidades hechas hasta el momento. La oficina lo ve en el panel al instante, sin llamadas."],
+  ["¿Cómo cierro una orden?", "Con «Finalizar orden»: unidades buenas y hora de fin. Sensobox calcula la merma y el tiempo real frente al previsto."],
+  ["¿Dónde apunto el material?", "En «Material», con el largo, el ancho y el peso. Así queda registrado el consumo de cada trabajo."],
+];
+const FAQ = () => <FaqList subtitle="Técnicos de taller" items={ITEMS} />;
 export default FAQ;

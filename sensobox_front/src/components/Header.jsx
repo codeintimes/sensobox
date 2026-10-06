@@ -1,28 +1,15 @@
+// Cabecera de página de demo (overlay fuera del repo)
 import React from 'react';
-import { Typography, Box, useTheme } from "@mui/material";
-import { tokens } from "../theme";
+import { Typography, Box } from "@mui/material";
 
-const Header = ({ title, subtitle, actionElement }) => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
-  return (
-    <Box display="flex" justifyContent="space-between" alignItems="center" mb="30px">
-      <Box>
-        <Typography
-          variant="h2"
-          color={colors.grey[100]}
-          fontWeight="bold"
-          sx={{ m: "0 0 5px 0" }}
-        >
-          {title}
-        </Typography>
-        <Typography variant="h5" color={colors.greenAccent[400]}>
-          {subtitle}
-        </Typography>
-      </Box>
-      {actionElement}
+const Header = ({ title, subtitle, actionElement }) => (
+  <Box className="sb-header" display="flex" justifyContent="space-between" alignItems="center" mb="20px" gap="12px" flexWrap="wrap">
+    <Box>
+      <Typography sx={{ fontSize: { xs: 22, md: 26 }, fontWeight: 700, letterSpacing: "-.02em", color: "#111827", m: "0 0 2px 0" }}>{title}</Typography>
+      {subtitle && <Typography sx={{ fontSize: 14, color: "#6B7280" }}>{subtitle}</Typography>}
     </Box>
-  );
-};
+    {actionElement}
+  </Box>
+);
 
 export default Header;

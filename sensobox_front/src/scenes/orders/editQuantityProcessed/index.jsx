@@ -1,103 +1,42 @@
-import React from "react";
-import { Box, Button, TextField, IconButton } from "@mui/material";
-import { Formik } from "formik";
-import * as yup from "yup";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import Header from "../../../components/Header";
-import { useLocation, useNavigate } from 'react-router-dom';
+// Registrar avance (overlay fuera del repo): mismo endpoint, con el resumen de la orden encima.
+import React, { useState } from "react";
+import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useTranslation } from 'react-i18next';
+import axios from "axios";
+import Header from "../../../components/Header";
 import { API_ORDERS } from "../../../config/config";
-import axios from 'axios';
-import { useParams } from "react-router-dom";
+import { OrderSummary, FormCard, nf } from "../../../components/OrderBits";
 
-const Form = () => {
-  const { t } = useTranslation();
-
-  const isNonMobile = useMediaQuery("(min-width:600px)");
+const EditQuantityProcessed = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { id } = useParams();
-  const order = location.state?.order || {};
-
-  const handleFormSubmit = async (values) => {
+  const order = useLocation().state?.order || {};
+  const [value, setValue] = useState("");
+  const [busy, setBusy] = useState(false);
+  const submit = async (e) => {
+    e.preventDefault();
+    if (!(Number(value) > 0)) return;
+    setBusy(true);
     try {
-      const jwt = localStorage.getItem("jwtToken")
-      const response = await axios.post(`${API_ORDERS.ORDERS}/${id}/update-quantity-processed`, {
-        quantityProcessed: values.quantityProcessed
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${jwt}`
-        }
-      });
-
+      await axios.post(`${API_ORDERS.ORDERS}/${id}/update-quantity-processed`, { quantityProcessed: Number(value) }, { headers: { Authorization: `Bearer ${localStorage.getItem("jwtToken")}` } });
       navigate(-1);
-    } catch (error) {
-      console.error("Failed to update current quantity", error);
-    }
+    } catch (err) { console.error(err); setBusy(false); }
   };
-
-  const handleGoBack = () => {
-
-    navigate(-1);
-  };
-
-  const initialValues = {
-    quantityProcessed: order.quantityProcessed || 0,
-  };
-
-  const checkoutSchema = yup.object().shape({
-    quantityProcessed: yup
-      .number()
-      .required(t("orders.currentQuantity.quantity_required"))
-      .positive(t("orders.currentQuantity.quantity_positive")),
-  });
-
   return (
-    <Box m="20px">
-      <Header
-        title={t("orders.currentQuantity.title")}
-        subtitle={t("orders.currentQuantity.subtitle")}
-        actionElement={
-          <IconButton onClick={handleGoBack}>
-            <ArrowBackIcon />
-          </IconButton>
-        }
-      />
-
-      <Formik
-        onSubmit={handleFormSubmit}
-        initialValues={initialValues}
-        validationSchema={checkoutSchema}
-      >
-        {({ values, errors, touched, handleBlur, handleChange, handleSubmit }) => (
-          <form onSubmit={handleSubmit}>
-            <Box display="flex" flexDirection="column" gap="20px">
-              <TextField
-                fullWidth
-                variant="filled"
-                type="number"
-                label={t("orders.currentQuantity.quantityProcessed")}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.quantityProcessed}
-                name="quantityProcessed"
-                error={!!touched.quantityProcessed && !!errors.quantityProcessed}
-                helperText={touched.quantityProcessed && errors.quantityProcessed}
-              />
-              <Box display="flex" justifyContent="flex-end" mt="20px">
-                <Button type="submit" color="secondary" variant="contained">
-                  {t("orders.currentQuantity.buttons.update")}
-                </Button>
-              </Box>
-
-            </Box>
-          </form>
-        )}
-      </Formik>
+    <Box sx={{ p: { xs: "16px", md: "24px 28px" }, maxWidth: 980 }}>
+      <Header title="Registrar avance" subtitle="Unidades hechas hasta ahora. La oficina lo ve al momento." actionElement={<IconButton onClick={() => navigate(-1)}><ArrowBackIcon /></IconButton>} />
+      <OrderSummary order={order} />
+      <FormCard>
+        <form onSubmit={submit}>
+          <Typography sx={{ fontSize: 13.5, color: "#6B7280", mb: "12px" }}>Llevabas {nf(order.quantityProcessed)} de {nf(order.productionQuantity)} unidades.</Typography>
+          <Box display="flex" gap="12px" flexDirection={{ xs: "column", sm: "row" }}>
+            <TextField name="quantityProcessed" label="Unidades hechas" type="number" value={value} onChange={(e) => setValue(e.target.value)} fullWidth autoFocus inputProps={{ min: 0 }} />
+            <Button type="submit" variant="contained" disabled={busy} className="sb-guardar" sx={{ minWidth: 180, height: 52, borderRadius: "10px", fontSize: 15 }}>Guardar avance</Button>
+          </Box>
+        </form>
+      </FormCard>
     </Box>
   );
 };
-
-export default Form;
+export default EditQuantityProcessed;

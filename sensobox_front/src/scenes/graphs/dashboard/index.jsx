@@ -1,446 +1,242 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Button, IconButton, Typography, useTheme, CircularProgress, useMediaQuery } from "@mui/material";
-import { tokens } from "../../../theme";
-import { mockTransactions } from "../../../data/mockData";
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
-import EmailIcon from "@mui/icons-material/Email";
-import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import TrafficIcon from "@mui/icons-material/Traffic";
-import BrokenImageIcon from '@mui/icons-material/BrokenImage';
-import MoreTimeIcon from '@mui/icons-material/MoreTime';
-import Header from "../../../components/Header";
-import LineChart from "../../../components/LineChart";
-// import GeographyChart from "../../../pruebas/GeographyChart";
-// import BarChart from "../../../pruebas/BarChart";
-import Inventory2Icon from '@mui/icons-material/Inventory2';
-import PieChart from "../../../components/PieChart";
-import StatBox from "../../../components/StatBox";
-import StatBox2 from "../../../components/StatBox2";
-import ProgressCircle from "../../../components/ProgressCircle";
-import { useTranslation } from 'react-i18next';
-import { jsPDF } from "jspdf";
-import html2canvas from "html2canvas";
+// Panel de demo (overlay fuera del repo): mismos datos del backend (GET /orders), presentados como
+// indicadores con su comparación, producción en curso en tiempo real, desviaciones y gráficas semanales.
+import React, { useEffect, useMemo, useState } from "react";
+import { Box, Typography, LinearProgress, useMediaQuery } from "@mui/material";
+import { ResponsiveBar } from "@nivo/bar";
+import { ResponsiveLine } from "@nivo/line";
+import axios from "axios";
 import { API_ORDERS } from "../../../config/config";
-import axios from 'axios';
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import TrendingDownIcon from "@mui/icons-material/TrendingDown";
+import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
+import PrecisionManufacturingOutlinedIcon from "@mui/icons-material/PrecisionManufacturingOutlined";
+import ContentCutOutlinedIcon from "@mui/icons-material/ContentCutOutlined";
+import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
+import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
+import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
+
+const C = { brand: "#4F46E5", brandSoft: "#EEF2FF", ok: "#059669", okSoft: "#ECFDF5", bad: "#DC2626", badSoft: "#FEF2F2", warn: "#D97706", warnSoft: "#FFFBEB", text: "#111827", muted: "#6B7280", line: "#E5E7EB" };
+const D = 24 * 3600e3;
+const nf = (n, d = 0) => Number(n || 0).toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d });
+const fmtDate = (d) => new Date(d).toLocaleDateString("es-ES", { day: "numeric", month: "short" });
+const fmtDateTime = (d) => new Date(d).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+const merma = (o) => (o.initialQuantity ? (o.initialQuantity - o.finalQuantity) / o.initialQuantity : 0);
+const desvT = (o) => (o.processingTime ? o.processingTimeDifference / o.processingTime : 0);
+const weekStart = (d) => { const x = new Date(d); const day = (x.getDay() + 6) % 7; x.setHours(0, 0, 0, 0); x.setDate(x.getDate() - day); return x.getTime(); };
+
+const Card = ({ children, sx, ...p }) => (
+  <Box className="sb-card" sx={{ background: "#fff", borderRadius: "16px", border: `1px solid ${C.line}`, boxShadow: "0 1px 2px rgba(16,24,40,.05)", p: "20px 22px", ...sx }} {...p}>{children}</Box>
+);
+const CardTitle = ({ title, sub, right }) => (
+  <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb="14px" gap="12px">
+    <Box>
+      <Typography sx={{ fontWeight: 700, fontSize: 15.5, color: C.text }}>{title}</Typography>
+      {sub && <Typography sx={{ fontSize: 12.5, color: C.muted, mt: "2px" }}>{sub}</Typography>}
+    </Box>
+    {right}
+  </Box>
+);
+
+function Kpi({ icon, label, value, unit, delta, goodWhenUp, foot }) {
+  const up = delta >= 0;
+  const good = goodWhenUp ? up : !up;
+  const color = Math.abs(delta) < 0.005 ? C.muted : good ? C.ok : C.bad;
+  return (
+    <Card sx={{ display: "flex", flexDirection: "column", gap: "10px", p: { xs: "14px", sm: "20px 22px" } }}>
+      <Box display="flex" alignItems="center" gap="10px">
+        <Box sx={{ width: 36, height: 36, borderRadius: "10px", background: C.brandSoft, color: C.brand, display: "grid", placeItems: "center" }}>{icon}</Box>
+        <Typography sx={{ fontSize: { xs: 12.5, sm: 13.5 }, color: C.muted, fontWeight: 500, lineHeight: 1.25 }}>{label}</Typography>
+      </Box>
+      <Box display="flex" alignItems="baseline" gap="6px">
+        <Typography sx={{ fontSize: { xs: 24, sm: 30 }, fontWeight: 700, letterSpacing: "-.02em", color: C.text, lineHeight: 1.1 }}>{value}</Typography>
+        {unit && <Typography sx={{ fontSize: 15, color: C.muted, fontWeight: 600 }}>{unit}</Typography>}
+      </Box>
+      <Box display="flex" alignItems="center" gap="6px" flexWrap="wrap" sx={{ fontSize: 12.5, color: C.muted }}>
+        <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: "2px", color, fontWeight: 700, background: color === C.muted ? "#F3F4F6" : good ? C.okSoft : C.badSoft, borderRadius: "999px", px: "8px", py: "2px" }}>
+          {up ? <TrendingUpIcon sx={{ fontSize: 16 }} /> : <TrendingDownIcon sx={{ fontSize: 16 }} />}
+          {up ? "+" : ""}{nf(delta * 100, 1)} %
+        </Box>
+        <span>{foot}</span>
+      </Box>
+    </Card>
+  );
+}
 
 const Dashboard = () => {
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState(null);
   const [error, setError] = useState(null);
-  const { t } = useTranslation();
-  // const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isMobile = useMediaQuery('(max-width:1500px)'); // Este es el nuevo media query para 1200px
+  const isNarrow = useMediaQuery("(max-width:1100px)");
+  const user = JSON.parse(localStorage.getItem("userData")) || {};
 
   useEffect(() => {
-    const getStats = async () => {
+    let alive = true;
+    const load = async () => {
       try {
-        const userData = JSON.parse(localStorage.getItem('userData')) || {};
-        const companyName = userData.companyName;
-
-        if (!companyName) {
-          console.error("No se encontró el nombre de la compañía.");
-          return;
-        }
-
         const jwt = localStorage.getItem("jwtToken");
-        const url = `${API_ORDERS.ORDERS}/statistics/${companyName}`; // Agregar companyName a la URL
-
-        const response = await axios.get(url, {
-          headers: {
-            'Authorization': `Bearer ${jwt}`
-          }
-        });
-
-        if (!response.data) {
-          throw new Error('Network response was not ok');
-        }
-
-        const data = response.data;
-        console.log("data", data)
-
-        const rates = Object.keys(data.statsLastMonth).reduce((acc, key) => {
-          const keyLastYear = key.replace('LastMonth', 'LastYear');
-          if (data.statsLastYear.hasOwnProperty(keyLastYear)) {
-            const monthlyValue = data.statsLastMonth[key];
-            const monthlyAverage = data.statsLastYear[keyLastYear];
-            let rate = monthlyValue && monthlyAverage ? (monthlyValue / monthlyAverage) - 1 : 0;
-            let increase = rate !== 0 ? ((rate) * 100).toFixed(2) : 0;
-            acc[key] = {
-              rate: rate.toFixed(2),
-              increase: `${increase}%`
-            };
-          }
-
-          return acc;
-        }, {});
-
-        console.log("rates", rates)
-        data.rates = rates;
-        setStats(data);
-        setLoading(false);
-      } catch (error) {
-        setError(error.message);
-        setLoading(false);
-      }
+        const r = await axios.get(`${API_ORDERS.ORDERS}`, { headers: { Authorization: `Bearer ${jwt}` } });
+        let rows = (r.data || []).filter((o) => o.companyName === user.companyName);
+        if (user.role === "client") rows = rows.filter((o) => o.clientName === user.clientName);
+        if (alive) setOrders(rows);
+      } catch (e) { if (alive) setError(e.message); }
     };
-
-    getStats();
+    load();
+    const t = setInterval(load, 4000); // tiempo real: el panel se refresca solo
+    return () => { alive = false; clearInterval(t); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // const getColor = (increaseValue) => {
-
-  //   return increaseValue.includes('-') ? colors.redAccent[600] : colors.greenAccent[600];
-  // };
-
-  // const getColorInverse = (condition, condition2) => {
-  //   return condition < condition2 ? colors.greenAccent[600] : colors.redAccent[600];
-  // };
-
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh" bgcolor={theme.palette.background.default}>
-        <CircularProgress size={50} color="secondary" />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh" bgcolor={theme.palette.neutral.dark}>
-        <Typography variant="h6" color="error">
-          Error: {error}
-        </Typography>
-      </Box>
-    );
-  }
-
-  const downloadPDF = () => {
-    const input = document.getElementById('dashboardBox');
-
-
-    html2canvas(input, { scale: 2 })
-      .then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF({
-          orientation: 'landscape',
-          unit: 'px',
-          format: [canvas.width, canvas.height]
-        });
-        pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-        pdf.save("dashboard.pdf");
-      })
-      .catch(err => {
-        console.error('Error al generar PDF:', err);
-      });
-  };
-
-  const increaseValueValid = (value) => {
-    if (value === null || value === undefined || isNaN(value)) {
-      return '0';
+  const s = useMemo(() => {
+    if (!orders) return null;
+    const now = Date.now();
+    const last = orders.filter((o) => now - new Date(o.createdAt) <= 30 * D);
+    const prev = orders.filter((o) => now - new Date(o.createdAt) > 30 * D);
+    const months = Math.max(1, (now - 30 * D - Math.min(...prev.map((o) => +new Date(o.createdAt)), now - 30 * D)) / (30 * D));
+    const done = (arr) => arr.filter((o) => o.status >= 3 && o.initialQuantity && o.finalQuantity);
+    const avg = (arr, f) => (arr.length ? arr.reduce((a, o) => a + f(o), 0) / arr.length : 0);
+    const units = (arr) => arr.reduce((a, o) => a + (o.productionQuantity || 0), 0);
+    const k = {
+      pedidos: last.length, pedidosPrev: prev.length / months,
+      unidades: units(last), unidadesPrev: units(prev) / months,
+      merma: avg(done(last), merma), mermaPrev: avg(done(prev), merma),
+      tiempo: avg(done(last), desvT), tiempoPrev: avg(done(prev), desvT),
+    };
+    const enCurso = orders.filter((o) => o.status === 2).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    const pendientes = orders.filter((o) => o.status === 1 && new Date(o.processingDate) > now).sort((a, b) => new Date(a.processingDate) - new Date(b.processingDate));
+    const retrasados = orders.filter((o) => o.status === 1 && new Date(o.processingDate) <= now).sort((a, b) => new Date(a.processingDate) - new Date(b.processingDate));
+    const desviaciones = done(orders.filter((o) => now - new Date(o.processingDateFinal || o.updatedAt) <= 45 * D))
+      .map((o) => ({ o, m: merma(o), t: desvT(o) }))
+      .filter((x) => x.m > 0.07 || x.t > 0.3)
+      .sort((a, b) => Math.max(b.m / 0.07, b.t / 0.3) - Math.max(a.m / 0.07, a.t / 0.3));
+    // semanas
+    const weeks = {};
+    for (const o of orders) {
+      const w = weekStart(o.createdAt);
+      weeks[w] = weeks[w] || { pedidos: 0, ini: 0, fin: 0, plan: 0, real: 0 };
+      weeks[w].pedidos++;
+      if (o.status >= 3 && o.initialQuantity && o.finalQuantity) { weeks[w].ini += o.initialQuantity; weeks[w].fin += o.finalQuantity; weeks[w].plan += o.processingTime; weeks[w].real += o.processingTimeFinal; }
     }
-    return value;
-  };
+    const ws = Object.keys(weeks).map(Number).sort((a, b) => a - b).filter((w) => w <= now);
+    const label = (w) => fmtDate(w);
+    const barData = ws.map((w) => ({ semana: label(w), Pedidos: weeks[w].pedidos }));
+    const mermaLine = [{ id: "Merma", data: ws.filter((w) => weeks[w].ini).map((w) => ({ x: label(w), y: +(((weeks[w].ini - weeks[w].fin) / weeks[w].ini) * 100).toFixed(2) })) },
+      { id: "Retraso", data: ws.filter((w) => weeks[w].plan).map((w) => ({ x: label(w), y: +(((weeks[w].real - weeks[w].plan) / weeks[w].plan) * 100).toFixed(2) })) }];
+    return { k, enCurso, pendientes, retrasados, desviaciones, barData, mermaLine };
+  }, [orders]);
+
+  if (error) return <Box m="24px"><Card><Typography color="error">No se han podido cargar los datos.</Typography></Card></Box>;
+  if (!s) return <Box m="24px" sx={{ color: C.muted }}><LinearProgress sx={{ borderRadius: 4 }} /></Box>;
+  const { k } = s;
+  const rel = (a, b) => (b ? a / b - 1 : 0);
+  const today0 = new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
+  const today = today0.charAt(0).toUpperCase() + today0.slice(1);
+  const nivoTheme = { fontFamily: "Inter, sans-serif", fontSize: 11, textColor: C.muted, grid: { line: { stroke: "#EEF0F4" } }, axis: { ticks: { text: { fill: C.muted } } }, tooltip: { container: { fontSize: 12, borderRadius: 8 } } };
+  const tickEvery = (arr, n) => arr.filter((_, i) => i % n === 0).map((d) => d.semana || d.x);
 
   return (
-    <Box m="20px">
-      {/* HEADER */}
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title={t('dashboard.welcome_title')} subtitle={t('dashboard.welcome_subtitle')} />
-        <Box></Box>
-        {!isMobile && (
-          <Button
-            onClick={downloadPDF}
-            sx={{
-              backgroundColor: colors.blueAccent[700],
-              color: colors.blueAccent[500],
-              fontSize: "14px",
-              fontWeight: "bold",
-              padding: "10px 20px",
-            }}
-          >
-            <DownloadOutlinedIcon sx={{ mr: "10px" }} />
-            {t('dashboard.download')}
-          </Button>
-        )}
+    <Box className="sb-dashboard" sx={{ p: { xs: "16px", md: "24px 28px" } }}>
+      <Box display="flex" justifyContent="space-between" alignItems="flex-end" mb="20px" flexWrap="wrap" gap="10px">
+        <Box>
+          <Typography sx={{ fontSize: 13, color: C.muted }}>{today}</Typography>
+          <Typography sx={{ fontSize: 26, fontWeight: 700, letterSpacing: "-.02em", color: C.text }}>Panel de producción</Typography>
+        </Box>
+        <Box sx={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: 12.5, color: C.ok, background: C.okSoft, borderRadius: "999px", px: "12px", py: "6px", fontWeight: 600 }}>
+          <FiberManualRecordIcon sx={{ fontSize: 10, animation: "sbPulse 1.6s infinite" }} /> En directo · se actualiza solo
+        </Box>
       </Box>
 
-      {/* GRID & CHARTS */}
-      <Box
-        id="dashboardBox"
-        display="grid"
-        gridTemplateColumns={isMobile ? "repeat(1, 1fr)" : "repeat(12, 1fr)"}
-        // gridTemplateColumns={isCompactLayout ? "repeat(1, 1fr)" : "repeat(12, 1fr)"}
+      <Box className="sb-kpis" display="grid" gridTemplateColumns={isNarrow ? "repeat(2, 1fr)" : "repeat(4, 1fr)"} gap="16px" mb="16px">
+        <Kpi icon={<Inventory2OutlinedIcon fontSize="small" />} label="Pedidos (30 días)" value={nf(k.pedidos)} delta={rel(k.pedidos, k.pedidosPrev)} goodWhenUp foot="vs. media mensual" />
+        <Kpi icon={<PrecisionManufacturingOutlinedIcon fontSize="small" />} label="Unidades encargadas" value={nf(k.unidades / 1000, 0)} unit="mil" delta={rel(k.unidades, k.unidadesPrev)} goodWhenUp foot="vs. media mensual" />
+        <Kpi icon={<ContentCutOutlinedIcon fontSize="small" />} label="Merma media" value={nf(k.merma * 100, 1)} unit="%" delta={rel(k.merma, k.mermaPrev)} foot={`antes ${nf(k.mermaPrev * 100, 1)} %`} />
+        <Kpi icon={<TimerOutlinedIcon fontSize="small" />} label="Desvío de tiempo" value={(k.tiempo >= 0 ? "+" : "") + nf(k.tiempo * 100, 1)} unit="%" delta={k.tiempo - k.tiempoPrev} foot={`antes ${k.tiempoPrev >= 0 ? "+" : ""}${nf(k.tiempoPrev * 100, 1)} %`} />
+      </Box>
 
-        gridAutoRows="131px"
-        gap="20px"
-        sx={{
-          ...(isMobile && {
-            m: 0, // Remover el margen en móviles
-            width: '100%', // Asegurar que el Box ocupa todo el ancho
-            maxWidth: '100%', // Prevenir cualquier overflow accidental
-            overflow: 'hidden',
-            '& > div': {
-              m: 0, // Remover el margen en móviles
-              width: '100%', // Asegurar que el Box ocupa todo el ancho
-              maxWidth: '100%', // Prevenir cualquier overflow accidental
-              overflowX: 'hidden', // Prevenir barras de desplazamiento innecesarias
-              // marginBottom: '10px',//cambia espaciado entre elementos
-              // '&:last-child': { marginBottom: '20px' }, 
-            } // Prevenir barras de desplazamiento innecesarias
-          })
-
-        }}
-      >
-        {/* ROW 1 */}
-        {/* Producción Total */}
-        <Box gridColumn={isMobile ? "1 / -1" : "span 3"} backgroundColor={colors.primary[400]} display="flex" alignItems="center" justifyContent="center">
-          <StatBox
-            title={`${stats?.statsLastMonth?.totalProductionQuantityLastMonth.toFixed(0)}/${stats?.statsLastYear?.totalProductionQuantityLastYear?.toFixed(2)}`}
-            subtitle={t('dashboard.monthly_quantities')}
-            icon={<PointOfSaleIcon />}
-            progress={`${stats?.rates?.totalProductionQuantityLastMonth?.rate?.toLocaleString()}`}
-            increase={`${stats?.rates?.totalProductionQuantityLastMonth?.increase?.toLocaleString()}`}
-          />
-        </Box>
-        {/* Conteo de Órdenes */}
-        <Box gridColumn={isMobile ? "1 / -1" : "span 3"} backgroundColor={colors.primary[400]} display="flex" alignItems="center" justifyContent="center">
-          <StatBox
-            title={`${stats?.statsLastMonth?.orderCountLastMonth.toFixed(0)}/${stats?.statsLastYear?.orderCountLastYear?.toFixed(2)}`}
-            subtitle={t('dashboard.monthly_orders')}
-            icon={<Inventory2Icon />}
-            progress={`${stats?.rates?.orderCountLastMonth?.rate?.toLocaleString()}`}
-            increase={`${stats?.rates?.orderCountLastMonth?.increase?.toLocaleString()}`}
-          />
-        </Box>
-        {/* Diferencia de Tiempo de Procesamiento */}
-        <Box gridColumn={isMobile ? "1 / -1" : "span 3"} backgroundColor={colors.primary[400]} display="flex" alignItems="center" justifyContent="center">
-          <StatBox2
-            title={`${stats?.statsLastMonth?.totalProcessingTimeDifferenceLastMonth?.toFixed(2)}/${stats?.statsLastYear?.totalProcessingTimeDifferenceLastYear?.toFixed(2)}`}
-            subtitle={t('dashboard.processing_delay')}
-            icon={<MoreTimeIcon />}
-            progress={`${stats?.rates?.totalProcessingTimeDifferenceLastMonth?.rate?.toLocaleString()}`}
-            increase={`${stats?.rates?.totalProcessingTimeDifferenceLastMonth?.increase?.toLocaleString()}`}
-            condition={`${stats?.statsLastMonth?.totalProcessingTimeDifferenceLastMonth?.toFixed(2)}`}
-            condition2={`${stats?.statsLastYear?.totalProcessingTimeDifferenceLastYear?.toFixed(2)}`}
-          />
-        </Box>
-        {/* Diferencia en Cantidad Final */}
-        <Box gridColumn={isMobile ? "1 / -1" : "span 3"} backgroundColor={colors.primary[400]} display="flex" alignItems="center" justifyContent="center">
-          <StatBox2
-            title={`${stats?.statsLastMonth?.totalFinalQuantityDifferenceLastMonth.toFixed(0)}/${stats?.statsLastYear?.totalFinalQuantityDifferenceLastYear?.toFixed(2)}`}
-            subtitle={t('dashboard.monthly_losses')}
-            icon={<BrokenImageIcon />}
-            progress={`${stats?.rates?.totalFinalQuantityDifferenceLastMonth?.rate?.toLocaleString()}`}
-            increase={`${stats?.rates?.totalFinalQuantityDifferenceLastMonth?.increase?.toLocaleString()}`}
-            condition={`${stats?.statsLastMonth?.totalFinalQuantityDifferenceLastMonth?.toFixed(2)}`}
-            condition2={`${stats?.statsLastYear?.totalFinalQuantityDifferenceLastYear?.toFixed(2)}`}
-          />
-        </Box>
-        {/* ROW 2 */}
-        <Box
-          gridColumn={isMobile ? "1 / -1" : "span 8"}
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-          overflow='hidden'
-        >
-          <Box
-            mt="25px"
-            p="0 30px"
-            display="flex "
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Box>
-              <Typography
-                variant="h5"
-                fontWeight="600"
-                color={colors.grey[100]}
-              >
-                {t('dashboard.orders')}
-              </Typography>
-              <Typography
-                variant="h3"
-                fontWeight="bold"
-                color={colors.greenAccent[500]}
-              >
-                {t('dashboard.graph_sub_title')}
-
-              </Typography>
-            </Box>
-          </Box>
-          <Box height={isMobile ? '240px' : '250px'} m="-20px 0 0 0">
-            <LineChart isDashboard={true} />
-          </Box>
-        </Box>
-        <Box
-          gridColumn={isMobile ? "1 / -1" : "span 4"}
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-          overflow="auto"
-        >
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            borderBottom={`4px solid ${colors.primary[500]}`}
-            colors={colors.grey[100]}
-            p="15px"
-          >
-            <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
-              {t('dashboard.pending_orders')}
-            </Typography>
-          </Box>
-          {stats.allPending.length > 0 ? (
-            stats.allPending.map((transaction, i) => (
-              <Box
-                key={`${transaction.orderNumber}-${i}`}
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                borderBottom={`4px solid ${colors.primary[500]}`}
-                p="15px"
-              >
-                <Box>
-                  <Typography
-                    color={colors.greenAccent[500]}
-                    variant="h5"
-                    fontWeight="600"
-                  >
-                    {new Date(transaction.processingDate).toLocaleString()}
-                  </Typography>
-                  <Typography color={colors.grey[100]}>
-                    {transaction.technician}
-                  </Typography>
+      <Box display="grid" gridTemplateColumns={isNarrow ? "1fr" : "1.25fr 1fr"} gap="16px" mb="16px">
+        <Card className="sb-encurso">
+          <CardTitle title="En producción ahora" sub="Lo que registran los técnicos aparece aquí al momento" right={<Box sx={{ fontSize: 12.5, fontWeight: 700, color: C.brand, background: C.brandSoft, borderRadius: "999px", px: "10px", py: "3px" }}>{s.enCurso.length} órdenes</Box>} />
+          <Box sx={{ maxHeight: 316, overflow: "auto", mr: "-8px", pr: "8px" }}>
+            {s.enCurso.map((o) => {
+              const p = Math.min(1, (o.quantityProcessed || 0) / o.productionQuantity);
+              return (
+                <Box key={o._id} sx={{ py: "10px", borderTop: `1px solid ${C.line}`, "&:first-of-type": { borderTop: 0, pt: 0 } }}>
+                  <Box display="flex" justifyContent="space-between" gap="10px">
+                    <Box sx={{ minWidth: 0 }}>
+                      <Typography sx={{ fontWeight: 600, fontSize: 13.5, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{o.workName}</Typography>
+                      <Typography sx={{ fontSize: 12, color: C.muted }}>Nº {o.orderNumber} · {o.clientName} · {o.technician.split(" ").slice(0, 2).join(" ")}</Typography>
+                    </Box>
+                    <Typography sx={{ fontSize: 13, fontWeight: 700, color: C.text, whiteSpace: "nowrap" }}>{nf(o.quantityProcessed)} <Box component="span" sx={{ color: C.muted, fontWeight: 500 }}>/ {nf(o.productionQuantity)}</Box></Typography>
+                  </Box>
+                  <LinearProgress variant="determinate" value={p * 100} sx={{ mt: "8px", height: 7, borderRadius: 4, background: "#EEF0F4", "& .MuiLinearProgress-bar": { borderRadius: 4, background: p >= 1 ? C.ok : C.brand } }} />
                 </Box>
-                <Box color={colors.grey[100]}>{transaction.clientName}</Box>
-                <Box
-                  backgroundColor={colors.greenAccent[500]}
-                  p="5px 10px"
-                  borderRadius="4px"
-                >
-                  {t('dashboard.order_number_prefix')} {transaction.orderNumber}
+              );
+            })}
+          </Box>
+        </Card>
+        <Card className="sb-desviaciones">
+          <CardTitle title="Desviaciones" sub="Órdenes con merma > 7 % o más de un 30 % de tiempo sobre lo previsto" right={<WarningAmberRoundedIcon sx={{ color: C.warn }} />} />
+          <Box sx={{ maxHeight: 316, overflow: "auto", mr: "-8px", pr: "8px" }}>
+            {s.desviaciones.length === 0 && <Typography sx={{ color: C.muted, fontSize: 13 }}>Sin desviaciones en las últimas semanas.</Typography>}
+            {s.desviaciones.slice(0, 12).map(({ o, m, t }) => (
+              <Box key={o._id} display="flex" justifyContent="space-between" alignItems="center" gap="10px" sx={{ py: "9px", borderTop: `1px solid ${C.line}`, "&:first-of-type": { borderTop: 0, pt: 0 } }}>
+                <Box sx={{ minWidth: 0 }}>
+                  <Typography sx={{ fontWeight: 600, fontSize: 13.5, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{o.workName}</Typography>
+                  <Typography sx={{ fontSize: 12, color: C.muted }}>Nº {o.orderNumber} · {o.clientName} · {fmtDate(o.processingDateFinal)}</Typography>
+                </Box>
+                <Box display="flex" gap="6px" flexShrink={0}>
+                  {m > 0.07 && <Box sx={{ fontSize: 12, fontWeight: 700, color: C.bad, background: C.badSoft, borderRadius: "8px", px: "8px", py: "3px" }}>merma {nf(m * 100, 1)} %</Box>}
+                  {t > 0.3 && <Box sx={{ fontSize: 12, fontWeight: 700, color: C.warn, background: C.warnSoft, borderRadius: "8px", px: "8px", py: "3px" }}>tiempo +{nf(t * 100, 0)} %</Box>}
                 </Box>
               </Box>
-            ))
-          ) : (
-            <Box display="flex" justifyContent="center" alignItems="center" p="15px" height="52%" sx={{ mt: 4 }}>
-              <Typography color={colors.grey[100]} align="center" mt={1}>
-                {t('dashboard.no_pending_orders')}
-              </Typography>
-            </Box>
-
-          )}
-        </Box>
-        <Box
-          gridColumn={isMobile ? "1 / -1" : "span 4"}
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-          overflow="auto"
-        >
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            borderBottom={`4px solid ${colors.redAccent[500]}`}
-            colors={colors.grey[100]}
-            p="15px"
-          >
-            <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
-              {t('dashboard.outdated_orders')}
-            </Typography>
+            ))}
           </Box>
-          {stats.futurePending.length > 0 ? (
-            stats.futurePending.map((transaction, i) => (
-              <Box
-                key={`${transaction.orderNumber}-${i}`}
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                borderBottom={`4px solid ${colors.primary[500]}`}
-                p="15px"
-              >
-                <Box>
-                  <Typography
-                    color={colors.redAccent[500]}
-                    variant="h5"
-                    fontWeight="600"
-                  >
-                    {new Date(transaction.processingDate).toLocaleString()}
-                  </Typography>
-                  <Typography color={colors.grey[100]}>
-                    {transaction.technician}
-                  </Typography>
-                </Box>
-                <Box color={colors.grey[100]}>{transaction.clientName}</Box>
-                <Box
-                  backgroundColor={colors.redAccent[500]}
-                  p="5px 10px"
-                  borderRadius="4px"
-                >
-                  {t('dashboard.order_number_prefix')} {transaction.orderNumber}
-                </Box>
+        </Card>
+      </Box>
+
+      <Box display="grid" gridTemplateColumns={isNarrow ? "1fr" : "1fr 1fr"} gap="16px" mb="16px">
+        <Card className="sb-chart-merma">
+          <CardTitle title="Merma y retraso por semana" sub="Porcentaje sobre lo planificado · órdenes terminadas" />
+          <Box height={isNarrow ? 220 : 250}>
+            <ResponsiveLine data={s.mermaLine} theme={nivoTheme} colors={[C.bad, C.warn]} margin={{ top: 10, right: 16, bottom: 46, left: 40 }}
+              xScale={{ type: "point" }} yScale={{ type: "linear", min: "auto", max: "auto" }} curve="monotoneX" lineWidth={2.5} pointSize={5} pointColor="#fff" pointBorderWidth={2} pointBorderColor={{ from: "serieColor" }}
+              enableGridX={false} axisLeft={{ tickSize: 0, tickPadding: 8, format: (v) => `${v} %`, tickValues: 5 }} axisBottom={{ tickSize: 0, tickPadding: 10, tickValues: tickEvery(s.mermaLine[0].data, isNarrow ? 4 : 2) }}
+              useMesh legends={[{ anchor: "bottom", direction: "row", translateY: 44, itemWidth: 90, itemHeight: 16, symbolSize: 10, symbolShape: "circle", itemTextColor: C.muted }]} />
+          </Box>
+        </Card>
+        <Card className="sb-chart-pedidos">
+          <CardTitle title="Pedidos por semana" sub="Desde julio" />
+          <Box height={isNarrow ? 220 : 250}>
+            <ResponsiveBar data={s.barData} keys={["Pedidos"]} indexBy="semana" theme={nivoTheme} colors={[C.brand]} margin={{ top: 10, right: 10, bottom: 46, left: 36 }} padding={0.35} borderRadius={4}
+              enableLabel={false} axisLeft={{ tickSize: 0, tickPadding: 8, tickValues: 5 }} axisBottom={{ tickSize: 0, tickPadding: 10, tickValues: tickEvery(s.barData, isNarrow ? 4 : 2) }} gridYValues={5} />
+          </Box>
+        </Card>
+      </Box>
+
+      <Box display="grid" gridTemplateColumns={isNarrow ? "1fr" : "1fr 1fr"} gap="16px">
+        <Card className="sb-pendientes">
+          <CardTitle title="Próximas órdenes" sub="Pendientes de empezar, por fecha prevista" right={<Box sx={{ fontSize: 12.5, fontWeight: 700, color: C.brand, background: C.brandSoft, borderRadius: "999px", px: "10px", py: "3px" }}>{s.pendientes.length}</Box>} />
+          {s.pendientes.slice(0, 6).map((o) => (
+            <Box key={o._id} display="flex" justifyContent="space-between" alignItems="center" gap="10px" sx={{ py: "9px", borderTop: `1px solid ${C.line}`, "&:first-of-type": { borderTop: 0, pt: 0 } }}>
+              <Box sx={{ minWidth: 0 }}>
+                <Typography sx={{ fontWeight: 600, fontSize: 13.5, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{o.clientName}</Typography>
+                <Typography sx={{ fontSize: 12, color: C.muted }}>{o.workName} · {o.technician.split(" ").slice(0, 2).join(" ")}</Typography>
               </Box>
-            ))
-          ) : (
-            <Box display="flex" justifyContent="center" alignItems="center" height="52%" sx={{ mt: 4 }}>
-              <Typography color={colors.grey[100]} align="center" mt={1}>
-                {t('dashboard.no_outdated_orders')}
-              </Typography>
+              <Typography sx={{ fontSize: 12.5, color: C.text, fontWeight: 600, whiteSpace: "nowrap" }}>{fmtDateTime(o.processingDate)}</Typography>
             </Box>
-          )}
-        </Box>
-        {/* ROW 3 */}
-        <Box
-          gridColumn={isMobile ? "1 / -1" : "span 4"}
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-        >
-          <Typography
-            variant="h5"
-            fontWeight="600"
-            sx={{ padding: "30px 30px 0 30px" }}
-          >
-            {t('dashboard.orders_by_client')}
-          </Typography>
-          <Box height={isMobile ? '190px' : '240px'} // Ajustar la altura del gráfico de pastel en la versión móvil
-            mt={isMobile ? '10px' : '-20px'} display="flex" alignItems="center" justifyContent="center">
-            {stats.statsLastYear.totalOrdersByCompany.length > 0 ? (
-              <PieChart isDashboard={true} data={stats.statsLastYear.totalOrdersByCompany} />
-            ) : (
-              <Typography color={colors.grey[100]} variant="h6" align="center" sx={{ mt: 4 }}>
-                {t('dashboard.no_orders_by_client')}
-              </Typography>
-            )}
-          </Box>
-        </Box>
-        <Box
-          gridColumn={isMobile ? "1 / -1" : "span 4"}
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-        >
-          <Typography
-            variant="h5"
-            fontWeight="600"
-            sx={{ padding: "30px 30px 0 30px" }}
-          >
-            {t('dashboard.quantities_by_client')}
-          </Typography>
-          <Box 
-  height={isMobile ? '190px' : '240px'} // Ajustar la altura del gráfico de pastel en la versión móvil
-  mt={isMobile ? '10px' : '-20px'} display="flex" alignItems="center" justifyContent="center">
-  {stats.statsLastYear.totalOrdersByCompany.length > 0 ? (
-    <PieChart isDashboard={true} data={stats.statsLastYear.totalOrdersByCompany} />
-  ) : (
-    <Typography color={colors.grey[100]} variant="h6" align="center" sx={{ mt: 4 }}>
-      {t('dashboard.no_orders_by_client')}
-    </Typography>
-  )}
-</Box>
-
-        </Box>
+          ))}
+        </Card>
+        <Card className="sb-retrasados" sx={{ borderColor: s.retrasados.length ? "#FECACA" : C.line }}>
+          <CardTitle title="Retrasadas" sub="Debían haber empezado y siguen pendientes" right={<Box sx={{ fontSize: 12.5, fontWeight: 700, color: C.bad, background: C.badSoft, borderRadius: "999px", px: "10px", py: "3px" }}>{s.retrasados.length}</Box>} />
+          {s.retrasados.length === 0 && <Typography sx={{ color: C.muted, fontSize: 13 }}>Nada retrasado.</Typography>}
+          {s.retrasados.slice(0, 6).map((o) => (
+            <Box key={o._id} display="flex" justifyContent="space-between" alignItems="center" gap="10px" sx={{ py: "9px", borderTop: `1px solid ${C.line}`, "&:first-of-type": { borderTop: 0, pt: 0 } }}>
+              <Box sx={{ minWidth: 0 }}>
+                <Typography sx={{ fontWeight: 600, fontSize: 13.5, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{o.clientName}</Typography>
+                <Typography sx={{ fontSize: 12, color: C.muted }}>{o.workName} · {o.technician.split(" ").slice(0, 2).join(" ")}</Typography>
+              </Box>
+              <Typography sx={{ fontSize: 12.5, color: C.bad, fontWeight: 700, whiteSpace: "nowrap" }}>{Math.max(1, Math.round((Date.now() - new Date(o.processingDate)) / D))} días</Typography>
+            </Box>
+          ))}
+        </Card>
       </Box>
     </Box>
   );

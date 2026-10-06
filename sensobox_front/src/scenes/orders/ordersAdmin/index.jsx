@@ -1,3 +1,5 @@
+// Copia del original con retoques de demo (overlay fuera del repo): estado en píldora, merma en color,
+// columnas secundarias ocultas por defecto y orden por número descendente.
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../../theme";
 import { mockDataOrders } from "../../../data/mockData";
@@ -21,6 +23,7 @@ import BuildIcon from '@mui/icons-material/Build';
 import { API_ORDERS } from "../../../config/config";
 import Popover from '@mui/material/Popover';
 import axios from 'axios';
+import { StatusChip, nf } from "../../../components/OrderBits";
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Button } from '@mui/material';
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
 import HourglassEmptyOutlinedIcon from "@mui/icons-material/HourglassEmptyOutlined";
@@ -188,53 +191,13 @@ const OrdersAdmin = () => {
       headerName: t("orders.columns.status"),
       type: "string",
       flex: 1,
-      minWidth: 140,
-      renderCell: (params) => {
-        let icon, color;
-        switch (params.value) {
-          case 1:
-            icon = <HourglassEmptyOutlinedIcon sx={{ color: 'white' }} />;
-            color = colors?.redAccent?.[400] || '#f00';
-            break;
-          case 2:
-            icon = <BuildOutlinedIcon sx={{ color: 'white' }} />;
-            color = colors?.blueAccent?.[400] || '#00f';
-            break;
-          case 3:
-            icon = <CheckCircleOutlineOutlinedIcon sx={{ color: 'white' }} />;
-            color = colors?.greenAccent?.[400] || '#0f0';
-            break;
-          case 4:
-            icon = <LocalShippingOutlinedIcon sx={{ color: 'white' }} />;
-            color = colors?.orangeAccent?.[400] || '#ffa500';
-            break;
-          default:
-            icon = null;
-            color = 'transparent';
-        }
-
-        return (
-          <Box
-            width="100%"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            bgcolor={color}
-            borderRadius="4px"
-            p="5px"
-          >
-            {icon}
-            <Typography color="white" sx={{ ml: 1 }}>
-              {t(`orders.status.${getStatusKey(params.value)}`)}
-            </Typography>
-          </Box>
-        );
-      }
+      minWidth: 150,
+      renderCell: (params) => <StatusChip status={params.value} />,
     },
     {
       field: "clientName",
       headerName: t("orders.columns.clientName"),
-      flex: 1, minWidth: 150,
+      flex: 1.3, minWidth: 190,
       renderCell: isTablet
         ? (params) => (
           <Typography onClick={(event) => handleCellClick(params, event)}>
@@ -272,6 +235,7 @@ const OrdersAdmin = () => {
       field: "productionQuantity",
       headerName: t("orders.columns.productionQuantity"),
       type: "number",
+      valueFormatter: ({ value }) => nf(value),
       flex: 1,
       minWidth: 70,
       renderCell: isTablet
@@ -286,6 +250,7 @@ const OrdersAdmin = () => {
       field: "quantityProcessed",
       headerName: t("orders.columns.quantityProcessed"),
       type: "number",
+      valueFormatter: ({ value }) => nf(value),
       flex: 1,
       minWidth: 90,
       renderCell: isTablet
@@ -339,7 +304,7 @@ const OrdersAdmin = () => {
       field: "technician",
       headerName: t("orders.columns.technician"),
       flex: 1,
-      minWidth: 100,
+      minWidth: 160,
       renderCell: isTablet
         ? (params) => (
           <Typography onClick={(event) => handleCellClick(params, event)}>
@@ -398,7 +363,7 @@ const OrdersAdmin = () => {
           {params.value}
         </Typography>
       ),
-      valueGetter: (params) => params.row.processingDate ? new Date(params.row.processingDate).toLocaleString() : "",
+      valueGetter: (params) => params.row.processingDate ? new Date(params.row.processingDate).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "",
       valueFormatter: ({ value }) => value,
     },
     {
@@ -446,18 +411,12 @@ const OrdersAdmin = () => {
       field: "errorPercentage",
       headerName: t("orders.columns.errorPercentage"),
       type: "number",
-      flex: 1,
-      minWidth: 100,
-      renderCell: (params) => {
-        const initialQuantity = params.row.initialQuantity || 1; // Avoid division by zero
-        const finalQuantity = params.row.finalQuantity || 0;
-        const errorPercentage = ((initialQuantity - finalQuantity) / initialQuantity) * 100;
-        return (
-          <Typography>
-            {errorPercentage.toFixed(2)}%
-          </Typography>
-        );
-      }
+      flex: 0.8,
+      minWidth: 90,
+      valueGetter: (params) => (params.row.status >= 3 && params.row.initialQuantity ? (params.row.initialQuantity - params.row.finalQuantity) / params.row.initialQuantity : null),
+      renderCell: (params) => params.value == null ? <Typography sx={{ color: "#9CA3AF" }}>—</Typography> : (
+        <Typography sx={{ fontWeight: 600, color: params.value > 0.07 ? "#DC2626" : "#047857" }}>{nf(params.value * 100, 1)} %</Typography>
+      ),
     },
     {
       field: "processingDateInitial",
@@ -470,7 +429,7 @@ const OrdersAdmin = () => {
           {params.value}
         </Typography>
       ),
-      valueGetter: (params) => params.row.processingDateInitial ? new Date(params.row.processingDateInitial).toLocaleString() : "",
+      valueGetter: (params) => params.row.processingDateInitial ? new Date(params.row.processingDateInitial).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "",
       valueFormatter: ({ value }) => value,
     },
     {
@@ -484,7 +443,7 @@ const OrdersAdmin = () => {
           {params.value}
         </Typography>
       ),
-      valueGetter: (params) => params.row.processingDateFinal ? new Date(params.row.processingDateFinal).toLocaleString() : "",
+      valueGetter: (params) => params.row.processingDateFinal ? new Date(params.row.processingDateFinal).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "",
       valueFormatter: ({ value }) => value,
     },
     {
@@ -497,7 +456,7 @@ const OrdersAdmin = () => {
           {params.value}
         </Typography>
       ),
-      valueGetter: (params) => params.row.createdAt ? new Date(params.row.createdAt).toLocaleString() : "N/A",
+      valueGetter: (params) => params.row.createdAt ? new Date(params.row.createdAt).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "N/A",
     },
     {
       field: "updatedAt",
@@ -509,7 +468,7 @@ const OrdersAdmin = () => {
           {params.value}
         </Typography>
       ),
-      valueGetter: (params) => new Date(params.row.updatedAt).toLocaleString(),
+      valueGetter: (params) => new Date(params.row.updatedAt).toLocaleString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }),
     },
 
     {
@@ -656,25 +615,14 @@ const OrdersAdmin = () => {
   };
 
   const actionElements = (
-    <Box display="flex" alignItems="center" gap={2} justifyContent="flex-end">
-      <Box display="flex" alignItems="center" bgcolor={colors.primary[400]} borderRadius={theme.shape.borderRadius} p="2px" sx={{ width: isTablet ? '80%' : 'auto' }}>
-        <InputBase
-          sx={{ ml: 1, flex: 1, color: 'white', fontSize: '0.875rem' }}
-          placeholder={t("orders.searchPlaceholder")}
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-        />
-        <IconButton type="submit" sx={{ p: '10px', color: 'white' }}>
-          <SearchIcon />
-        </IconButton>
-      </Box>
+    <Box className="sb-search" display="flex" alignItems="center" sx={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: "10px", height: 42, px: "10px", width: 300 }}>
+      <SearchIcon sx={{ color: "#9CA3AF", fontSize: 20, mr: "6px" }} />
+      <InputBase sx={{ flex: 1, fontSize: "0.9rem" }} placeholder={t("orders.searchPlaceholder")} value={searchText} onChange={(e) => setSearchText(e.target.value)} />
     </Box>
   );
 
-
-
   return (
-    <Box m="20px">
+    <Box sx={{ p: { xs: '16px', md: '24px 28px' } }}>
       <Header title={t("orders.title")} subtitle={t("orders.subtitle")} actionElement={actionElements} />
       <Popover
         open={popover.open}
@@ -707,6 +655,10 @@ const OrdersAdmin = () => {
 <DataGrid
   rows={filteredData}
   columns={columns}
+  initialState={{
+    columns: { columnVisibilityModel: { colors: false, processes: false, specialFinishes: false, palletsNumber: false, materialArea: false, materialWeight: false, processingTime: false, initialQuantity: false, finalQuantity: false, processingDateInitial: false, createdAt: false, updatedAt: false } },
+    sorting: { sortModel: [{ field: "orderNumber", sort: "desc" }] },
+  }}
   getRowId={(row) => row._id}
   components={{ Toolbar: () => <TableHeaderCreate handleCreate={handleCreate} /> }}
   pageSizeOptions={[25]}
