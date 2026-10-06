@@ -144,14 +144,14 @@ const Dashboard = () => {
         </Box>
       </Box>
 
-      <Box className="sb-kpis" display="grid" gridTemplateColumns={isNarrow ? "repeat(2, 1fr)" : "repeat(4, 1fr)"} gap="16px" mb="16px">
+      <Box className="sb-kpis" display="grid" gridTemplateColumns={isNarrow ? "repeat(2, minmax(0, 1fr))" : "repeat(4, minmax(0, 1fr))"} gap="16px" mb="16px">
         <Kpi icon={<Inventory2OutlinedIcon fontSize="small" />} label={t("dashboard.kpi.orders")} value={nf(k.pedidos)} delta={rel(k.pedidos, k.pedidosPrev)} goodWhenUp foot={t("dashboard.kpi.vsMonthly")} />
         <Kpi icon={<PrecisionManufacturingOutlinedIcon fontSize="small" />} label={t("dashboard.kpi.units")} value={nf(k.unidades / 1000, 0)} unit={t("dashboard.kpi.thousand")} delta={rel(k.unidades, k.unidadesPrev)} goodWhenUp foot={t("dashboard.kpi.vsMonthly")} />
         <Kpi icon={<ContentCutOutlinedIcon fontSize="small" />} label={t("dashboard.kpi.waste")} value={nf(k.merma * 100, 1)} unit="%" delta={rel(k.merma, k.mermaPrev)} foot={t("dashboard.kpi.before", { v: pct(k.mermaPrev * 100, 1) })} />
         <Kpi icon={<TimerOutlinedIcon fontSize="small" />} label={t("dashboard.kpi.timeDeviation")} value={(k.tiempo >= 0 ? "+" : "") + nf(k.tiempo * 100, 1)} unit="%" delta={k.tiempo - k.tiempoPrev} foot={t("dashboard.kpi.before", { v: pct(k.tiempoPrev * 100, 1, true) })} />
       </Box>
 
-      <Box display="grid" gridTemplateColumns={isNarrow ? "1fr" : "1.25fr 1fr"} gap="16px" mb="16px">
+      <Box display="grid" gridTemplateColumns={isNarrow ? "minmax(0, 1fr)" : "minmax(0, 1.25fr) minmax(0, 1fr)"} gap="16px" mb="16px">
         <Card className="sb-encurso">
           <CardTitle title={t("dashboard.inProduction.title")} sub={t("dashboard.inProduction.subtitle")} right={<Box sx={{ fontSize: 12.5, fontWeight: 700, color: C.brand, background: C.brandSoft, borderRadius: "999px", px: "10px", py: "3px", whiteSpace: "nowrap" }}>{t("dashboard.inProduction.count", { count: s.enCurso.length })}</Box>} />
           <Box sx={{ maxHeight: 316, overflow: "auto", mr: "-8px", pr: "8px" }}>
@@ -160,11 +160,11 @@ const Dashboard = () => {
               return (
                 <Box key={o._id} className="sb-row" sx={{ py: "10px", borderTop: `1px solid ${C.line}`, "&:first-of-type": { borderTop: 0, pt: 0 } }}>
                   <Box display="flex" justifyContent="space-between" gap="10px">
-                    <Box sx={{ minWidth: 0 }}>
+                    <Box sx={{ minWidth: 0, flex: 1 }}>
                       <Typography sx={{ fontWeight: 600, fontSize: 13.5, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{o.workName}</Typography>
-                      <Typography sx={{ fontSize: 12, color: C.muted }}>{t("order.numberShort", { n: o.orderNumber })} · {o.clientName} · {o.technician.split(" ").slice(0, 2).join(" ")}</Typography>
+                      <Typography sx={{ fontSize: 12, color: C.muted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{t("order.numberShort", { n: o.orderNumber })} · {o.clientName} · {o.technician.split(" ").slice(0, 2).join(" ")}</Typography>
                     </Box>
-                    <Typography sx={{ fontSize: 13, fontWeight: 700, color: C.text, whiteSpace: "nowrap" }}>{nf(o.quantityProcessed)} <Box component="span" sx={{ color: C.muted, fontWeight: 500 }}>/ {nf(o.productionQuantity)}</Box></Typography>
+                    <Typography sx={{ fontSize: 13, fontWeight: 700, color: C.text, whiteSpace: "nowrap", flexShrink: 0 }}>{nf(o.quantityProcessed)} <Box component="span" sx={{ color: C.muted, fontWeight: 500 }}>/ {nf(o.productionQuantity)}</Box></Typography>
                   </Box>
                   <LinearProgress variant="determinate" value={p * 100} sx={{ mt: "8px", height: 7, borderRadius: 4, background: "#EEF0F4", "& .MuiLinearProgress-bar": { borderRadius: 4, background: p >= 1 ? C.ok : C.brand } }} />
                 </Box>
@@ -192,7 +192,7 @@ const Dashboard = () => {
         </Card>
       </Box>
 
-      <Box display="grid" gridTemplateColumns={isNarrow ? "1fr" : "1fr 1fr"} gap="16px" mb="16px">
+      <Box display="grid" gridTemplateColumns={isNarrow ? "minmax(0, 1fr)" : "repeat(2, minmax(0, 1fr))"} gap="16px" mb="16px">
         <Card className="sb-chart-merma">
           <CardTitle title={t("dashboard.charts.wasteDelay")} sub={t("dashboard.charts.wasteDelaySub")} />
           <Box height={isNarrow ? 220 : 250}>
@@ -211,7 +211,7 @@ const Dashboard = () => {
         </Card>
       </Box>
 
-      <Box display="grid" gridTemplateColumns={isNarrow ? "1fr" : "1fr 1fr"} gap="16px">
+      <Box display="grid" gridTemplateColumns={isNarrow ? "minmax(0, 1fr)" : "repeat(2, minmax(0, 1fr))"} gap="16px">
         <Card className="sb-pendientes">
           <CardTitle title={t("dashboard.upcoming.title")} sub={t("dashboard.upcoming.subtitle")} right={<Box sx={{ fontSize: 12.5, fontWeight: 700, color: C.brand, background: C.brandSoft, borderRadius: "999px", px: "10px", py: "3px" }}>{s.pendientes.length}</Box>} />
           {s.pendientes.slice(0, 6).map((o) => (
