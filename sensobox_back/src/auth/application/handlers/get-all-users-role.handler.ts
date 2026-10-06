@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import { GetAllUsersRoleQuery } from '../queries/get-all-users-role.query';
 import { UserRepository } from '../../infrastructure/persistence/user.repository';
@@ -26,7 +27,7 @@ export class GetAllUsersRoleHandler implements IQueryHandler<GetAllUsersRoleQuer
       return users;
     } catch (error) {
       this.logger.error('Failed to fetch users with roles admin and technician', error.stack); 
-      throw new InternalServerErrorException('Failed to fetch users with roles admin and technician'); 
+      throw new InternalServerErrorException(tr('errors.usersFetchFailed')); 
     }
   }
 }

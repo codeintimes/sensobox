@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateEcoDataCommand } from '../commands/update-eco-user.command';
 import { UserRepository } from '../../infrastructure/persistence/user.repository';
@@ -25,7 +26,7 @@ export class UpdateEcoDataHandler implements ICommandHandler<UpdateEcoDataComman
       return result;
     } catch (error) {
       this.logger.error(`Failed to update eco data for users with clientName: ${command.clientName}`, error.stack);
-      throw new InternalServerErrorException(`Failed to update eco data for users with clientName: ${command.clientName}.`);
+      throw new InternalServerErrorException(tr('errors.ecoUpdateFailed', { client: command.clientName }));
     }
   }
 }

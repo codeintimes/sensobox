@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
@@ -22,7 +23,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const user = await this.userRepository.findByEmail(email);
     if (!user) {
       this.logger.error(`User validation failed: No user found with email ${email}`); 
-      throw new UnauthorizedException(`Access denied: No user found with email ${email}`);
+      throw new UnauthorizedException(tr('errors.accessDenied', { email }));
     }
 
     this.logger.log(`User validated: ${email}`); 

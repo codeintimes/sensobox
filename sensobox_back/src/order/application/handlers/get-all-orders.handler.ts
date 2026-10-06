@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import { GetAllOrdersQuery } from '../queries/get-all-orders.query'; // Actualizado
 import { OrderRepository } from '../../infrastructure/persistence/order.repository'; // Actualizado
@@ -19,8 +20,8 @@ export class GetAllOrdersHandler implements IQueryHandler<GetAllOrdersQuery> {
       this.logger.log(`Successfully fetched ${orders.length} Orders`);
       return orders;
     } catch (error) {
-      this.logger.error('Failed to fetch Orders', error.stack);
-      throw new InternalServerErrorException('Failed to fetch Orders');
+      this.logger.error(tr('errors.ordersFetchFailed'), error.stack);
+      throw new InternalServerErrorException(tr('errors.ordersFetchFailed'));
     }
   }
 }

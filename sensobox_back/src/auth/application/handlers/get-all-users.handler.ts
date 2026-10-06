@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import { GetAllUsersQuery } from '../queries/get-all-users.query';
 import { UserRepository } from '../../infrastructure/persistence/user.repository';
@@ -21,7 +22,7 @@ export class GetAllUsersHandler implements IQueryHandler<GetAllUsersQuery> {
       return users;
     } catch (error) {
       this.logger.error('Failed to fetch non-superadmin users', error.stack); 
-      throw new InternalServerErrorException('Failed to fetch non-superadmin users'); 
+      throw new InternalServerErrorException(tr('errors.usersFetchFailed')); 
     }
   }
 }

@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { LoginCommand } from '../commands/login.command';
 import { AuthService } from '../services/authentication.service';
@@ -17,7 +18,7 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
       const user = await this.authService.validateUser(email, password);
       if (!user) {
         this.logger.warn(`Invalid login attempt for email: ${email}`);
-        throw new UnauthorizedException('Invalid credentials');
+        throw new UnauthorizedException(tr('errors.invalidCredentials'));
       }
       const token = await this.authService.login(user);
       this.logger.log(`User logged in successfully: ${email}`);
@@ -36,10 +37,10 @@ export class LoginHandler implements ICommandHandler<LoginCommand> {
     } catch (error) {
       if (error instanceof UnauthorizedException) {
         this.logger.warn(`Invalid login attempt for email: ${email}`);
-        throw new UnauthorizedException('Invalid credentials');
+        throw new UnauthorizedException(tr('errors.invalidCredentials'));
       } else {
         this.logger.error(`Login process failed for email: ${email}`, error.stack);
-        throw new InternalServerErrorException('An error occurred while validating the user.');
+        throw new InternalServerErrorException(tr('errors.validateUser'));
       }
     }
   }

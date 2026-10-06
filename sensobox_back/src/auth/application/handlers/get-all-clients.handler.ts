@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import { GetAllClientsQuery } from '../queries/get-all-clients.query';
 import { UserRepository } from '../../infrastructure/persistence/user.repository';
@@ -21,7 +22,7 @@ export class GetAllClientsHandler implements IQueryHandler<GetAllClientsQuery> {
       return users;
     } catch (error) {
       this.logger.error(`Failed to fetch client level users for company: ${companyName}`, error.stack); 
-      throw new InternalServerErrorException(`Failed to fetch client level users for company: ${companyName}`); 
+      throw new InternalServerErrorException(tr('errors.usersFetchFailed')); 
     }
   }
 }

@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateOpiFinalCommand } from '../commands/update-opi-final.command';
 import { OrderRepository } from '../../infrastructure/persistence/order.repository';
@@ -16,8 +17,8 @@ export class UpdateOpiFinalHandler implements ICommandHandler<UpdateOpiFinalComm
 
     const order = await this.orderRepository.findById(id);
     if (!order) {
-      this.logger.error(`OPI with ID: ${id} not found`);
-      throw new NotFoundException(`OPI with ID: ${id} not found`);
+      this.logger.error(tr('errors.orderNotFound', { id }));
+      throw new NotFoundException(tr('errors.orderNotFound', { id }));
     }
 
     const differenceInHours = (date1: Date, date2: Date): number => {
@@ -51,7 +52,7 @@ export class UpdateOpiFinalHandler implements ICommandHandler<UpdateOpiFinalComm
       this.logger.log(`Final process of OPI with ID: ${id} successfully updated`);
     } catch (error) {
       this.logger.error(`Error during final process update of OPI with ID: ${id}`, error.stack);
-      throw new InternalServerErrorException('Error occurred during final process update of OPI');
+      throw new InternalServerErrorException(tr('errors.orderUpdateFailed'));
     }
   }
 }

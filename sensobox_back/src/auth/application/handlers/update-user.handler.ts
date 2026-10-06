@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateUserCommand } from '../commands/update-user.command';
 import { UserRepository } from '../../infrastructure/persistence/user.repository';
@@ -19,14 +20,14 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
     const userRole = await this.userRepository.findUserRoleById(command.id);
     if (userRole === 'superadmin') {
       this.logger.error(`Attempt to update a superadmin user with ID: ${command.id}`);
-      throw new ForbiddenException('Updating a superadmin user is forbidden.');
+      throw new ForbiddenException(tr('errors.superadminUpdate'));
     }
 
     // Check if user exists before attempting update
     const existingUser = await this.userRepository.findById(command.id);
     if (!existingUser) {
       this.logger.error(`User with ID ${command.id} not found.`);
-      throw new NotFoundException(`User with ID ${command.id} not found.`);
+      throw new NotFoundException(tr('errors.userNotFound', { id: command.id }));
     }
    //console.log("existingUser",existingUser)
     try {
@@ -47,7 +48,7 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
       return updatedUser; 
     } catch (error) {
       this.logger.error(`Failed to update user with ID: ${command.id}`, error.stack);
-      throw new InternalServerErrorException(`Failed to update user with ID: ${command.id}.`);
+      throw new InternalServerErrorException(tr('errors.userUpdateFailed', { id: command.id }));
     }
   }
 }

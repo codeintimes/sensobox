@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 import { Injectable, Logger, UnauthorizedException, InternalServerErrorException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from '../../infrastructure/persistence/user.repository';
@@ -21,14 +22,16 @@ export class AuthService {
         return result;
       } else {
         this.logger.warn(`Invalid login attempt: ${email}`);
-        throw new UnauthorizedException('Invalid credentials');
+        throw new UnauthorizedException(tr('errors.invalidCredentials'));
       }
     } catch (error) {
+      // Credenciales incorrectas: 401 tal cual (antes acababa como 500)
+      if (error instanceof UnauthorizedException) throw error;
       this.logger.error(`Error validating user: ${email}`, error.stack);
       if (error.name === 'QueryFailedError' || error.code === 'ER_CON_COUNT_ERROR') { // Ajusta según los errores específicos que puedas esperar
-        throw new InternalServerErrorException('A database error occurred.');
+        throw new InternalServerErrorException(tr('errors.database'));
       }
-      throw new InternalServerErrorException('An error occurred while validating the user.');
+      throw new InternalServerErrorException(tr('errors.validateUser'));
     }
   }
   
@@ -41,7 +44,7 @@ export class AuthService {
       };
     } catch (error) {
       this.logger.error(`Login failed for user: ${user.email}`, error.stack);
-      throw new UnauthorizedException('Login failed');
+      throw new UnauthorizedException(tr('errors.loginFailed'));
     }
   }
 }

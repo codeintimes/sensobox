@@ -1,7 +1,8 @@
+import { tr } from '../../../i18n/i18n';
 
 import { IOrderRepository } from '../../domain/repositories/Iorder.repository';
 import { differenceInMilliseconds } from 'date-fns';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { OrderModel, IOrder } from '../../domain/schemas/order.schema';
@@ -53,7 +54,7 @@ export class OrderRepository implements IOrderRepository {
 
   async updateInitialProcess(id: string, initialProcessData: any): Promise<IOrder | null> {
     if (isNaN(new Date(initialProcessData.processingDateInitial).getTime())) {
-      throw new Error('Invalid date format for initial processing date');
+      throw new BadRequestException(tr('errors.invalidStartDate'));
     }
     const updatedOrder = await this.orderModel.findByIdAndUpdate(id, {
       $set: {

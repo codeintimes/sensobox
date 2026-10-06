@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { DeleteUserCommand } from '../commands/delete-user.command';
 import { UserRepository } from '../../infrastructure/persistence/user.repository';
@@ -15,26 +16,26 @@ export class DeleteUserHandler implements ICommandHandler<DeleteUserCommand> {
     const userRole = await this.userRepository.findUserRoleById(command.id);
     if (userRole === 'superadmin') {
       this.logger.error(`Attempt to delete a superadmin user with ID: ${command.id}`);
-      throw new ForbiddenException('Deleting a superadmin user is forbidden.');
+      throw new ForbiddenException(tr('errors.superadminDelete'));
     }
 
     const userExists = await this.userRepository.userExistsById(command.id);
     if (!userExists) {
       this.logger.warn(`User with ID: ${command.id} not found`);
-      throw new NotFoundException(`User with ID: ${command.id} not found`);
+      throw new NotFoundException(tr('errors.userNotFound', { id: command.id }));
     }    
 
     try {
       const deleted = await this.userRepository.delete(command.id);
       if (!deleted) {
         this.logger.error(`Failed to delete user with ID: ${command.id}`);
-        throw new InternalServerErrorException(`Failed to delete user with ID: ${command.id}`);
+        throw new InternalServerErrorException(tr('errors.userDeleteFailed', { id: command.id }));
       }
 
       this.logger.log(`User with ID: ${command.id} successfully deleted`);
     } catch (error) {
       this.logger.error(`Unexpected error during deletion of user with ID: ${command.id}`, error.stack);
-      throw new InternalServerErrorException('Unexpected error occurred during user deletion');
+      throw new InternalServerErrorException(tr('errors.userDeleteFailed', { id: command.id }));
     }
   }
 }

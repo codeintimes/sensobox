@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import { GetOrderByIdQuery } from '../queries/get-order-by-id.query'; // Actualizado
 import { OrderRepository } from '../../infrastructure/persistence/order.repository'; // Actualizado
@@ -17,14 +18,14 @@ export class GetOrderByIdHandler implements IQueryHandler<GetOrderByIdQuery> {
       const order = await this.orderRepository.findById(id);
       if (!order) {
         this.logger.warn(`Order with ID ${id} not found`);
-        throw new NotFoundException('Order not found');
+        throw new NotFoundException(tr('errors.orderNotFound', { id: query.id }));
       }
 
       this.logger.log(`Order with ID ${id} found successfully`);
       return order;
     } catch (error) {
       this.logger.error(`Failed to fetch Order with ID ${id}`, error.stack);
-      throw new NotFoundException('Failed to fetch Order');
+      throw new NotFoundException(tr('errors.ordersFetchFailed'));
     }
   }
 }

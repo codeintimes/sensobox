@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 import { CommandHandler, ICommandHandler, EventBus } from '@nestjs/cqrs';
 import { RegisterCommand } from '../commands/register.command';
 import { UserRepository } from '../../infrastructure/persistence/user.repository';
@@ -21,7 +22,7 @@ export class RegisterHandler implements ICommandHandler<RegisterCommand> {
     const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) {
       this.logger.warn(`Registration attempt failed: Email ${email} is already registered`);
-      throw new ConflictException(`Email ${email} is already registered`);
+      throw new ConflictException(tr('errors.emailRegistered', { email }));
     }
   
     // const existingUserByName = await this.userRepository.findByName(name);
@@ -48,7 +49,7 @@ export class RegisterHandler implements ICommandHandler<RegisterCommand> {
       return newUser;
     } catch (error) {
       this.logger.error(`Failed to register user ${email}`, error.stack);
-      throw new InternalServerErrorException('Failed to register user due to an unexpected error');
+      throw new InternalServerErrorException(tr('errors.registerFailed'));
     }
   }
   

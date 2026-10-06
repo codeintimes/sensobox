@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import { CheckEmailExistsQuery } from '../queries/check-email-exists.query';
 import { UserRepository } from '../../infrastructure/persistence/user.repository';
@@ -19,7 +20,7 @@ export class CheckEmailExistsHandler implements IQueryHandler<CheckEmailExistsQu
       return exists;
     } catch (error) {
       this.logger.error(`Error checking if email exists: ${email}`, error.stack); 
-      throw new InternalServerErrorException('An error occurred while checking if the email exists'); 
+      throw new InternalServerErrorException(tr('errors.emailCheckFailed')); 
     }
   }
 }

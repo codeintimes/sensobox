@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { setupSwagger } from './auth/infrastructure/config/swagger.config';
+import { I18nExceptionFilter, validationExceptionFactory } from './i18n/i18n-exception.filter';
 
 async function bootstrap() {
   dotenv.config();
@@ -22,8 +23,11 @@ async function bootstrap() {
       transform: true,
       whitelist: true,
       forbidNonWhitelisted: true,
+      exceptionFactory: validationExceptionFactory,
     }),
   );
+  // Errores de la API traducidos según Accept-Language (es, en, nl, de, fr)
+  app.useGlobalFilters(new I18nExceptionFilter());
 
   setupSwagger(app);
   logger.log('Swagger has been set up at /api');

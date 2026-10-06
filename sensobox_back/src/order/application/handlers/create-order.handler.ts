@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CreateOrderCommand } from '../commands/create-order.command';
 import { OrderRepository } from '../../infrastructure/persistence/order.repository';
@@ -17,7 +18,7 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
             const orderExists = await this.orderRepository.orderExistsByOrderNumber(orderDto.orderNumber, orderDto.companyName);
             if (orderExists) {
                 this.logger.error(`Order with order number ${orderDto.orderNumber} already exists for company ${orderDto.companyName}.`);
-                throw new ConflictException(`Order with order number ${orderDto.orderNumber} already exists for this company.`);
+                throw new ConflictException(tr('errors.orderNumberExists', { number: orderDto.orderNumber }));
             }
 
             const orderData = {
@@ -30,7 +31,7 @@ export class CreateOrderHandler implements ICommandHandler<CreateOrderCommand> {
         } catch (error) {
             if (!(error instanceof ConflictException)) {
                 this.logger.error('Unexpected error during Order creation', error.stack);
-                throw new InternalServerErrorException('Unexpected error occurred during Order creation');
+                throw new InternalServerErrorException(tr('errors.orderCreateFailed'));
             }
             throw error;
         }

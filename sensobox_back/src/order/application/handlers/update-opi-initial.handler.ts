@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 // update-opi-initial.handler.ts
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UpdateOpiInitialCommand } from '../commands/update-opi-initial.command';
@@ -16,8 +17,8 @@ export class UpdateOpiInitialHandler implements ICommandHandler<UpdateOpiInitial
 
     const opiExists = await this.orderRepository.orderExistsById(id);
     if (!opiExists) {
-      this.logger.warn(`OPI with ID: ${id} not found`);
-      throw new NotFoundException(`OPI with ID: ${id} not found`);
+      this.logger.warn(tr('errors.orderNotFound', { id }));
+      throw new NotFoundException(tr('errors.orderNotFound', { id }));
     }
 
     try {
@@ -26,7 +27,7 @@ export class UpdateOpiInitialHandler implements ICommandHandler<UpdateOpiInitial
       this.logger.log(`Initial process of OPI with ID: ${id} successfully updated`);
     } catch (error) {
       this.logger.error(`Unexpected error during initial process update of OPI with ID: ${id}`, error.stack);
-      throw new InternalServerErrorException('Unexpected error occurred during initial process update of OPI');
+      throw new InternalServerErrorException(tr('errors.orderUpdateFailed'));
     }
   }
 }

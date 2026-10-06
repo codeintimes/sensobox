@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import { CalculateEcoEmissionsQuery } from '../queries/get-eco-emissions.query'; // Actualizado
 import { OrderRepository } from '../../infrastructure/persistence/order.repository'; // Actualizado
@@ -61,7 +62,7 @@ export class GetEcoEmissionsHandler implements IQueryHandler<CalculateEcoEmissio
       return results;
     } catch (error) {
       this.logger.error('Failed to fetch Orders', error.stack);
-      throw new InternalServerErrorException('Failed to fetch eco orders');
+      throw new InternalServerErrorException(tr('errors.ordersFetchFailed'));
     }
   }
 }

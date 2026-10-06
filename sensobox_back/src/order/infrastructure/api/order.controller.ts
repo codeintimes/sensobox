@@ -1,4 +1,5 @@
-import { Controller, Post, Get, Res, Patch, Delete, Body, Param, UseGuards, Query } from '@nestjs/common';
+import { resolveLang, tr } from '../../../i18n/i18n';
+import { Controller, Post, Get, Res, Patch, Delete, Body, Param, UseGuards, Query, Headers } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 // import { AuthGuard } from '@nestjs/passport';
 // import { RolesGuard } from './roles.guard';
@@ -104,10 +105,11 @@ export class OrderController {
   }
 
   @Get('/download-pdf/:id')
-  async downloadPdf(@Param('id') id: string, @Res() res: Response) {
-    //console.log("Attempting to download PDF for order ID:", id);
+  @ApiOperation({ summary: 'Download the order summary as PDF (language from ?lang= or Accept-Language)' })
+  async downloadPdf(@Param('id') id: string, @Query('lang') langParam: string, @Headers('accept-language') acceptLanguage: string, @Res() res: Response) {
+    const lang = resolveLang(langParam || acceptLanguage);
     try {
-      const pdfBuffer = await this.commandBus.execute(new GeneratePdfCommand(id));
+      const pdfBuffer = await this.commandBus.execute(new GeneratePdfCommand(id, lang));
       res.set({
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="order_${id}.pdf"`,
@@ -115,17 +117,9 @@ export class OrderController {
       });
       res.end(pdfBuffer);
     } catch (error) {
-      console.error("Error during PDF download process:", error);
-
-      // Distinguish between not found error and other errors
-      if (error instanceof NotFoundException) {
-        res.status(404).send('Order not found');
-      } else {
-        console.error("Error during PDF download process:", error);
-        res.status(500).send(`Error in generating PDF: ${error.message}`);
-        // Alternatively, throw an InternalServerErrorException to automatically send a 500 status
-        // throw new InternalServerErrorException('Error in generating PDF');
-      }
+      if (error instanceof NotFoundException) throw error;
+      console.error('Error during PDF download process:', error);
+      throw new InternalServerErrorException(tr('errors.pdfFailed'));
     }
   }
 
@@ -168,7 +162,7 @@ export class OrderController {
       await this.commandBus.execute(new UpdateQuantityProcessedCommand(id, quantityProcessed));
       return { message: 'Quantity processed updated successfully' };
     } catch (error) {
-      throw new NotFoundException(`Order with ID: ${id} not found`);
+      throw new NotFoundException(tr('errors.orderNotFound', { id }));
     }
   }
 

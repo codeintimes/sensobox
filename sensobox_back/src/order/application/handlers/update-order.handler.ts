@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 
 
 // src/orders/handlers/update-order.handler.ts
@@ -18,8 +19,8 @@ export class UpdateOrderHandler implements ICommandHandler<UpdateOrderCommand> {
 
     const order = await this.orderRepository.findById(id);
     if (!order) {
-      this.logger.error(`Order with ID: ${id} not found`);
-      throw new NotFoundException(`Order with ID: ${id} not found`);
+      this.logger.error(tr('errors.orderNotFound', { id }));
+      throw new NotFoundException(tr('errors.orderNotFound', { id }));
     }
 
     try {
@@ -27,7 +28,7 @@ export class UpdateOrderHandler implements ICommandHandler<UpdateOrderCommand> {
       this.logger.log(`Order with ID: ${id} successfully updated`);
     } catch (error) {
       this.logger.error(`Error during update of order with ID: ${id}`, error.stack);
-      throw new InternalServerErrorException('Error occurred during order update');
+      throw new InternalServerErrorException(tr('errors.orderUpdateFailed'));
     }
   }
 }

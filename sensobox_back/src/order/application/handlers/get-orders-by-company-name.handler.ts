@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { OrderRepository } from '../../infrastructure/persistence/order.repository';
 import { IOrder } from '../../domain/schemas/order.schema';
@@ -24,7 +25,7 @@ export class GetOrdersByCompanyNameHandler implements IQueryHandler<GetOrdersByC
     //console.log("orders",filter)
 
     if (!orders || orders.length === 0) {
-      throw new NotFoundException('No orders found for the specified company and client');
+      throw new NotFoundException(tr('errors.ordersNotFoundForClient'));
     }
 
     return orders;

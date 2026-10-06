@@ -1,3 +1,4 @@
+import { tr } from '../../../i18n/i18n';
 // src/orders/handlers/update-material-info.handler.ts
 
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
@@ -18,8 +19,8 @@ export class UpdateMaterialInfoHandler implements ICommandHandler<UpdateMaterial
 
     const order = await this.orderRepository.findById(id);
     if (!order) {
-      this.logger.error(`OPI with ID: ${id} not found`);
-      throw new NotFoundException(`OPI with ID: ${id} not found`);
+      this.logger.error(tr('errors.orderNotFound', { id }));
+      throw new NotFoundException(tr('errors.orderNotFound', { id }));
     }
 console
     try {
@@ -28,7 +29,7 @@ console
       this.logger.log(`Material info of OPI with ID: ${id} successfully updated`);
     } catch (error) {
       this.logger.error(`Error during material info update of OPI with ID: ${id}`, error.stack);
-      throw new InternalServerErrorException('Error occurred during material info update of OPI');
+      throw new InternalServerErrorException(tr('errors.orderUpdateFailed'));
     }
   }
 }
