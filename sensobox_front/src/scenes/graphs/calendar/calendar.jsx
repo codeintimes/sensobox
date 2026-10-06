@@ -25,10 +25,11 @@ import enGbLocale from "@fullcalendar/core/locales/en-gb";
 import nlLocale from "@fullcalendar/core/locales/nl";
 import deLocale from "@fullcalendar/core/locales/de";
 import frLocale from "@fullcalendar/core/locales/fr";
+import itLocale from "@fullcalendar/core/locales/it";
 import { currentLang } from "../../../i18n";
 import { nf } from "../../../utils/format";
 
-const FC_LOCALES = [esLocale, enGbLocale, nlLocale, deLocale, frLocale];
+const FC_LOCALES = [esLocale, enGbLocale, nlLocale, deLocale, frLocale, itLocale];
 
 const Calendar = () => {
   const theme = useTheme();

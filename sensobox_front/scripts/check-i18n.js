@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /*
  * Comprueba la traducción del frontend de Sensobox.
- *   1. Los cinco idiomas (es, en, nl, de, fr) tienen exactamente las mismas claves, sin valores vacíos
+ *   1. Los seis idiomas (es, en, nl, de, fr, it) tienen exactamente las mismas claves, sin valores vacíos
  *      y con las mismas variables {{...}} que el español.
  *   2. Todas las claves que se usan en el código con t("...") existen en es.json.
  *   3. No hay cadenas fijas visibles en los componentes: texto JSX, atributos de texto (label, title,
@@ -16,7 +16,7 @@ const traverse = require("@babel/traverse").default;
 
 const ROOT = path.resolve(__dirname, "..");
 const LOCALES = path.join(ROOT, "src", "locales");
-const LANGS = ["es", "en", "nl", "de", "fr"];
+const LANGS = ["es", "en", "nl", "de", "fr", "it"];
 const problems = [];
 
 const flat = (o, p = "", out = {}) => {

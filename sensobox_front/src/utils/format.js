@@ -1,12 +1,12 @@
-// Formatos de número y fecha según el idioma activo (es-ES, en-GB, nl-NL, de-DE, fr-FR).
+// Formatos de número y fecha según el idioma activo (es-ES, en-GB, nl-NL, de-DE, fr-FR, it-IT).
 import { currentLocale } from "../i18n";
 
 export const nf = (n, d = 0) => Number(n || 0).toLocaleString(currentLocale(), { minimumFractionDigits: d, maximumFractionDigits: d });
-// Porcentaje con el espacio y el signo que usa cada idioma (es/de/fr/nl: «5,1 %»; en: «5.1%»)
+// Porcentaje con el espacio y el signo que usa cada idioma (es/de/fr/nl: «5,1 %»; en: «5.1%»; it: «5,1%»)
 export const pct = (n, d = 1, signed = false) => {
   const v = Number(n || 0);
   const s = (signed && v >= 0 ? "+" : "") + nf(v, d);
-  return currentLocale().startsWith("en") ? `${s}%` : `${s} %`;
+  return /^(en|it)/.test(currentLocale()) ? `${s}%` : `${s} %`;
 };
 export const fmtDate = (d) => (d ? new Date(d).toLocaleDateString(currentLocale(), { day: "numeric", month: "short" }) : "—");
 export const fmtDayMonth = fmtDate;

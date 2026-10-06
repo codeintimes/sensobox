@@ -49,7 +49,7 @@ const OrdersTechnician = () => {
       <Box display="flex" gap="10px" alignItems="center" mb="16px" flexWrap="wrap">
         <Box sx={{ display: "inline-flex", background: "#E9EBF2", borderRadius: "10px", p: "3px" }}>
           {[["todo", "techOrders.tabTodo"], ["done", "techOrders.tabDone"]].map(([k, l]) => (
-            <Box key={k} component="button" className={"sb-tab" + (tab === k ? " active" : "")} onClick={() => setTab(k)}
+            <Box key={k} component="button" className={"sb-tab" + (tab === k ? " active" : "")} data-testid={`tab-${k}`} onClick={() => setTab(k)}
               sx={{ border: 0, cursor: "pointer", font: "inherit", fontSize: 13.5, fontWeight: 600, px: "14px", py: "7px", borderRadius: "8px", background: tab === k ? "#fff" : "transparent", color: tab === k ? "#111827" : "#6B7280", boxShadow: tab === k ? "0 1px 2px rgba(16,24,40,.08)" : "none" }}>
               {t(l)} <Box component="span" sx={{ color: "#9CA3AF", fontWeight: 500 }}>{counts[k]}</Box>
             </Box>
@@ -86,10 +86,10 @@ const OrdersTechnician = () => {
                 <LinearProgress variant="determinate" value={p * 100} sx={{ height: 7, borderRadius: 4, background: "#EEF0F4", "& .MuiLinearProgress-bar": { borderRadius: 4, background: p >= 1 ? "#10B981" : "#4F46E5" } }} />
               </Box>
               {o.status <= 2 && (
-                <Box display="flex" gap="8px" mt="2px">
+                <Box display="flex" gap="8px" mt="2px" flexWrap="wrap" data-testid="order-actions">
                   {o.status === 1 && <Button className="sb-act-iniciar" variant="contained" size="small" startIcon={<PlayArrowRoundedIcon />} onClick={() => go("editOpiInitial", o)} sx={{ flex: 1, borderRadius: "9px", minHeight: 38, lineHeight: 1.2 }}>{t("techOrders.start")}</Button>}
-                  {o.status === 2 && <Button className="sb-act-avance" variant="contained" size="small" startIcon={<EditNoteRoundedIcon />} onClick={() => go("editQuantityProcessed", o)} sx={{ flex: 1, borderRadius: "9px", minHeight: 38, lineHeight: 1.2 }}>{t("techOrders.progress")}</Button>}
-                  {o.status === 2 && <Button className="sb-act-finalizar" variant="outlined" size="small" startIcon={<FlagRoundedIcon />} onClick={() => go("editOpiFinal", o)} sx={{ flex: 1, borderRadius: "9px", minHeight: 38, lineHeight: 1.2, borderColor: "#D1D5DB", color: "#374151" }}>{t("techOrders.finish")}</Button>}
+                  {o.status === 2 && <Button className="sb-act-avance" variant="contained" size="small" startIcon={<EditNoteRoundedIcon />} onClick={() => go("editQuantityProcessed", o)} sx={{ flex: "1 1 auto", whiteSpace: "nowrap", px: "12px", borderRadius: "9px", minHeight: 38, lineHeight: 1.2, "& .MuiButton-startIcon": { mr: "6px" } }}>{t("techOrders.progress")}</Button>}
+                  {o.status === 2 && <Button className="sb-act-finalizar" variant="outlined" size="small" startIcon={<FlagRoundedIcon />} onClick={() => go("editOpiFinal", o)} sx={{ flex: "1 1 auto", whiteSpace: "nowrap", px: "12px", borderRadius: "9px", minHeight: 38, lineHeight: 1.2, borderColor: "#D1D5DB", color: "#374151", "& .MuiButton-startIcon": { mr: "6px" } }}>{t("techOrders.finish")}</Button>}
                 </Box>
               )}
             </Box>

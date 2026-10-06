@@ -35,4 +35,4 @@ export const fmtDateTime = (lang: Lang, d?: Date | string | null) =>
   d ? new Date(d).toLocaleString(LOCALES[lang], { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Madrid' }) : '—';
 
 export const fmtPercent = (lang: Lang, n: number, digits = 1) =>
-  lang === 'en' ? `${fmtNumber(lang, n, digits)}%` : `${fmtNumber(lang, n, digits)} %`;
+  lang === 'en' || lang === 'it' ? `${fmtNumber(lang, n, digits)}%` : `${fmtNumber(lang, n, digits)} %`;

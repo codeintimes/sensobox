@@ -22,7 +22,7 @@ const Topbar = ({ setIsAuthenticated }) => {
         <SensoboxLogo size={26} />
         <Box display="flex" alignItems="center">
           <LanguageSelector compact />
-          <IconButton aria-label={t("app.logout")} onClick={logout} sx={{ color: "#6B7280" }}><LogoutRoundedIcon /></IconButton>
+          <IconButton data-testid="logout" aria-label={t("app.logout")} onClick={logout} sx={{ color: "#6B7280" }}><LogoutRoundedIcon /></IconButton>
         </Box>
       </Box>
     );
@@ -36,7 +36,7 @@ const Topbar = ({ setIsAuthenticated }) => {
       <Box display="flex" alignItems="center" gap="6px" flexShrink={0}>
         <LanguageSelector />
         <Tooltip title={t("app.notifications")}><IconButton aria-label={t("app.notifications")} sx={{ color: "#6B7280" }}><NotificationsNoneRoundedIcon /></IconButton></Tooltip>
-        <Button onClick={logout} startIcon={<LogoutRoundedIcon />} sx={{ color: "#374151", fontWeight: 600, borderRadius: "10px", px: "12px" }}>{t("app.logout")}</Button>
+        <Button data-testid="logout" onClick={logout} startIcon={<LogoutRoundedIcon />} sx={{ color: "#374151", fontWeight: 600, borderRadius: "10px", px: "12px" }}>{t("app.logout")}</Button>
       </Box>
     </Box>
   );

@@ -158,7 +158,7 @@ const Dashboard = () => {
             {s.enCurso.map((o) => {
               const p = Math.min(1, (o.quantityProcessed || 0) / o.productionQuantity);
               return (
-                <Box key={o._id} sx={{ py: "10px", borderTop: `1px solid ${C.line}`, "&:first-of-type": { borderTop: 0, pt: 0 } }}>
+                <Box key={o._id} className="sb-row" sx={{ py: "10px", borderTop: `1px solid ${C.line}`, "&:first-of-type": { borderTop: 0, pt: 0 } }}>
                   <Box display="flex" justifyContent="space-between" gap="10px">
                     <Box sx={{ minWidth: 0 }}>
                       <Typography sx={{ fontWeight: 600, fontSize: 13.5, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{o.workName}</Typography>
@@ -177,7 +177,7 @@ const Dashboard = () => {
           <Box sx={{ maxHeight: 316, overflow: "auto", mr: "-8px", pr: "8px" }}>
             {s.desviaciones.length === 0 && <Typography sx={{ color: C.muted, fontSize: 13 }}>{t("dashboard.deviations.none")}</Typography>}
             {s.desviaciones.slice(0, 12).map(({ o, m, t: dt }) => (
-              <Box key={o._id} display="flex" justifyContent="space-between" alignItems="center" gap="10px" sx={{ py: "9px", borderTop: `1px solid ${C.line}`, "&:first-of-type": { borderTop: 0, pt: 0 } }}>
+              <Box key={o._id} className="sb-row" display="flex" justifyContent="space-between" alignItems="center" gap="10px" sx={{ py: "9px", borderTop: `1px solid ${C.line}`, "&:first-of-type": { borderTop: 0, pt: 0 } }}>
                 <Box sx={{ minWidth: 0 }}>
                   <Typography sx={{ fontWeight: 600, fontSize: 13.5, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{o.workName}</Typography>
                   <Typography sx={{ fontSize: 12, color: C.muted }}>{t("order.numberShort", { n: o.orderNumber })} · {o.clientName} · {fmtDate(o.processingDateFinal)}</Typography>
@@ -215,7 +215,7 @@ const Dashboard = () => {
         <Card className="sb-pendientes">
           <CardTitle title={t("dashboard.upcoming.title")} sub={t("dashboard.upcoming.subtitle")} right={<Box sx={{ fontSize: 12.5, fontWeight: 700, color: C.brand, background: C.brandSoft, borderRadius: "999px", px: "10px", py: "3px" }}>{s.pendientes.length}</Box>} />
           {s.pendientes.slice(0, 6).map((o) => (
-            <Box key={o._id} display="flex" justifyContent="space-between" alignItems="center" gap="10px" sx={{ py: "9px", borderTop: `1px solid ${C.line}`, "&:first-of-type": { borderTop: 0, pt: 0 } }}>
+            <Box key={o._id} className="sb-row" display="flex" justifyContent="space-between" alignItems="center" gap="10px" sx={{ py: "9px", borderTop: `1px solid ${C.line}`, "&:first-of-type": { borderTop: 0, pt: 0 } }}>
               <Box sx={{ minWidth: 0 }}>
                 <Typography sx={{ fontWeight: 600, fontSize: 13.5, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{o.clientName}</Typography>
                 <Typography sx={{ fontSize: 12, color: C.muted }}>{o.workName} · {o.technician.split(" ").slice(0, 2).join(" ")}</Typography>
@@ -228,7 +228,7 @@ const Dashboard = () => {
           <CardTitle title={t("dashboard.late.title")} sub={t("dashboard.late.subtitle")} right={<Box sx={{ fontSize: 12.5, fontWeight: 700, color: C.bad, background: C.badSoft, borderRadius: "999px", px: "10px", py: "3px" }}>{s.retrasados.length}</Box>} />
           {s.retrasados.length === 0 && <Typography sx={{ color: C.muted, fontSize: 13 }}>{t("dashboard.late.none")}</Typography>}
           {s.retrasados.slice(0, 6).map((o) => (
-            <Box key={o._id} display="flex" justifyContent="space-between" alignItems="center" gap="10px" sx={{ py: "9px", borderTop: `1px solid ${C.line}`, "&:first-of-type": { borderTop: 0, pt: 0 } }}>
+            <Box key={o._id} className="sb-row" display="flex" justifyContent="space-between" alignItems="center" gap="10px" sx={{ py: "9px", borderTop: `1px solid ${C.line}`, "&:first-of-type": { borderTop: 0, pt: 0 } }}>
               <Box sx={{ minWidth: 0 }}>
                 <Typography sx={{ fontWeight: 600, fontSize: 13.5, color: C.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{o.clientName}</Typography>
                 <Typography sx={{ fontSize: 12, color: C.muted }}>{o.workName} · {o.technician.split(" ").slice(0, 2).join(" ")}</Typography>

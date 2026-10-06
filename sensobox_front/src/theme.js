@@ -2,14 +2,14 @@
 // Mantiene la misma API (tokens, themeSettings, useMode, ColorModeContext) que el theme.js original.
 import { createContext, useState, useMemo } from "react";
 import { createTheme } from "@mui/material/styles";
-import { esES as gridEsES, enUS as gridEnUS, nlNL as gridNlNL, deDE as gridDeDE, frFR as gridFrFR } from "@mui/x-data-grid";
-import { esES as coreEsES, enUS as coreEnUS, nlNL as coreNlNL, deDE as coreDeDE, frFR as coreFrFR } from "@mui/material/locale";
+import { esES as gridEsES, enUS as gridEnUS, nlNL as gridNlNL, deDE as gridDeDE, frFR as gridFrFR, itIT as gridItIT } from "@mui/x-data-grid";
+import { esES as coreEsES, enUS as coreEnUS, nlNL as coreNlNL, deDE as coreDeDE, frFR as coreFrFR, itIT as coreItIT } from "@mui/material/locale";
 import { useTranslation } from "react-i18next";
 import { currentLang } from "./i18n";
 
 // Textos propios de MUI (tablas, paginación, filtros) en el idioma activo
 const MUI_LOCALES = {
-  es: [gridEsES, coreEsES], en: [gridEnUS, coreEnUS], nl: [gridNlNL, coreNlNL], de: [gridDeDE, coreDeDE], fr: [gridFrFR, coreFrFR],
+  es: [gridEsES, coreEsES], en: [gridEnUS, coreEnUS], nl: [gridNlNL, coreNlNL], de: [gridDeDE, coreDeDE], fr: [gridFrFR, coreFrFR], it: [gridItIT, coreItIT],
 };
 
 const PALETTE = {

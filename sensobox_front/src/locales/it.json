@@ -1,0 +1,527 @@
+{
+  "orders": {
+    "title": "Ordini di produzione",
+    "subtitle": "Tutti gli ordini del reparto, con lo stato aggiornato",
+    "searchPlaceholder": "Cerca n° o cliente…",
+    "columns": {
+      "orderNumber": "N°",
+      "clientName": "Cliente",
+      "companyName": "Stabilimento",
+      "productionQuantity": "Quantità",
+      "colors": "Colori",
+      "processes": "Lavorazioni",
+      "specialFinishes": "Finitura",
+      "technician": "Operatore",
+      "palletsNumber": "Bancali",
+      "processingDate": "Data prevista",
+      "processingTime": "Ore previste",
+      "initialQuantity": "Pz. in macchina",
+      "finalQuantity": "Pz. buoni",
+      "createdAt": "Creato",
+      "updatedAt": "Aggiornato",
+      "status": "Stato",
+      "edit": "Modifica",
+      "opiInitialEdit": "Avvia ordine",
+      "opiFinalEdit": "Chiudi ordine",
+      "editSelector": "Modifica ordine",
+      "delete": "Elimina ordine",
+      "download": "Scarica PDF",
+      "materialArea": "Superficie",
+      "materialWeight": "Peso",
+      "quantityProcessed": "Prodotto",
+      "material": "Materiale",
+      "workName": "Lavoro",
+      "workType": "Tipo",
+      "processingDateInitial": "Inizio",
+      "processingDateFinal": "Fine",
+      "errorPercentage": "Scarto"
+    },
+    "status": {
+      "pending": "Da avviare",
+      "processing": "In produzione",
+      "processed": "Completato",
+      "shipping": "Spedito"
+    },
+    "material": {
+      "length_required": "La lunghezza è obbligatoria",
+      "length_positive": "La lunghezza deve essere un numero positivo",
+      "width_required": "La larghezza è obbligatoria",
+      "width_positive": "La larghezza deve essere un numero positivo",
+      "update_material_area": "Materiale dell'ordine",
+      "update_area_subtitle": "Superficie e peso del materiale dell'ordine {{orderNumber}}",
+      "length_meters": "Lunghezza (metri)",
+      "width_meters": "Larghezza (metri)",
+      "calculated_area": "Superficie calcolata",
+      "update_fail": "Impossibile salvare il materiale",
+      "weight_kg": "Peso (kg)",
+      "weight_required": "Il peso è obbligatorio",
+      "weight_positive": "Il peso deve essere un numero positivo",
+      "submit_area_weight_order_id": "Salva materiale"
+    },
+    "currentQuantity": {
+      "quantityProcessed": "Pezzi prodotti",
+      "title": "Registra avanzamento",
+      "subtitle": "Pezzi prodotti finora. L'ufficio lo vede subito.",
+      "buttons": {
+        "update": "Salva avanzamento"
+      },
+      "soFar": "Eri a {{done}} su {{total}} pezzi."
+    },
+    "dialog": {
+      "confirmDeleteTitle": "Conferma eliminazione",
+      "confirmDeleteText": "Vuoi davvero eliminare questo ordine? L'operazione non si può annullare.",
+      "cancel": "Annulla",
+      "confirm": "Conferma"
+    }
+  },
+  "users": {
+    "title": "Utenti",
+    "subtitle": "Elenco degli utenti",
+    "titleClients": "Clienti",
+    "subtitleClients": "Le aziende per cui produci e il loro referente",
+    "titleAdmins": "Amministrazione",
+    "subtitleAdmins": "Persone con accesso completo",
+    "titleClientsEco": "Clienti ECO",
+    "subtitleClientsECO": "Emissioni di CO2 per cliente",
+    "titleEmployees": "Operatori",
+    "subtitleEmployees": "Squadra di reparto",
+    "role": {
+      "admin": "Amministratore",
+      "technician": "Operatore",
+      "client": "Cliente"
+    },
+    "editClient": {
+      "updateUser": "Aggiorna utente"
+    },
+    "editUser": {
+      "title": "Modifica utente",
+      "subtitle": "Aggiorna i dati dell'utente"
+    },
+    "columns": {
+      "email": "E-mail",
+      "role": "Ruolo",
+      "name": "Nome",
+      "companyName": "Azienda",
+      "clientName": "Azienda",
+      "totalQuantity": "Quantità totale",
+      "eco": "Stato ECO",
+      "ecoEmissions": "CO2/pezzo",
+      "totalEmissions": "CO2 totale",
+      "createdAt": "Creato",
+      "updatedAt": "Aggiornato",
+      "password": "Password",
+      "contactName": "Referente",
+      "contactPhone": "Telefono",
+      "contactEmail": "E-mail del referente",
+      "ecoStatus": "Stato ECO"
+    },
+    "dialog": {
+      "confirmDeleteTitle": "Conferma eliminazione",
+      "confirmDeleteText": "Vuoi davvero eliminare questo utente?",
+      "cancel": "Annulla",
+      "confirm": "Conferma"
+    },
+    "ecoImageAlt": "Immagine ECO del cliente"
+  },
+  "createUser": {
+    "title": "Nuovo utente",
+    "subtitle": "Registra una persona e scegli cosa può vedere",
+    "name": "Nome",
+    "email": "E-mail",
+    "password": "Password",
+    "role": "Ruolo",
+    "createButton": "Crea utente",
+    "clientName": "Ragione sociale",
+    "contactName": "Referente",
+    "contactPhone": "Telefono del referente",
+    "contactEmail": "E-mail del referente",
+    "messages": {
+      "companyMissing": "Impossibile trovare la tua azienda. Accedi di nuovo.",
+      "emailExists": "Esiste già un utente con questa e-mail.",
+      "createFail": "Impossibile creare l'utente: {{error}}"
+    }
+  },
+  "roles": {
+    "admin": "Amministratore",
+    "technician": "Operatore",
+    "client": "Cliente"
+  },
+  "dashboard": {
+    "title": "Cruscotto di produzione",
+    "live": "In tempo reale · si aggiorna da solo",
+    "loadError": "Impossibile caricare i dati.",
+    "series": {
+      "waste": "Scarto",
+      "delay": "Ritardo",
+      "orders": "Ordini"
+    },
+    "kpi": {
+      "orders": "Ordini (30 giorni)",
+      "units": "Pezzi ordinati",
+      "thousand": "mila",
+      "waste": "Scarto medio",
+      "timeDeviation": "Scostamento tempi",
+      "vsMonthly": "vs. media mensile",
+      "before": "prima {{v}}"
+    },
+    "inProduction": {
+      "title": "In produzione ora",
+      "subtitle": "Quello che registrano gli operatori compare qui all'istante",
+      "count_one": "{{count}} ordine",
+      "count_other": "{{count}} ordini"
+    },
+    "deviations": {
+      "title": "Scostamenti",
+      "subtitle": "Ordini con scarto > {{waste}} o tempi oltre il {{time}} del previsto",
+      "none": "Nessuno scostamento nelle ultime settimane.",
+      "waste": "scarto {{v}}",
+      "time": "tempi {{v}}"
+    },
+    "charts": {
+      "wasteDelay": "Scarto e ritardo per settimana",
+      "wasteDelaySub": "Percentuale sul pianificato · ordini completati",
+      "ordersPerWeek": "Ordini per settimana",
+      "since": "Dal {{date}}"
+    },
+    "upcoming": {
+      "title": "Prossimi ordini",
+      "subtitle": "Da avviare, per data prevista"
+    },
+    "late": {
+      "title": "In ritardo",
+      "subtitle": "Dovevano essere avviati e sono ancora fermi",
+      "none": "Niente in ritardo.",
+      "days_one": "{{count}} giorno",
+      "days_other": "{{count}} giorni"
+    }
+  },
+  "popUp": {
+    "login_error_title": "Accesso non riuscito",
+    "incorrect_password": "E-mail o password errate. Riprova.",
+    "close_button": "Chiudi",
+    "connection_error": "Impossibile collegarsi al server. Riprova tra qualche secondo."
+  },
+  "login": {
+    "title": "Accedi",
+    "email_label": "E-mail",
+    "email_error": "E-mail non valida",
+    "email_required": "Obbligatoria",
+    "password_label": "Password",
+    "password_required": "Obbligatoria",
+    "password_min": "La password deve avere almeno 8 caratteri",
+    "login_button": "Accedi",
+    "togglePassword": "Mostra o nascondi la password"
+  },
+  "ecoForm": {
+    "ecoStatus": "Stato ECO",
+    "ecoEmissions": "Emissioni (g CO2/pezzo)",
+    "updateEcoData": "Aggiorna",
+    "activated": "Attivo",
+    "deactivated": "Disattivato"
+  },
+  "common": {
+    "enabled": "Attivo",
+    "disabled": "Disattivato",
+    "close": "Chiudi",
+    "notAvailable": "Questa funzione non è ancora disponibile."
+  },
+  "createOrder": {
+    "title": "Nuovo ordine di produzione",
+    "subtitle": "Compila i dati e l'operatore lo riceve subito",
+    "form": {
+      "orderNumber": "N° ordine",
+      "clientName": "Cliente",
+      "workName": "Lavoro",
+      "workType": "Tipo di lavoro",
+      "productionQuantity": "Quantità",
+      "colors": "Colori",
+      "processes": "Lavorazioni",
+      "specialFinishes": "Finitura speciale",
+      "palletsNumber": "Bancali",
+      "technician": "Operatore",
+      "processingDate": "Data prevista",
+      "processingTime": "Ore previste",
+      "createOrderButton": "Crea ordine"
+    },
+    "messages": {
+      "createFail": "Impossibile creare l'ordine",
+      "companyNameMissing": "Impossibile trovare la tua azienda. Accedi di nuovo.",
+      "orderNumberExists": "Esiste già un ordine con questo numero."
+    }
+  },
+  "validation": {
+    "invalidEmail": "E-mail non valida",
+    "requiredEmail": "L'e-mail è obbligatoria",
+    "passwordMin": "La password deve avere almeno 6 caratteri",
+    "requiredPassword": "La password è obbligatoria",
+    "requiredContactName": "Il nome del referente è obbligatorio",
+    "requiredContactPhone": "Il telefono del referente è obbligatorio",
+    "requiredContactEmail": "L'e-mail del referente è obbligatoria",
+    "required": "Campo obbligatorio",
+    "positive": "Il numero deve essere positivo",
+    "minZero": "Il numero deve essere zero o superiore",
+    "requiredName": "Il nome è obbligatorio",
+    "invalidName": "Nome non valido: solo lettere, spazi, trattini e apostrofi",
+    "requiredClientName": "Il nome del cliente è obbligatorio",
+    "invalidContactEmail": "E-mail del referente non valida",
+    "passwordMin8": "La password deve avere almeno 8 caratteri"
+  },
+  "updateOrders": {
+    "title": "Modifica ordine",
+    "subtitle": "Modifica i dati dell'ordine",
+    "edit": "Aggiorna",
+    "messages": {
+      "updateSuccess": "Ordine aggiornato",
+      "updateFail": "Impossibile aggiornare l'ordine"
+    }
+  },
+  "opiInitialForm": {
+    "title": "Avvia ordine",
+    "subtitle": "Pezzi che carichi in macchina e ora di inizio",
+    "labels": {
+      "initialQuantity": "Pezzi in macchina",
+      "processingDateInitial": "Inizio"
+    },
+    "buttons": {
+      "update": "Avvia ordine"
+    }
+  },
+  "createFinalOpi": {
+    "title": "Chiudi ordine",
+    "subtitle": "Pezzi buoni e ora di fine: scarto e tempo effettivo si calcolano da soli",
+    "labels": {
+      "finalQuantity": "Pezzi buoni",
+      "processingDateFinal": "Fine"
+    },
+    "buttons": {
+      "update": "Chiudi ordine"
+    },
+    "startedWith": "Sei partito da {{n}} pezzi",
+    "wastePreview": "Scarto: {{n}} pz. ({{pct}})"
+  },
+  "editClientEco": {
+    "headerTitle": "Modifica cliente ECO",
+    "headerSubtitle": "Dati sulle emissioni del cliente",
+    "validationMessages": {
+      "ecoStatusRequired": "Lo stato ECO è obbligatorio",
+      "ecoEmissionsRequired": "Le emissioni sono obbligatorie"
+    }
+  },
+  "calendar": {
+    "title": "Calendario",
+    "subtitle": "Date previste, di inizio e di fine di ogni ordine",
+    "today": "Oggi",
+    "month": "Mese",
+    "week": "Sett",
+    "day": "Giorno",
+    "list": "Elenco",
+    "more": "+{{n}} altri",
+    "event": {
+      "start": "Inizio n° {{n}} · {{client}}",
+      "end": "Fine n° {{n}} · {{client}}",
+      "planned": "N° {{n}} · {{client}}"
+    }
+  },
+  "app": {
+    "productionControl": "controllo della produzione",
+    "clientPortal": "portale clienti",
+    "logout": "Esci",
+    "notifications": "Avvisi",
+    "openMenu": "Apri menu",
+    "language": "Lingua",
+    "tagline": "Controllo della produzione, senza fogli di calcolo."
+  },
+  "nav": {
+    "production": "Produzione",
+    "dashboard": "Cruscotto",
+    "orders": "Ordini",
+    "calendar": "Calendario",
+    "analysis": "Analisi",
+    "quantities": "Quantità e scarto",
+    "ordersByPeriod": "Ordini clienti",
+    "processTimes": "Tempi di lavorazione",
+    "team": "Squadra",
+    "clients": "Clienti",
+    "technicians": "Operatori",
+    "help": "Aiuto",
+    "workshop": "Reparto",
+    "myOrders": "I miei ordini",
+    "myPurchaseOrders": "I miei ordini",
+    "tracking": "Monitoraggio",
+    "clientOrdersByPeriod": "Ordini per periodo"
+  },
+  "roleLong": {
+    "admin": "Amministrazione",
+    "technician": "Operatore di reparto",
+    "client": "Cliente"
+  },
+  "order": {
+    "numberLong": "Ordine n° {{n}}",
+    "numberShort": "N° {{n}}",
+    "units": "{{n}} pz.",
+    "hours": "{{n}} h"
+  },
+  "table": {
+    "new": "Nuovo",
+    "newOrder": "Nuovo ordine",
+    "newClient": "Nuovo cliente",
+    "newTechnician": "Nuovo operatore",
+    "newUser": "Nuovo utente",
+    "more": "Altre azioni"
+  },
+  "faq": {
+    "title": "Domande frequenti",
+    "admin": {
+      "subtitle": "Amministrazione",
+      "items": [
+        {
+          "q": "Come inserisco un ordine di produzione?",
+          "a": "In «Ordini», premi il pulsante «+». Indica cliente, lavoro, quantità, lavorazioni e finiture, l'operatore responsabile, la data prevista e le ore stimate. L'operatore lo vedrà subito nel suo elenco."
+        },
+        {
+          "q": "Che cosa significa ogni stato?",
+          "a": "Da avviare: non è ancora iniziato. In produzione: l'operatore ha registrato l'avvio e annota quanto prodotto. Completato: con quantità e tempi finali. Spedito: è già partito per il cliente."
+        },
+        {
+          "q": "Da dove vengono lo scarto e lo scostamento dei tempi?",
+          "a": "All'avvio l'operatore annota i pezzi caricati in macchina; alla chiusura, i pezzi buoni e l'ora di fine. Sensobox calcola lo scarto (pezzi persi) e confronta le ore effettive con quelle previste."
+        },
+        {
+          "q": "Che cosa compare in «Scostamenti»?",
+          "a": "Gli ordini completati con più del 7% di scarto o che hanno richiesto oltre il 30% di tempo in più del previsto. Serve a individuare in tempo una macchina, un materiale o un lavoro che sta andando fuori controllo."
+        },
+        {
+          "q": "Posso filtrare o esportare gli ordini?",
+          "a": "Sì. Nella tabella degli ordini puoi cercare per numero o cliente, filtrare per qualsiasi colonna, scegliere quali colonne vedere ed esportare in CSV per la contabilità."
+        },
+        {
+          "q": "Come aggiungo un cliente o un operatore?",
+          "a": "Da «Clienti» o «Operatori», con il pulsante «+». Ogni persona riceve il suo utente e vede solo ciò che la riguarda: l'operatore i suoi ordini, il cliente i suoi acquisti."
+        }
+      ]
+    },
+    "technician": {
+      "subtitle": "Operatori di reparto",
+      "items": [
+        {
+          "q": "Quali ordini vedo?",
+          "a": "Solo quelli assegnati a te, ordinati per data prevista. I nuovi compaiono appena l'ufficio li inserisce."
+        },
+        {
+          "q": "Come avvio un ordine?",
+          "a": "Nella scheda dell'ordine, premi «Avvia». Annota i pezzi di partenza (fogli o metri che carichi in macchina) e l'ora di inizio."
+        },
+        {
+          "q": "Come registro quanto ho prodotto?",
+          "a": "Con «Registra avanzamento» aggiorni i pezzi prodotti fino a quel momento. L'ufficio lo vede subito nel cruscotto, senza telefonate."
+        },
+        {
+          "q": "Come chiudo un ordine?",
+          "a": "Con «Chiudi»: pezzi buoni e ora di fine. Sensobox calcola lo scarto e il tempo effettivo rispetto al previsto."
+        },
+        {
+          "q": "Dove annoto il materiale?",
+          "a": "In «Materiale», con lunghezza, larghezza e peso. Così il consumo di ogni lavoro resta registrato."
+        }
+      ]
+    },
+    "client": {
+      "subtitle": "Clienti",
+      "items": [
+        {
+          "q": "Che cosa vedo nel portale?",
+          "a": "I tuoi ordini e a che punto è ciascuno: da avviare, in produzione, completato o spedito, con quantità e date."
+        },
+        {
+          "q": "Ogni quanto si aggiorna?",
+          "a": "In tempo reale: appena il reparto registra un avanzamento, lo vedi qui."
+        },
+        {
+          "q": "Posso vedere i miei ordini per data?",
+          "a": "Sì. In «Calendario» trovi la data prevista di ogni ordine e in «Ordini per periodo» il loro andamento."
+        },
+        {
+          "q": "A chi chiedo informazioni su un ordine?",
+          "a": "Al tuo referente abituale in stabilimento. Indicagli il numero d'ordine che compare nell'elenco."
+        }
+      ]
+    }
+  },
+  "weekly": {
+    "period": "Periodo",
+    "client": "Cliente",
+    "allClients": "Tutti i clienti",
+    "worstWeek": "Settimana peggiore",
+    "limitLine": "Linea rossa: limite del {{n}}",
+    "periods": {
+      "lastMonth": "Ultimo mese",
+      "last3Months": "Ultimi 3 mesi",
+      "last6Months": "Ultimi 6 mesi",
+      "lastYear": "Ultimo anno"
+    },
+    "quantities": {
+      "title": "Quantità e scarto",
+      "subtitle": "Pezzi in macchina rispetto ai pezzi buoni, per settimana",
+      "series": {
+        "a": "Pezzi in macchina",
+        "b": "Pezzi buoni"
+      },
+      "unitValue": "{{n}} mila pz.",
+      "ratioName": "Scarto",
+      "periodRatio": "Scarto del periodo",
+      "mainTitle": "Pezzi in macchina e pezzi buoni",
+      "mainSubtitle": "In migliaia di pezzi",
+      "ratioTitle": "Scarto per settimana"
+    },
+    "times": {
+      "title": "Tempi di lavorazione",
+      "subtitle": "Ore previste rispetto alle ore effettive, per settimana",
+      "series": {
+        "a": "Ore previste",
+        "b": "Ore effettive"
+      },
+      "unitValue": "{{n}} h",
+      "ratioName": "Scostamento tempi",
+      "periodRatio": "Scostamento tempi del periodo",
+      "mainTitle": "Ore previste e ore effettive",
+      "mainSubtitle": "In ore macchina",
+      "ratioTitle": "Scostamento tempi per settimana"
+    },
+    "orders": {
+      "title": "Ordini per periodo",
+      "subtitle": "Ordini ricevuti ogni settimana e pezzi ordinati",
+      "series": {
+        "a": "Ordini"
+      },
+      "ratioName": "Pezzi ordinati (migliaia)",
+      "mainTitle": "Ordini per settimana",
+      "mainSubtitle": "Numero di ordini",
+      "ratioTitle": "Pezzi ordinati (migliaia)",
+      "ratioSubtitle": "Migliaia di pezzi per settimana",
+      "stats": {
+        "orders": "Ordini",
+        "unitsOrdered": "Pezzi ordinati",
+        "thousands": "{{n}} mila",
+        "weeklyAverage": "Media settimanale",
+        "clients": "Clienti"
+      }
+    }
+  },
+  "techOrders": {
+    "title": "I miei ordini",
+    "subtitle": "Ciò che ti è assegnato, in ordine di priorità",
+    "tabTodo": "Da fare",
+    "tabDone": "Completati",
+    "search": "Cerca n°, cliente o lavoro",
+    "finishedAt": "Completato {{date}}",
+    "plannedAt": "Previsto {{date}}",
+    "start": "Avvia",
+    "progress": "Registra avanzamento",
+    "finish": "Chiudi",
+    "empty": "Nessun ordine in questo elenco."
+  },
+  "pie": {
+    "title": "Ripartizione per cliente",
+    "subtitle": "Pezzi per cliente"
+  }
+}
