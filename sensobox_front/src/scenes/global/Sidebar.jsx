@@ -99,7 +99,7 @@ const Sidebar = () => {
   if (isMobile) {
     return (
       <>
-        <IconButton className="sb-menu-btn" aria-label={t("app.openMenu")} onClick={() => setOpen(true)} sx={{ position: "fixed", top: 10, left: 10, zIndex: 1301, color: "#111827" }}>
+        <IconButton className="sb-menu-btn" aria-label={t("app.openMenu")} onClick={() => setOpen(true)} sx={{ position: "fixed", top: 10, left: 10, zIndex: 1301, color: "#111827", visibility: open ? "hidden" : "visible" }}>
           <MenuRoundedIcon />
         </IconButton>
         <Drawer open={open} onClose={() => setOpen(false)} PaperProps={{ sx: { border: 0 } }}>
