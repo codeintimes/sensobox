@@ -500,7 +500,7 @@ const OrdersAdmin = () => {
               {t("orders.columns.opiFinalEdit")}
             </MenuItem>
             <MenuItem onClick={() => handlequantityProcessed(currentId)}>
-              {t("orders.columns.quantityProcessed")}
+              {t("orders.currentQuantity.title")}
             </MenuItem>
             <MenuItem onClick={() => handleEditMaterial(currentId)}>
               {t("orders.columns.material")}
