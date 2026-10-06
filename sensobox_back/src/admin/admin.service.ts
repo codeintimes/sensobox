@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User, UserDocument } from '../auth/domain/schemas/user.schema';
-import { Order, OrderDocument } from '../order/domain/schemas/order.schema';
+import { IUser } from '../auth/domain/schemas/user.schema';
+import { IOrder } from '../order/domain/schemas/order.schema';
 import { faker } from '@faker-js/faker';
 import * as bcrypt from 'bcrypt';
 
@@ -42,8 +42,8 @@ const TechnicianNames = [
 @Injectable()
 export class AdminService {
   constructor(
-    @InjectModel('User') private userModel: Model<UserDocument>,
-    @InjectModel('Order') private orderModel: Model<OrderDocument>,
+    @InjectModel('User') private userModel: Model<IUser>,
+    @InjectModel('Order') private orderModel: Model<IOrder>,
   ) {}
 
   async generateUsersForCompany() {

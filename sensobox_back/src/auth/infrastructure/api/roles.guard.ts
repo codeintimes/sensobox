@@ -6,8 +6,11 @@ export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    // Obtener los roles requeridos desde los metadatos del handler actual
-    const requiredRoles = this.reflector.get<string[]>('roles', context.getHandler()); // Asegúrate de que 'roles' es el metadato correcto
+    // Leer roles tanto del método como del controlador
+    const requiredRoles = this.reflector.getAllAndOverride<string[]>('roles', [
+      context.getHandler(),
+      context.getClass(),
+    ]);
 
     // Si no hay roles requeridos, retorna false para negar el acceso
     if (!requiredRoles || requiredRoles.length === 0) {
