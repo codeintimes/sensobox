@@ -17,3 +17,8 @@ export const fmtLongDate = (d) => {
   return s.charAt(0).toUpperCase() + s.slice(1);
 };
 export const fmtNumericDate = (d) => (d ? new Date(d).toLocaleDateString(currentLocale(), { day: "2-digit", month: "2-digit", year: "numeric" }) : "—");
+// Planifica (Gantt y carga por día)
+export const fmtHour = (d) => new Date(d).toLocaleTimeString(currentLocale(), { hour: "2-digit", minute: "2-digit" });
+export const fmtWeekdayDay = (d) => new Date(d).toLocaleDateString(currentLocale(), { weekday: "short", day: "numeric", month: "short" });
+export const fmtWeekdayNum = (d) => new Date(d).toLocaleDateString(currentLocale(), { weekday: "short", day: "numeric" });
+export const fmtIsoDay = (iso) => new Date(`${iso}T12:00:00`).toLocaleDateString(currentLocale());

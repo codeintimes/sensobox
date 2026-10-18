@@ -14,6 +14,7 @@ import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import EngineeringOutlinedIcon from "@mui/icons-material/EngineeringOutlined";
+import ViewTimelineOutlinedIcon from "@mui/icons-material/ViewTimelineOutlined";
 
 export const SensoboxLogo = ({ size = 32, text = true, color = "#111827" }) => (
   <Box display="flex" alignItems="center" gap="10px">
@@ -33,6 +34,8 @@ const MENUS = {
     { title: "nav.dashboard", to: "/", icon: <SpaceDashboardOutlinedIcon /> },
     { title: "nav.orders", to: "/ordersAdmin", icon: <Inventory2OutlinedIcon /> },
     { title: "nav.calendar", to: "/calendar", icon: <CalendarMonthOutlinedIcon /> },
+    { section: "nav.planifica", accent: "#7E22CE" },
+    { title: "nav.planning", to: "/planifica", icon: <ViewTimelineOutlinedIcon />, accent: "#7E22CE", soft: "#F3E8FF" },
     { section: "nav.analysis" },
     { title: "nav.quantities", to: "/lineQuantityGraph", icon: <StackedLineChartOutlinedIcon /> },
     { title: "nav.ordersByPeriod", to: "/lineOrdersGraph", icon: <BarChartOutlinedIcon /> },
@@ -75,11 +78,11 @@ function Content({ onNavigate }) {
       <Box component="nav" sx={{ display: "flex", flexDirection: "column", gap: "2px" }}>
         {items.map((it, i) =>
           it.section ? (
-            <Typography key={i} sx={{ fontSize: 11, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase", color: "#9CA3AF", px: "10px", mt: i ? "14px" : 0, mb: "4px" }}>{t(it.section)}</Typography>
+            <Typography key={i} sx={{ fontSize: 11, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase", color: it.accent || "#9CA3AF", px: "10px", mt: i ? "14px" : 0, mb: "4px" }}>{t(it.section)}</Typography>
           ) : (
             <Link key={it.to} to={it.to} onClick={onNavigate} className={"sb-nav" + (pathname === it.to ? " active" : "")} style={{ textDecoration: "none" }}>
               <Box sx={{ display: "flex", alignItems: "center", gap: "12px", px: "10px", py: "9px", borderRadius: "10px", fontSize: 14, fontWeight: pathname === it.to ? 600 : 500,
-                color: pathname === it.to ? "#4338CA" : "#374151", background: pathname === it.to ? "#EEF2FF" : "transparent", "& svg": { fontSize: 20, flexShrink: 0, color: pathname === it.to ? "#4F46E5" : "#9CA3AF" }, "&:hover": { background: "#F3F4F6" } }}>
+                color: pathname === it.to ? (it.accent || "#4338CA") : "#374151", background: pathname === it.to ? (it.soft || "#EEF2FF") : "transparent", "& svg": { fontSize: 20, flexShrink: 0, color: pathname === it.to ? (it.accent || "#4F46E5") : it.accent || "#9CA3AF" }, "&:hover": { background: "#F3F4F6" } }}>
                 {it.icon}<span>{t(it.title)}</span>
               </Box>
             </Link>

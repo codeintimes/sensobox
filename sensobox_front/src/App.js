@@ -51,6 +51,7 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import EditQuantityProcessed from "./scenes/orders/editQuantityProcessed";
 import ClientsEcoClient from "./scenes/usersGroup/clientsEcoClient";
+import Planifica from "./scenes/planifica";
 import { useMediaQuery } from "@mui/material";
 
 function App() {
@@ -99,6 +100,7 @@ function App() {
                       {/* <Route path="/editTechnician/:id" element={<EditTechnician />} /> */}
                       <Route path="/quantityGraph" element={<QuantityGraph />} />
                       <Route path="/faqAdmin" element={<FAQAdmin />} />
+                      <Route path="/planifica" element={<Planifica />} />
                     </Route>
                     <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} roles={'technician'} />}>
                       <Route path="/ordersTechnician" element={<OrdersTechnician />} />
