@@ -348,7 +348,9 @@
     "myOrders": "Mijn orders",
     "myPurchaseOrders": "Mijn bestellingen",
     "tracking": "Status volgen",
-    "clientOrdersByPeriod": "Bestellingen per periode"
+    "clientOrdersByPeriod": "Bestellingen per periode",
+    "planifica": "Planifica",
+    "planning": "Planning"
   },
   "roleLong": {
     "admin": "Beheer",
@@ -523,5 +525,130 @@
   "pie": {
     "title": "Verdeling per klant",
     "subtitle": "Eenheden per klant"
+  },
+  "planifica": {
+    "title": "Planifica",
+    "subtitle": "Productieplanning met eindige capaciteit: wat wordt gemaakt, op welke machine en wanneer",
+    "tabs": {
+      "gantt": "Gantt",
+      "load": "Machinebezetting",
+      "orders": "Orders",
+      "whatif": "Wat als er een spoedorder komt?",
+      "setup": "Middelen, kalenders en routings"
+    },
+    "cols": {
+      "order": "Order",
+      "client": "Klant",
+      "article": "Artikel",
+      "qty": "Aantal",
+      "progress": "Voortgang",
+      "due": "Levering",
+      "end": "Gepland einde",
+      "status": "Status",
+      "priority": "Prioriteit"
+    },
+    "priority": {
+      "1": "Spoed",
+      "2": "Hoog",
+      "3": "Normaal"
+    },
+    "status": {
+      "onTime": "Op tijd",
+      "lateBy": "{{h}} u te laat",
+      "unplanned": "Geen ruimte"
+    },
+    "kpi": {
+      "orders": "Orders in planning",
+      "late": "Te laat",
+      "locked": "Handmatig vastgezet",
+      "unlinked": "Zonder routing"
+    },
+    "gantt": {
+      "resource": "Middel",
+      "realCapacity": "Werkelijke capaciteit {{v}} % (Ritmia)",
+      "stdCapacity": "Standaardcapaciteit {{v}} %",
+      "qty": "{{n}} st.",
+      "setup": "omstellen {{n}} min",
+      "locked": "handmatig vastgezet",
+      "now": "Nu",
+      "prev": "Vorige",
+      "next": "Volgende",
+      "today": "Vandaag",
+      "days": "{{n}} dagen",
+      "hint": "Sleep een balk naar een ander tijdstip of een andere machine",
+      "unlock": "Terug naar automatische planning"
+    },
+    "load": {
+      "title": "Machinebezetting",
+      "subtitle": "Percentage van de ploeguren dat per dag bezet is (komende 14 dagen)",
+      "total": "Totaal",
+      "legendPct": "Cijfers: % bezetting van de dag",
+      "legendOver": "Rood: overbelast (meer dan 100 %)",
+      "legendOff": "Gearceerd: geen ploeg"
+    },
+    "orders": {
+      "title": "Geplande productieorders",
+      "unlinkedTitle_one": "{{count}} Sensobox-order zonder routing",
+      "unlinkedTitle_other": "{{count}} Sensobox-orders zonder routing",
+      "unlinkedHint": "Wijs het artikel toe zodat de order in de planning komt.",
+      "link": "Inplannen"
+    },
+    "whatif": {
+      "title": "Wat gebeurt er als deze spoedorder binnenkomt?",
+      "subtitle": "Simuleer de order zonder de planning te wijzigen: zie wanneer hij klaar is en wie vertraging oploopt.",
+      "run": "Simuleren",
+      "empty": "Vul de order in en klik op „Simuleren”.",
+      "finish": "Klaar op",
+      "meets": "Op tijd?",
+      "yes": "Ja",
+      "no": "Nee",
+      "lateOrders": "Orders te laat",
+      "machines": "Waar hij gemaakt wordt",
+      "impact_one": "{{count}} order loopt vertraging op",
+      "impact_other": "{{count}} orders lopen vertraging op",
+      "noImpact": "Geen enkele andere order loopt vertraging op.",
+      "delayed": "+{{h}} u",
+      "newlyLate": "Wordt te laat",
+      "confirm": "Order accepteren en inplannen",
+      "created": "Order {{n}} aangemaakt en ingepland"
+    },
+    "setup": {
+      "resources": "Middelen en capaciteit",
+      "ritmiaOn": "De capaciteit van de spuitgietmachines komt uit de werkelijke OEE die Ritmia meet (beschikbaarheid × prestatie van de laatste 14 dagen).",
+      "ritmiaOff": "Ritmia niet gekoppeld: de standaardefficiëntie van elk middel wordt gebruikt.",
+      "calendar": "Kalender",
+      "efficiency": "Standaardefficiëntie %",
+      "realOee": "Werkelijk: besch. {{a}} % · prest. {{p}} %",
+      "standard": "Standaardefficiëntie",
+      "calendars": "Kalenders en ploegen",
+      "holidays": "Feestdagen",
+      "addHoliday": "Feestdag toevoegen",
+      "routes": "Productieroutings",
+      "rate": "{{n}} st./u"
+    },
+    "weekday": {
+      "1": "ma",
+      "2": "di",
+      "3": "wo",
+      "4": "do",
+      "5": "vr",
+      "6": "za",
+      "7": "zo"
+    },
+    "ritmia": {
+      "on": "Werkelijke capaciteit uit Ritmia",
+      "off": "Standaardcapaciteit"
+    },
+    "order": "PO {{n}}",
+    "replan": "Opnieuw plannen",
+    "replanned": "Planning herberekend",
+    "moved": "PO {{n}} verplaatst en vastgezet; planning herberekend",
+    "unlocked": "Bewerking vrijgegeven; planning herberekend",
+    "linked": "Order aan de planning toegevoegd",
+    "lateAlert_one": "{{count}} order haalt de leverdatum niet",
+    "lateAlert_other": "{{count}} orders halen de leverdatum niet",
+    "errors": {
+      "generic": "De actie kon niet worden uitgevoerd."
+    }
   }
 }

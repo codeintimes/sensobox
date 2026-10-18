@@ -348,7 +348,9 @@
     "myOrders": "My orders",
     "myPurchaseOrders": "My orders",
     "tracking": "Tracking",
-    "clientOrdersByPeriod": "Orders by period"
+    "clientOrdersByPeriod": "Orders by period",
+    "planifica": "Planifica",
+    "planning": "Planning"
   },
   "roleLong": {
     "admin": "Administration",
@@ -523,5 +525,130 @@
   "pie": {
     "title": "Split by client",
     "subtitle": "Units per client"
+  },
+  "planifica": {
+    "title": "Planifica",
+    "subtitle": "Finite-capacity production planning: what is made, on which machine and when",
+    "tabs": {
+      "gantt": "Gantt",
+      "load": "Machine load",
+      "orders": "Orders",
+      "whatif": "What if a rush order comes in?",
+      "setup": "Resources, calendars and routings"
+    },
+    "cols": {
+      "order": "Order",
+      "client": "Customer",
+      "article": "Item",
+      "qty": "Quantity",
+      "progress": "Progress",
+      "due": "Due",
+      "end": "Planned finish",
+      "status": "Status",
+      "priority": "Priority"
+    },
+    "priority": {
+      "1": "Rush",
+      "2": "High",
+      "3": "Normal"
+    },
+    "status": {
+      "onTime": "On time",
+      "lateBy": "{{h}} h late",
+      "unplanned": "No slot"
+    },
+    "kpi": {
+      "orders": "Orders in plan",
+      "late": "Late",
+      "locked": "Pinned by hand",
+      "unlinked": "Without routing"
+    },
+    "gantt": {
+      "resource": "Resource",
+      "realCapacity": "Real capacity {{v}}% (Ritmia)",
+      "stdCapacity": "Standard capacity {{v}}%",
+      "qty": "{{n}} units",
+      "setup": "setup {{n}} min",
+      "locked": "pinned by hand",
+      "now": "Now",
+      "prev": "Previous",
+      "next": "Next",
+      "today": "Today",
+      "days": "{{n}} days",
+      "hint": "Drag a bar to move it to another time or machine",
+      "unlock": "Back to automatic planning"
+    },
+    "load": {
+      "title": "Machine load",
+      "subtitle": "Share of shift hours booked each day (next 14 days)",
+      "total": "Total",
+      "legendPct": "Figures: % load of the day",
+      "legendOver": "Red: overload (over 100%)",
+      "legendOff": "Hatched: no shift"
+    },
+    "orders": {
+      "title": "Planned production orders",
+      "unlinkedTitle_one": "{{count}} Sensobox order without routing",
+      "unlinkedTitle_other": "{{count}} Sensobox orders without routing",
+      "unlinkedHint": "Assign the item so the order enters the plan.",
+      "link": "Plan it"
+    },
+    "whatif": {
+      "title": "What happens if this rush order comes in?",
+      "subtitle": "Simulate the order without touching the plan: see when it would ship and who it delays.",
+      "run": "Simulate",
+      "empty": "Fill in the order and press \"Simulate\".",
+      "finish": "Would finish",
+      "meets": "On time?",
+      "yes": "Yes",
+      "no": "No",
+      "lateOrders": "Late orders",
+      "machines": "Where it would be made",
+      "impact_one": "{{count}} order is delayed",
+      "impact_other": "{{count}} orders are delayed",
+      "noImpact": "No other order is delayed.",
+      "delayed": "+{{h}} h",
+      "newlyLate": "Becomes late",
+      "confirm": "Accept the order and plan it",
+      "created": "Order {{n}} created and planned"
+    },
+    "setup": {
+      "resources": "Resources and capacity",
+      "ritmiaOn": "Injection moulder capacity comes from the real OEE measured by Ritmia (availability × performance over the last 14 days).",
+      "ritmiaOff": "Ritmia not connected: each resource's standard efficiency is used.",
+      "calendar": "Calendar",
+      "efficiency": "Standard efficiency %",
+      "realOee": "Real: avail. {{a}}% · perf. {{p}}%",
+      "standard": "Standard efficiency",
+      "calendars": "Calendars and shifts",
+      "holidays": "Holidays",
+      "addHoliday": "Add holiday",
+      "routes": "Production routings",
+      "rate": "{{n}} units/h"
+    },
+    "weekday": {
+      "1": "Mon",
+      "2": "Tue",
+      "3": "Wed",
+      "4": "Thu",
+      "5": "Fri",
+      "6": "Sat",
+      "7": "Sun"
+    },
+    "ritmia": {
+      "on": "Real capacity from Ritmia",
+      "off": "Standard capacity"
+    },
+    "order": "PO {{n}}",
+    "replan": "Replan",
+    "replanned": "Plan recalculated",
+    "moved": "PO {{n}} moved and pinned; plan recalculated",
+    "unlocked": "Operation released; plan recalculated",
+    "linked": "Order added to the plan",
+    "lateAlert_one": "{{count}} order misses its due date",
+    "lateAlert_other": "{{count}} orders miss their due date",
+    "errors": {
+      "generic": "The action could not be completed."
+    }
   }
 }

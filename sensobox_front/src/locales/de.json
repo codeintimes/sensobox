@@ -348,7 +348,9 @@
     "myOrders": "Meine Aufträge",
     "myPurchaseOrders": "Meine Bestellungen",
     "tracking": "Sendungsverfolgung",
-    "clientOrdersByPeriod": "Bestellungen pro Zeitraum"
+    "clientOrdersByPeriod": "Bestellungen pro Zeitraum",
+    "planifica": "Planifica",
+    "planning": "Planung"
   },
   "roleLong": {
     "admin": "Verwaltung",
@@ -523,5 +525,130 @@
   "pie": {
     "title": "Verteilung nach Kunde",
     "subtitle": "Stück pro Kunde"
+  },
+  "planifica": {
+    "title": "Planifica",
+    "subtitle": "Produktionsplanung mit begrenzter Kapazität: was, auf welcher Maschine und wann gefertigt wird",
+    "tabs": {
+      "gantt": "Gantt",
+      "load": "Maschinenauslastung",
+      "orders": "Aufträge",
+      "whatif": "Was, wenn ein Eilauftrag kommt?",
+      "setup": "Ressourcen, Kalender und Arbeitspläne"
+    },
+    "cols": {
+      "order": "Auftrag",
+      "client": "Kunde",
+      "article": "Artikel",
+      "qty": "Menge",
+      "progress": "Fortschritt",
+      "due": "Liefertermin",
+      "end": "Geplantes Ende",
+      "status": "Status",
+      "priority": "Priorität"
+    },
+    "priority": {
+      "1": "Eilig",
+      "2": "Hoch",
+      "3": "Normal"
+    },
+    "status": {
+      "onTime": "Termingerecht",
+      "lateBy": "{{h}} Std. Verzug",
+      "unplanned": "Kein Platz"
+    },
+    "kpi": {
+      "orders": "Aufträge im Plan",
+      "late": "Verspätet",
+      "locked": "Manuell fixiert",
+      "unlinked": "Ohne Arbeitsplan"
+    },
+    "gantt": {
+      "resource": "Ressource",
+      "realCapacity": "Reale Kapazität {{v}} % (Ritmia)",
+      "stdCapacity": "Standardkapazität {{v}} %",
+      "qty": "{{n}} Stk.",
+      "setup": "Rüsten {{n}} Min.",
+      "locked": "manuell fixiert",
+      "now": "Jetzt",
+      "prev": "Zurück",
+      "next": "Weiter",
+      "today": "Heute",
+      "days": "{{n}} Tage",
+      "hint": "Ziehen Sie einen Balken auf eine andere Zeit oder Maschine",
+      "unlock": "Zurück zur automatischen Planung"
+    },
+    "load": {
+      "title": "Maschinenauslastung",
+      "subtitle": "Anteil der belegten Schichtstunden pro Tag (nächste 14 Tage)",
+      "total": "Gesamt",
+      "legendPct": "Zahlen: Auslastung des Tages in %",
+      "legendOver": "Rot: Überlast (über 100 %)",
+      "legendOff": "Schraffiert: keine Schicht"
+    },
+    "orders": {
+      "title": "Geplante Fertigungsaufträge",
+      "unlinkedTitle_one": "{{count}} Sensobox-Auftrag ohne Arbeitsplan",
+      "unlinkedTitle_other": "{{count}} Sensobox-Aufträge ohne Arbeitsplan",
+      "unlinkedHint": "Ordnen Sie den Artikel zu, damit der Auftrag eingeplant wird.",
+      "link": "Einplanen"
+    },
+    "whatif": {
+      "title": "Was passiert, wenn dieser Eilauftrag kommt?",
+      "subtitle": "Simulieren Sie den Auftrag, ohne den Plan zu ändern: Sie sehen, wann er fertig wäre und wen er verzögert.",
+      "run": "Simulieren",
+      "empty": "Auftrag ausfüllen und „Simulieren“ drücken.",
+      "finish": "Fertig am",
+      "meets": "Termingerecht?",
+      "yes": "Ja",
+      "no": "Nein",
+      "lateOrders": "Verspätete Aufträge",
+      "machines": "Wo er gefertigt würde",
+      "impact_one": "{{count}} Auftrag verzögert sich",
+      "impact_other": "{{count}} Aufträge verzögern sich",
+      "noImpact": "Kein anderer Auftrag verzögert sich.",
+      "delayed": "+{{h}} Std.",
+      "newlyLate": "Wird verspätet",
+      "confirm": "Auftrag annehmen und einplanen",
+      "created": "Auftrag {{n}} angelegt und eingeplant"
+    },
+    "setup": {
+      "resources": "Ressourcen und Kapazität",
+      "ritmiaOn": "Die Kapazität der Spritzgießmaschinen stammt aus der realen OEE, die Ritmia misst (Verfügbarkeit × Leistung der letzten 14 Tage).",
+      "ritmiaOff": "Ritmia nicht verbunden: Es gilt die Standardeffizienz jeder Ressource.",
+      "calendar": "Kalender",
+      "efficiency": "Standardeffizienz %",
+      "realOee": "Real: Verf. {{a}} % · Leist. {{p}} %",
+      "standard": "Standardeffizienz",
+      "calendars": "Kalender und Schichten",
+      "holidays": "Feiertage",
+      "addHoliday": "Feiertag hinzufügen",
+      "routes": "Arbeitspläne",
+      "rate": "{{n}} Stk./Std."
+    },
+    "weekday": {
+      "1": "Mo",
+      "2": "Di",
+      "3": "Mi",
+      "4": "Do",
+      "5": "Fr",
+      "6": "Sa",
+      "7": "So"
+    },
+    "ritmia": {
+      "on": "Reale Kapazität aus Ritmia",
+      "off": "Standardkapazität"
+    },
+    "order": "FA {{n}}",
+    "replan": "Neu planen",
+    "replanned": "Plan neu berechnet",
+    "moved": "FA {{n}} verschoben und fixiert; Plan neu berechnet",
+    "unlocked": "Arbeitsgang freigegeben; Plan neu berechnet",
+    "linked": "Auftrag in den Plan aufgenommen",
+    "lateAlert_one": "{{count}} Auftrag verfehlt den Liefertermin",
+    "lateAlert_other": "{{count}} Aufträge verfehlen den Liefertermin",
+    "errors": {
+      "generic": "Die Aktion konnte nicht ausgeführt werden."
+    }
   }
 }

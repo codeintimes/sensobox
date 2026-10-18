@@ -348,7 +348,9 @@
     "myOrders": "Mis órdenes",
     "myPurchaseOrders": "Mis pedidos",
     "tracking": "Seguimiento",
-    "clientOrdersByPeriod": "Pedidos por periodo"
+    "clientOrdersByPeriod": "Pedidos por periodo",
+    "planifica": "Planifica",
+    "planning": "Planificación"
   },
   "roleLong": {
     "admin": "Administración",
@@ -523,5 +525,130 @@
   "pie": {
     "title": "Reparto por cliente",
     "subtitle": "Unidades por cliente"
+  },
+  "planifica": {
+    "title": "Planifica",
+    "subtitle": "Planificación de producción con capacidad finita: qué se fabrica, en qué máquina y cuándo",
+    "tabs": {
+      "gantt": "Gantt",
+      "load": "Carga por máquina",
+      "orders": "Órdenes",
+      "whatif": "¿Y si entra un urgente?",
+      "setup": "Recursos, calendarios y rutas"
+    },
+    "cols": {
+      "order": "Orden",
+      "client": "Cliente",
+      "article": "Artículo",
+      "qty": "Cantidad",
+      "progress": "Avance",
+      "due": "Entrega",
+      "end": "Fin previsto",
+      "status": "Estado",
+      "priority": "Prioridad"
+    },
+    "priority": {
+      "1": "Urgente",
+      "2": "Alta",
+      "3": "Normal"
+    },
+    "status": {
+      "onTime": "A tiempo",
+      "lateBy": "Retraso {{h}} h",
+      "unplanned": "Sin hueco"
+    },
+    "kpi": {
+      "orders": "Órdenes en plan",
+      "late": "Con retraso",
+      "locked": "Fijadas a mano",
+      "unlinked": "Sin ruta asignada"
+    },
+    "gantt": {
+      "resource": "Recurso",
+      "realCapacity": "Capacidad real {{v}} % (Ritmia)",
+      "stdCapacity": "Capacidad estándar {{v}} %",
+      "qty": "{{n}} uds.",
+      "setup": "preparación {{n}} min",
+      "locked": "fijada a mano",
+      "now": "Ahora",
+      "prev": "Anterior",
+      "next": "Siguiente",
+      "today": "Hoy",
+      "days": "{{n}} días",
+      "hint": "Arrastra una barra para moverla de hora o de máquina",
+      "unlock": "Volver a planificación automática"
+    },
+    "load": {
+      "title": "Carga por máquina",
+      "subtitle": "Porcentaje de las horas de turno ocupadas cada día (próximos 14 días)",
+      "total": "Total",
+      "legendPct": "Cifras: % de carga del día",
+      "legendOver": "Rojo: sobrecarga (más del 100 %)",
+      "legendOff": "Rayado: sin turno"
+    },
+    "orders": {
+      "title": "Órdenes de fabricación planificadas",
+      "unlinkedTitle_one": "{{count}} orden de Sensobox sin ruta",
+      "unlinkedTitle_other": "{{count}} órdenes de Sensobox sin ruta",
+      "unlinkedHint": "Asigna el artículo para que la orden entre en el plan.",
+      "link": "Planificar"
+    },
+    "whatif": {
+      "title": "¿Qué pasa si entra este pedido urgente?",
+      "subtitle": "Simula el pedido sin tocar el plan: verás cuándo saldría y a quién retrasa.",
+      "run": "Simular",
+      "empty": "Rellena el pedido y pulsa «Simular».",
+      "finish": "Saldría",
+      "meets": "¿Llega a tiempo?",
+      "yes": "Sí",
+      "no": "No",
+      "lateOrders": "Órdenes con retraso",
+      "machines": "Dónde se fabricaría",
+      "impact_one": "{{count}} orden se retrasa",
+      "impact_other": "{{count}} órdenes se retrasan",
+      "noImpact": "No retrasa ninguna otra orden.",
+      "delayed": "+{{h}} h",
+      "newlyLate": "Pasa a ir con retraso",
+      "confirm": "Aceptar el pedido y planificarlo",
+      "created": "Orden {{n}} creada y planificada"
+    },
+    "setup": {
+      "resources": "Recursos y capacidad",
+      "ritmiaOn": "La capacidad de las inyectoras sale del OEE real que mide Ritmia (disponibilidad × rendimiento de los últimos 14 días).",
+      "ritmiaOff": "Sin Ritmia conectado: se usa la eficiencia estándar de cada recurso.",
+      "calendar": "Calendario",
+      "efficiency": "Eficiencia estándar %",
+      "realOee": "Real: disp. {{a}} % · rend. {{p}} %",
+      "standard": "Eficiencia estándar",
+      "calendars": "Calendarios y turnos",
+      "holidays": "Festivos",
+      "addHoliday": "Añadir festivo",
+      "routes": "Rutas de fabricación",
+      "rate": "{{n}} uds./h"
+    },
+    "weekday": {
+      "1": "lun",
+      "2": "mar",
+      "3": "mié",
+      "4": "jue",
+      "5": "vie",
+      "6": "sáb",
+      "7": "dom"
+    },
+    "ritmia": {
+      "on": "Capacidad real de Ritmia",
+      "off": "Capacidad estándar"
+    },
+    "order": "OF {{n}}",
+    "replan": "Replanificar",
+    "replanned": "Plan recalculado",
+    "moved": "OF {{n}} movida y fijada; plan recalculado",
+    "unlocked": "Operación liberada; plan recalculado",
+    "linked": "Orden añadida al plan",
+    "lateAlert_one": "{{count}} orden no llega a su fecha de entrega",
+    "lateAlert_other": "{{count}} órdenes no llegan a su fecha de entrega",
+    "errors": {
+      "generic": "No se ha podido completar la acción."
+    }
   }
 }
