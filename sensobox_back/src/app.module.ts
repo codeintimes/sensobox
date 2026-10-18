@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 // import {OpiModule}  from './opi/opi.module'; // Asegúrate de que la ruta sea correcta
 import { OrderModule } from './order/order.module'; // Asegúrate de que la ruta sea correcta
 import { AdminModule } from './admin/admin.module';
+import { PlanningModule } from './planning/planning.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { AdminModule } from './admin/admin.module';
     // OpiModule,
     OrderModule,
     AdminModule,
+    PlanningModule,
   ],
 })
 export class AppModule {}
