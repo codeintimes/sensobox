@@ -6,6 +6,7 @@ import { Model } from 'mongoose';
 import { tr } from '../../i18n/i18n';
 import { Lang, LANGS } from '../../i18n/messages';
 import { Calendar, comparePlans, loadByDay, PlanOrder, Resource, schedule, workingWindows } from '../domain/scheduler';
+import { ordersAtRisk } from '../domain/risk';
 import { ARTICLES, CLIENTS, DEMO_ORDERS, demoArticles, demoCalendars, demoResources, demoText } from './demo';
 
 const OPEN_STATUSES = [1, 2]; // pendiente y en proceso
@@ -294,6 +295,14 @@ export class PlanningService {
 
   // ---------- Integración con Ritmia ----------
   /** Qué OF tiene cada máquina conectada a Ritmia (en curso y próximas 7 días). */
+  /** Pedidos en riesgo con su motivo y holgura (Planta 3D, panel de dirección). */
+  async atRisk(marginHours = 24) {
+    if ((await this.operations.countDocuments()) === 0) await this.replan();
+    const inp = await this.inputs();
+    const all = this.orderSummaries(inp, await this.operations.find().lean());
+    return { now: new Date().toISOString(), total: all.length, orders: ordersAtRisk(all as any, marginHours) };
+  }
+
   async dispatch() {
     if ((await this.operations.countDocuments()) === 0) await this.replan();
     const now = new Date();

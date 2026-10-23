@@ -31,6 +31,8 @@ Si se recargan los datos de los vídeos de Sensobox (`videos-guiones/sensobox/gu
 `POST /planning/orders/:id/link`, `PATCH /planning/orders/:id`, `GET /planning/master`, `PATCH /planning/resources/:code`,
 `PATCH /planning/calendars/:code`, `POST /planning/demo`. Integración con Ritmia (cabecera `x-api-key`):
 `GET /planning/integration/dispatch` y `POST /planning/integration/progress`.
+Planta 3D (gemelo digital), misma cabecera: `GET /planning/integration/orders-at-risk?marginHours=24` → pedidos retrasados,
+sin plan o con menos de 24 h de holgura, para su panel de dirección; la OF en curso por máquina sale de `dispatch`.
 
 ## Tests
 `cd sensobox_back && npx jest --config jest.config.ts src/planning` (8 tests del planificador).

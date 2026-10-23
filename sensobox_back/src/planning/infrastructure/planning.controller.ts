@@ -127,6 +127,12 @@ export class PlanningController {
     return this.planning.dispatch();
   }
 
+  @Get('integration/orders-at-risk')
+  ordersAtRisk(@Headers('x-api-key') key?: string, @Query('marginHours') margin?: string) {
+    this.checkKey(key);
+    return this.planning.atRisk(Math.min(168, Math.max(0, Number(margin ?? 24))));
+  }
+
   @Post('integration/progress')
   @HttpCode(200)
   progress(@Headers('x-api-key') key: string, @Body() body: any) {
