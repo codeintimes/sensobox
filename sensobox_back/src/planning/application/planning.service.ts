@@ -8,7 +8,7 @@ import { Lang, LANGS } from '../../i18n/messages';
 import { Calendar, comparePlans, loadByDay, PlanOrder, Resource, schedule, workingWindows } from '../domain/scheduler';
 import { ordersAtRisk } from '../domain/risk';
 import { DEMO_STOCK, materialsByOf, ofNumber, OfInput } from '../domain/materials';
-import { ARTICLES, CLIENTS, DEMO_ORDERS, demoArticles, demoCalendars, demoResources, demoText } from './demo';
+import { ARTICLES, CLIENTS, DEMO_FIRST_ORDER, DEMO_ORDERS, demoArticles, demoCalendars, demoResources, demoText } from './demo';
 import { FORNIVAL, fornivalOrderDocs } from './demo-fornival';
 
 const OPEN_STATUSES = [1, 2]; // pendiente y en proceso
@@ -416,8 +416,11 @@ export class PlanningService {
     await this.articles.insertMany(arts);
     await this.detectCompany();
     const now = Date.now();
-    const last: any = await this.orders.findOne().sort({ orderNumber: -1 }).lean();
-    let num = (last?.orderNumber ?? 26000) + 1;
+    // Numeración fija 26001… (la que usan las demos de Lotea y Planta 3D para encontrar los lotes de cada OF); si ese bloque
+    // ya lo ocupan órdenes que no son de esta demo, se sigue tras la última.
+    const ocupadas = await this.orders.countDocuments({ orderNumber: { $gte: DEMO_FIRST_ORDER, $lt: DEMO_FIRST_ORDER + DEMO_ORDERS.length } });
+    const last: any = ocupadas ? await this.orders.findOne().sort({ orderNumber: -1 }).lean() : null;
+    let num = ocupadas ? (last?.orderNumber ?? DEMO_FIRST_ORDER - 1) + 1 : DEMO_FIRST_ORDER;
     const locked: any[] = [];
     for (let i = 0; i < DEMO_ORDERS.length; i++) {
       const [code, qty, dueH, priority, status, runningH] = DEMO_ORDERS[i];

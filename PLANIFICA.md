@@ -22,7 +22,9 @@ curl -X POST "localhost:5208/planning/demo?lang=es" -H "Authorization: Bearer $T
 ```
 
 Crea 9 recursos (8 inyectoras, las mismas de Ritmia, y un puesto de montaje), 3 calendarios, 8 artículos con ruta y
-18 órdenes (8 en curso), de las que 3 salen con retraso. Volver a lanzarlo deja la demo «en directo» (plan desde ahora).
+18 órdenes (8 en curso), de las que 3 salen con retraso. Las órdenes llevan siempre los números 26001-26018 (las 8 en curso
+son las impares, 26001…26015): son los que tiene la demo de Lotea, así que Planta 3D encuentra los lotes de cada OF por su número.
+Si ese bloque lo ocupan órdenes que no son de la demo, se numera tras la última. Volver a lanzarlo deja la demo «en directo» (plan desde ahora).
 La demo carga también 8 órdenes cerradas de **Fornival Hornos Industriales** (otra empresa: no salen en Planifica ni en las
 listas de Envases Turia): los hornos del parque de Averix con su número de serie, numerados AANNN (OF-2025-0042 de Averix = 25042).
 Si se recargan los datos de los vídeos de Sensobox (`videos-guiones/sensobox/guiones/datos_demo.mjs`), hay que volver a lanzar la demo de Planifica.

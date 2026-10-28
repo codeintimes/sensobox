@@ -68,6 +68,9 @@ export function demoArticles(lang: Lang) {
 
 export const CLIENTS = ['Conservas Ribera, S.A.', 'Lácteos La Safor, S.L.', 'Pinturas Levante, S.L.', 'Droguería Turia, S.L.', 'Helados Albufera, S.L.', 'Químicas del Camp, S.A.'];
 
+/** Número de Sensobox de la primera orden de la demo (OF-26001): Lotea y Planta 3D tienen los lotes de 26001… */
+export const DEMO_FIRST_ORDER = 26001;
+
 // [artículo, cantidad, entrega (horas desde ahora), prioridad, estado Sensobox (1 pendiente, 2 en proceso), horas que lleva en marcha]
 export const DEMO_ORDERS: [string, number, number, number, number, number][] = [
   ['TAP-38', 160000, 30, 3, 2, 6], ['TAP-38', 120000, 70, 3, 1, 0], ['TAP-83', 90000, 40, 3, 2, 4], ['TAP-83', 110000, 96, 3, 1, 0],
