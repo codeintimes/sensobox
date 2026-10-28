@@ -11,6 +11,7 @@ export const PlanningResourceSchema = new Schema(
     efficiency: { type: Number, default: 0.85 }, // factor de capacidad si no hay datos reales de Ritmia
     ritmia: { type: Boolean, default: false }, // la máquina está conectada a Ritmia
     sort: { type: Number, default: 0 },
+    company: { type: String, default: '' }, // empresa dueña (vacío = la principal de la demo); solo la ven sus usuarios
   },
   { collection: 'planning_resources', timestamps: true },
 );
@@ -21,6 +22,7 @@ export const PlanningCalendarSchema = new Schema(
     name: { type: String, required: true },
     shifts: [{ _id: false, name: String, start: String, end: String, days: [Number] }],
     holidays: [String],
+    company: { type: String, default: '' },
   },
   { collection: 'planning_calendars', timestamps: true },
 );
@@ -30,6 +32,7 @@ export const PlanningArticleSchema = new Schema(
     code: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     route: [{ _id: false, seq: Number, name: String, resources: [String], setupMin: Number, ratePerHour: Number }],
+    company: { type: String, default: '' },
   },
   { collection: 'planning_articles', timestamps: true },
 );

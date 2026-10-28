@@ -2,6 +2,7 @@
 // guarda el plan y atiende la integración con Ritmia (OEE real y avance de fabricación).
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 import { tr } from '../../i18n/i18n';
 import { Lang, LANGS } from '../../i18n/messages';
@@ -10,6 +11,10 @@ import { ordersAtRisk } from '../domain/risk';
 import { DEMO_STOCK, materialsByOf, ofNumber, OfInput } from '../domain/materials';
 import { ARTICLES, CLIENTS, DEMO_FIRST_ORDER, DEMO_ORDERS, demoArticles, demoCalendars, demoResources, demoText } from './demo';
 import { FORNIVAL, fornivalOrderDocs } from './demo-fornival';
+import { MILLARS, MILLARS_CLOSED, MILLARS_OPEN, MILLARS_RUNNING, MILLARS_USERS, millarsArticles, millarsCalendar, millarsOrderDoc, millarsResources } from './demo-millars';
+
+/** Lo que ve un usuario en Planifica: los recursos de su empresa si tiene propios; si no, los que no son de nadie. */
+export interface Scope { codes: Set<string>; company: string | null; owners: string[] }
 
 const OPEN_STATUSES = [1, 2]; // pendiente y en proceso
 
@@ -76,7 +81,7 @@ export class PlanningService {
       const l = linkByOrder.get(String(o._id));
       const a = l && artByCode.get(l.articleCode);
       if (!l || !a) {
-        unlinked.push({ id: String(o._id), orderNumber: o.orderNumber, clientName: o.clientName, workName: o.workName, productionQuantity: o.productionQuantity, status: o.status });
+        unlinked.push({ id: String(o._id), orderNumber: o.orderNumber, clientName: o.clientName, workName: o.workName, productionQuantity: o.productionQuantity, status: o.status, companyName: o.companyName });
         continue;
       }
       planOrders.push({
@@ -90,6 +95,24 @@ export class PlanningService {
     return { resources, calendars, articles, orders, links, planOrders, unlinked, cals, res, cap };
   }
 
+  /** Recursos visibles para la empresa del usuario (Cerámicas Millars ve los suyos; el resto, los de la demo principal). */
+  async scope(company?: string | null): Promise<Scope> {
+    const owners: string[] = (await this.resources.distinct('company')).filter((c: any) => !!c);
+    const mine = company && owners.includes(company) ? company : null;
+    const res = await this.resources.find(mine ? { company: mine } : { company: { $in: [null, ''] } }).lean();
+    return { codes: new Set(res.map((r: any) => r.code)), company: mine, owners };
+  }
+
+  /** ¿El pedido de Sensobox es de la empresa que se ve? */
+  private orderInScope(sc: Scope, companyName?: string) {
+    return sc.company ? companyName === sc.company : !sc.owners.includes(companyName ?? '');
+  }
+
+  /** ¿El artículo se fabrica en recursos que se ven? */
+  private articleInScope(sc: Scope, a: any) {
+    return (a?.route ?? []).every((s: any) => (s.resources ?? []).some((c: string) => sc.codes.has(c)));
+  }
+
   /** Recalcula el plan completo respetando las operaciones fijadas y lo guarda. */
   async replan() {
     const inp = await this.inputs();
@@ -101,16 +124,19 @@ export class PlanningService {
   }
 
   /** Plan para el Gantt: operaciones, órdenes con su estado de entrega, recursos y horas sin turno. */
-  async getPlan(fromIso?: string, days = 7) {
+  async getPlan(fromIso?: string, days = 7, company?: string | null) {
     if ((await this.operations.countDocuments()) === 0) await this.replan();
     const inp = await this.inputs();
+    const sc = await this.scope(company);
     const from = fromIso ? new Date(fromIso) : new Date(Date.now() - 12 * 3600000);
     const to = new Date(from.getTime() + days * 86400000);
-    const ops = await this.operations.find({ end: { $gt: from }, start: { $lt: to } }).sort({ start: 1 }).lean();
+    const ops = (await this.operations.find({ end: { $gt: from }, start: { $lt: to } }).sort({ start: 1 }).lean()).filter((o: any) => sc.codes.has(o.resourceCode));
     const allOps = await this.operations.find().lean();
-    const orderInfo = this.orderSummaries(inp, allOps);
+    const artByCode = new Map(inp.articles.map((a: any) => [a.code, a]));
+    const orderInfo = this.orderSummaries(inp, allOps).filter((o) => this.articleInScope(sc, artByCode.get(o.articleCode)));
     const calByCode = new Map(inp.cals.map((c) => [c.code, c]));
-    const offTime = inp.resources.map((r: any) => {
+    const visibles = inp.resources.filter((r: any) => sc.codes.has(r.code));
+    const offTime = visibles.map((r: any) => {
       const wins = workingWindows(calByCode.get(r.calendarCode)!, from, to);
       const gaps: [string, string][] = [];
       let cur = from.getTime();
@@ -126,11 +152,11 @@ export class PlanningService {
       from: from.toISOString(),
       to: to.toISOString(),
       now: new Date().toISOString(),
-      resources: inp.resources.map((r: any) => ({ ...r, _id: String(r._id), capacity: inp.cap.find((c) => c.code === r.code) })),
+      resources: visibles.map((r: any) => ({ ...r, _id: String(r._id), capacity: inp.cap.find((c) => c.code === r.code) })),
       operations: ops.map((o: any) => ({ ...o, _id: String(o._id) })),
       orders: orderInfo,
       offTime,
-      unlinked: inp.unlinked,
+      unlinked: inp.unlinked.filter((u: any) => this.orderInScope(sc, u.companyName)).map(({ companyName, ...u }: any) => u),
       ritmia: { configured: !!ritmia.url, ok: ritmia.ok, error: ritmia.error },
     };
   }
@@ -153,16 +179,17 @@ export class PlanningService {
     });
   }
 
-  async load(days = 14) {
+  async load(days = 14, company?: string | null) {
     if ((await this.operations.countDocuments()) === 0) await this.replan();
     const inp = await this.inputs();
+    const sc = await this.scope(company);
     const ops = (await this.operations.find().lean()).map((o: any) => ({ ...o, start: new Date(o.start), end: new Date(o.end) }));
-    const rows = loadByDay(ops, inp.res, inp.cals, new Date(), days);
-    return { resources: inp.resources.map((r: any) => ({ code: r.code, name: r.name, line: r.line, capacity: inp.cap.find((c) => c.code === r.code) })), rows };
+    const rows = loadByDay(ops, inp.res.filter((r) => sc.codes.has(r.code)), inp.cals, new Date(), days);
+    return { resources: inp.resources.filter((r: any) => sc.codes.has(r.code)).map((r: any) => ({ code: r.code, name: r.name, line: r.line, capacity: inp.cap.find((c) => c.code === r.code) })), rows };
   }
 
   // ---------- Gantt: mover y soltar ----------
-  async moveOperation(id: string, body: { resourceCode?: string; start?: string }) {
+  async moveOperation(id: string, body: { resourceCode?: string; start?: string }, company?: string | null) {
     const op: any = await this.operations.findById(id).lean().catch(() => null);
     if (!op) throw new NotFoundException(tr('errors.planning.notFound'));
     const link: any = await this.links.findOne({ orderId: op.orderId }).lean();
@@ -174,7 +201,7 @@ export class PlanningService {
     if (isNaN(start.getTime())) throw new BadRequestException(tr('errors.planning.invalidData'));
     await this.operations.updateOne({ _id: id }, { $set: { resourceCode, start, locked: true } });
     await this.replan();
-    return this.getPlan();
+    return this.getPlan(undefined, 7, company);
   }
 
   async unlock(id: string) {
@@ -185,10 +212,11 @@ export class PlanningService {
   }
 
   // ---------- ¿Qué pasa si entra este pedido urgente? ----------
-  async simulate(body: { articleCode: string; qty: number; dueDate?: string; priority?: number }) {
+  async simulate(body: { articleCode: string; qty: number; dueDate?: string; priority?: number }, company?: string | null) {
     const inp = await this.inputs();
+    const sc = await this.scope(company);
     const art: any = inp.articles.find((a: any) => a.code === body.articleCode);
-    if (!art) throw new BadRequestException(tr('errors.planning.unknownArticle', { code: body.articleCode }));
+    if (!art || !this.articleInScope(sc, art)) throw new BadRequestException(tr('errors.planning.unknownArticle', { code: body.articleCode }));
     const qty = Number(body.qty);
     if (!(qty > 0)) throw new BadRequestException(tr('errors.planning.invalidData'));
     const locked = (await this.operations.find({ locked: true }).lean()).map((o: any) => ({ orderId: o.orderId, seq: o.seq, resourceCode: o.resourceCode, start: new Date(o.start) }));
@@ -205,21 +233,28 @@ export class PlanningService {
     const orderDocs = new Map((inp.orders as any[]).map((o) => [String(o._id), o]));
     return {
       urgent: { ...result, ops: after.ops.filter((o) => o.orderId === 'SIMULADO') },
-      impact: impact.map((x) => ({ ...x, clientName: orderDocs.get(x.orderId)?.clientName, articleCode: byId.get(x.orderId)?.articleCode, dueDate: byId.get(x.orderId)?.dueDate })),
-      lateBefore: before.orders.filter((o) => o.late).length,
-      lateAfter: after.orders.filter((o) => o.late && o.orderId !== 'SIMULADO').length,
+      impact: impact.filter((x) => this.articleInScope(sc, inp.articles.find((a: any) => a.code === byId.get(x.orderId)?.articleCode))).map((x) => ({ ...x, clientName: orderDocs.get(x.orderId)?.clientName, articleCode: byId.get(x.orderId)?.articleCode, dueDate: byId.get(x.orderId)?.dueDate })),
+      lateBefore: before.orders.filter((o) => o.late && this.articleInScope(sc, inp.articles.find((a: any) => a.code === byId.get(o.orderId)?.articleCode))).length,
+      lateAfter: after.orders.filter((o) => o.late && o.orderId !== 'SIMULADO' && this.articleInScope(sc, inp.articles.find((a: any) => a.code === byId.get(o.orderId)?.articleCode))).length,
     };
   }
 
   /** Da de alta el pedido simulado como orden real de Sensobox y replanifica. */
-  async confirmUrgent(body: { articleCode: string; qty: number; dueDate?: string; priority?: number; clientName?: string }, lang: Lang) {
+  async confirmUrgent(body: { articleCode: string; qty: number; dueDate?: string; priority?: number; clientName?: string }, lang: Lang, company?: string | null) {
     const art: any = await this.articles.findOne({ code: body.articleCode }).lean();
-    if (!art) throw new BadRequestException(tr('errors.planning.unknownArticle', { code: body.articleCode }));
+    const sc = await this.scope(company);
+    if (!art || !this.articleInScope(sc, art)) throw new BadRequestException(tr('errors.planning.unknownArticle', { code: body.articleCode }));
     const qty = Number(body.qty);
     if (!(qty > 0) || !body.clientName) throw new BadRequestException(tr('errors.planning.invalidData'));
     await this.detectCompany();
-    const last: any = await this.orders.findOne().sort({ orderNumber: -1 }).lean();
-    const order = await this.orders.create(this.orderDoc(lang, (last?.orderNumber ?? 260000) + 1, body.clientName, art, qty, body.dueDate ? new Date(body.dueDate) : null, 1));
+    const due = body.dueDate ? new Date(body.dueDate) : null;
+    // cada empresa numera tras su última orden (Millars en 2611xx, el resto como siempre)
+    const own = sc.company ? { companyName: sc.company } : { companyName: { $nin: sc.owners } };
+    const last: any = await this.orders.findOne(own).sort({ orderNumber: -1 }).lean();
+    const num = (last?.orderNumber ?? 260000) + 1;
+    const order = await this.orders.create(sc.company === MILLARS.name
+      ? millarsOrderDoc(lang, num, art.code, qty, body.clientName, due ?? new Date(Date.now() + 48 * 3600000), 1)
+      : this.orderDoc(lang, num, body.clientName, art, qty, due, 1));
     await this.links.create({ orderId: String(order._id), orderNumber: order.orderNumber, articleCode: art.code, dueDate: body.dueDate ? new Date(body.dueDate) : null, priority: Number(body.priority ?? 1) });
     await this.replan();
     return { id: String(order._id), orderNumber: order.orderNumber };
@@ -250,13 +285,17 @@ export class PlanningService {
   }
 
   // ---------- Datos maestros ----------
-  async master() {
-    const [resources, calendars, articles, cap] = await Promise.all([
+  async master(company?: string | null) {
+    const sc = await this.scope(company);
+    const [allResources, allCalendars, allArticles, cap] = await Promise.all([
       this.resources.find().sort({ sort: 1 }).lean(),
       this.calendars.find().lean(),
       this.articles.find().sort({ code: 1 }).lean(),
       this.capacity(),
     ]);
+    const resources = allResources.filter((r: any) => sc.codes.has(r.code));
+    const calendars = allCalendars.filter((c: any) => resources.some((r: any) => r.calendarCode === c.code));
+    const articles = allArticles.filter((a: any) => this.articleInScope(sc, a));
     const ritmia = await this.ritmiaAvailability();
     return { resources: resources.map((r: any) => ({ ...r, capacity: cap.find((c) => c.code === r.code) })), calendars, articles, ritmia: { configured: !!ritmia.url, ok: ritmia.ok, url: ritmia.url, error: ritmia.error } };
   }
@@ -388,8 +427,8 @@ export class PlanningService {
   /** Empresa y técnico de la demo de Sensobox que haya cargada (los pedidos nuevos van a su nombre). */
   private async detectCompany() {
     const users = this.orders.db.collection('users');
-    const admin: any = await users.findOne({ role: 'admin' });
-    const tech: any = await users.findOne({ role: 'technician' });
+    const admin: any = await users.findOne({ role: 'admin', companyName: { $ne: MILLARS.name } });
+    const tech: any = await users.findOne({ role: 'technician', companyName: { $ne: MILLARS.name } });
     if (admin?.companyName) this.company.name = admin.companyName;
     if (tech?.name) this.company.technician = tech.name;
   }
@@ -419,7 +458,7 @@ export class PlanningService {
     // Numeración fija 26001… (la que usan las demos de Lotea y Planta 3D para encontrar los lotes de cada OF); si ese bloque
     // ya lo ocupan órdenes que no son de esta demo, se sigue tras la última.
     const ocupadas = await this.orders.countDocuments({ orderNumber: { $gte: DEMO_FIRST_ORDER, $lt: DEMO_FIRST_ORDER + DEMO_ORDERS.length } });
-    const last: any = ocupadas ? await this.orders.findOne().sort({ orderNumber: -1 }).lean() : null;
+    const last: any = ocupadas ? await this.orders.findOne({ companyName: { $ne: MILLARS.name } }).sort({ orderNumber: -1 }).lean() : null;
     let num = ocupadas ? (last?.orderNumber ?? DEMO_FIRST_ORDER - 1) + 1 : DEMO_FIRST_ORDER;
     const locked: any[] = [];
     for (let i = 0; i < DEMO_ORDERS.length; i++) {
@@ -439,8 +478,50 @@ export class PlanningService {
     const fv = fornivalOrderDocs(lang);
     await this.orders.deleteMany({ companyName: FORNIVAL.name, orderNumber: { $in: fv.map((o) => o.orderNumber) } });
     await this.orders.insertMany(fv);
+    const millars = await this.seedMillars(lang, now);
     const plan = await this.replan();
     this.logger.log(`Demo de Planifica cargada (${lang}): ${plan.ops.length} operaciones, ${plan.orders.filter((o) => o.late).length} con retraso`);
-    return { lang, orders: DEMO_ORDERS.length, fornival: fv.length, operations: plan.ops.length, late: plan.orders.filter((o) => o.late).length };
+    return { lang, orders: DEMO_ORDERS.length, fornival: fv.length, millars, operations: plan.ops.length, late: plan.orders.filter((o) => o.late).length };
+  }
+
+  /** Cerámicas Millars (línea CAS-1 de Planta 3D y Atisba): recursos, calendario y artículos propios, sus usuarios, dos OF
+   *  cerradas y cinco abiertas; la 261184 lleva 3 h en el horno HR-01 (todas las fases de la línea a la vez, fijadas). */
+  private async seedMillars(lang: Lang, now: number) {
+    await this.calendars.insertMany([millarsCalendar(lang)]);
+    await this.resources.insertMany(millarsResources(lang));
+    const arts = millarsArticles(lang);
+    await this.articles.insertMany(arts);
+    const users = this.orders.db.collection('users');
+    const hash = await bcrypt.hash(process.env.DEMO_PASSWORD || 'Demo2026!', 10);
+    for (const u of MILLARS_USERS) {
+      await users.updateOne({ email: u.email }, {
+        $set: { name: u.name, clientName: MILLARS.name, companyName: MILLARS.name, role: u.role, contactName: u.name, contactPhone: u.phone, contactEmail: u.email },
+        $setOnInsert: { password: hash, eco: false, ecoEmissions: 0, createdAt: new Date(now), updatedAt: new Date(now), __v: 0 },
+      }, { upsert: true });
+    }
+    const nums = [...MILLARS_OPEN.map((o) => o[0]), ...MILLARS_CLOSED.map((o) => o[0])];
+    await this.orders.deleteMany({ companyName: MILLARS.name, orderNumber: { $in: nums } });
+    const hour = (h: number) => new Date(Math.round((now + h * 3600000) / 3600000) * 3600000);
+    for (const [num, code, qty, client, h] of MILLARS_CLOSED) {
+      const fin = new Date(now - h * 3600000 + 8 * 3600000);
+      await this.orders.create(millarsOrderDoc(lang, num, code, qty, client, fin, 3, new Date(now - h * 3600000)));
+    }
+    const locked: any[] = [];
+    for (const [num, code, qty, client, dueH, priority] of MILLARS_OPEN) {
+      const running = num === MILLARS_RUNNING;
+      const start = running ? new Date(now - 3 * 3600000) : undefined;
+      const order = await this.orders.create(millarsOrderDoc(lang, num, code, qty, client, hour(dueH), running ? 2 : 1, start));
+      const art = arts.find((a) => a.code === code)!;
+      const good = running ? Math.round(art.route[2].ratePerHour * 0.88 * 3) : 0;
+      await this.links.create({ orderId: String(order._id), orderNumber: num, articleCode: code, dueDate: hour(dueH), priority, demo: true, producedGood: good });
+      if (running) {
+        await this.orders.updateOne({ _id: order._id }, { $set: { quantityProcessed: good } });
+        // la línea es continua: prensa, esmaltado, horno y clasificadora trabajan la misma OF con 30 min de desfase
+        art.route.forEach((st, i) => locked.push({ orderId: String(order._id), orderNumber: num, articleCode: code, seq: st.seq, resourceCode: st.resources[0],
+          start: new Date(now - (4 - i * 0.5) * 3600000), end: new Date(now), locked: true, qty, setupMin: st.setupMin, workMin: 0 }));
+      }
+    }
+    await this.operations.insertMany(locked);
+    return { users: MILLARS_USERS.length, open: MILLARS_OPEN.length, closed: MILLARS_CLOSED.length };
   }
 }

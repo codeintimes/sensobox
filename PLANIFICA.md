@@ -27,6 +27,13 @@ son las impares, 26001…26015): son los que tiene la demo de Lotea, así que Pl
 Si ese bloque lo ocupan órdenes que no son de la demo, se numera tras la última. Volver a lanzarlo deja la demo «en directo» (plan desde ahora).
 La demo carga también 8 órdenes cerradas de **Fornival Hornos Industriales** (otra empresa: no salen en Planifica ni en las
 listas de Envases Turia): los hornos del parque de Averix con su número de serie, numerados AANNN (OF-2025-0042 de Averix = 25042).
+La demo carga además **Cerámicas Millars, S.A.** (Vila-real), la línea CAS-1 de Planta 3D y Atisba: prensa PR-01, esmaltado
+ES-01, horno de rodillos HR-01 y clasificadora CL-01 con su calendario de horno continuo (24 h, 7 días) y tres artículos de
+porcelánico. Recursos, calendario y artículos llevan `company`: **solo los ve Millars** (Planifica filtra por la empresa del
+usuario; Envases Turia y el resto ven lo de siempre). OF cerradas 261182 y 261183 y abiertas 261184…261188 (= OF-26-1182… de
+Atisba y Lotea); la 261184 lleva 3 h en la línea (todas las fases fijadas a la vez) y `dispatch` la da «running» en HR-01.
+Usuarios: `marta.climent@ceramicasmillars.es` (admin) y `vicent.arnau@ceramicasmillars.es` (técnico), clave `Demo2026!`.
+Con la demo recién cargada salen con retraso 3 órdenes de Envases Turia y 1 de Millars (261185).
 Si se recargan los datos de los vídeos de Sensobox (`videos-guiones/sensobox/guiones/datos_demo.mjs`), hay que volver a lanzar la demo de Planifica.
 
 ## API

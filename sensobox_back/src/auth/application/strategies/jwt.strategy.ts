@@ -27,6 +27,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     this.logger.log(`User validated: ${email}`); 
-    return { userId: user.id, email: user.email, role: user.role }; 
+    return { userId: user.id, email: user.email, role: user.role, companyName: (user as any).companyName }; 
   }
 }
