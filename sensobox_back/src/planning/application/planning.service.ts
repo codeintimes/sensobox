@@ -9,6 +9,7 @@ import { Calendar, comparePlans, loadByDay, PlanOrder, Resource, schedule, worki
 import { ordersAtRisk } from '../domain/risk';
 import { DEMO_STOCK, materialsByOf, ofNumber, OfInput } from '../domain/materials';
 import { ARTICLES, CLIENTS, DEMO_ORDERS, demoArticles, demoCalendars, demoResources, demoText } from './demo';
+import { FORNIVAL, fornivalOrderDocs } from './demo-fornival';
 
 const OPEN_STATUSES = [1, 2]; // pendiente y en proceso
 
@@ -431,8 +432,12 @@ export class PlanningService {
       }
     }
     await this.operations.insertMany(locked);
+    // Hornos de Fornival (otra empresa de la demo, órdenes cerradas): los que atiende Averix, con su número de orden
+    const fv = fornivalOrderDocs(lang);
+    await this.orders.deleteMany({ companyName: FORNIVAL.name, orderNumber: { $in: fv.map((o) => o.orderNumber) } });
+    await this.orders.insertMany(fv);
     const plan = await this.replan();
     this.logger.log(`Demo de Planifica cargada (${lang}): ${plan.ops.length} operaciones, ${plan.orders.filter((o) => o.late).length} con retraso`);
-    return { lang, orders: DEMO_ORDERS.length, operations: plan.ops.length, late: plan.orders.filter((o) => o.late).length };
+    return { lang, orders: DEMO_ORDERS.length, fornival: fv.length, operations: plan.ops.length, late: plan.orders.filter((o) => o.late).length };
   }
 }
