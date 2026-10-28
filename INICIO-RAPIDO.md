@@ -138,3 +138,22 @@ Una vez completados estos pasos, cada vez que hagas `git push` a main, se desple
 
 **¿Preguntas?** Revisa `DEPLOYMENT.md` para documentación detallada.
 
+
+## Facturación por Enlace Fiscal (Verifactu)
+
+Al cerrar una orden (OPI final, `PATCH /orders/final/:id`) Sensobox deja su factura en la **carpeta vigilada de Enlace
+Fiscal** (`transversal/enlace-fiscal`), que la registra en Verifactu encadenada y con su QR y, si toca, la envía como
+factura electrónica B2B. También a mano: `POST /orders/:id/invoice`. Formato: CSV de la plantilla «Access · CSV» de Enlace
+Fiscal (una fila por línea, `;`, coma decimal, fecha DD/MM/AAAA); el fichero se escribe oculto y se renombra al final.
+
+| Variable (`sensobox_back/.env`) | Para qué |
+|---|---|
+| `ENLACE_FISCAL_CARPETA` | Carpeta `entrada` del conector de Enlace Fiscal. Vacía = desactivado. Demo: `<ruta>/transversal/enlace-fiscal/repo/buzon/sensobox/entrada` |
+| `ENLACE_FISCAL_SERIE` | Serie de las facturas (`SB`; número = año + número de orden, `SB2026-026101`) |
+| `ENLACE_FISCAL_IVA` | Tipo de IVA (21) |
+| `FACTURACION_CLIENTES` | JSON con el NIF de cada cliente y la tarifa por tipo de trabajo; por defecto `src/order/application/billing/clientes-demo.json` (los 18 clientes de Envases Turia) |
+
+En Enlace Fiscal la demo trae la empresa **Envases Turia, S.L.** con el conector de carpeta `sensobox` (`make seed`, o
+`npx tsx src/demo/apps-codeintime.ts` en `enlace-fiscal/repo/server` para añadirla a una demo ya cargada). Sin NIF del
+cliente en el JSON, la orden no se factura (queda en el registro del servidor). Código y pruebas:
+`sensobox_back/src/order/application/billing/`.

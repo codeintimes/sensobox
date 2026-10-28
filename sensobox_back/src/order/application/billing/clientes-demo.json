@@ -1,0 +1,35 @@
+{
+  "_nota": "Datos fiscales y tarifa de la demo de Envases Turia para facturar por Enlace Fiscal. NIF de ejemplo válidos en formato. Precio por unidad según el tipo de trabajo (sin IVA).",
+  "tarifa": {
+    "Estuche": 0.21,
+    "Etiqueta adhesiva": 0.035,
+    "Etiqueta en bobina": 0.028,
+    "Caja de cartón ondulado": 0.64,
+    "Caja plegable": 0.32,
+    "Bandeja": 0.27,
+    "Expositor": 9.5,
+    "Funda": 0.06,
+    "Pedido de cliente (Pedidia)": 1.0,
+    "_defecto": 0.25
+  },
+  "clientes": {
+    "Conservas Albufera, S.A.": "A46102349",
+    "Horchatería Font Freda, S.L.": "B46219838",
+    "Cítricos Ribera Alta, S. Coop.": "F46330197",
+    "Bodegas Altos de Requena, S.L.": "B46447025",
+    "Turrones La Marina, S.L.": "B03112588",
+    "Arroces Sueca Tradició, S.L.": "B46558417",
+    "Laboratorios Dermaluz, S.L.": "B46669156",
+    "Farmalevante, S.A.": "A46773065",
+    "Juguetes Foia de Castalla, S.L.": "B03227410",
+    "Calzados Vinalopó, S.L.": "B03338266",
+    "Panadería Hermanos Serrano, S.L.": "B46884425",
+    "Aceites Sierra Calderona, S.L.": "B46991337",
+    "Helados Costa Azahar, S.L.": "B12104576",
+    "Dulces de Xàtiva, S.L.": "B46215588",
+    "Vinos Utiel Selección, S.L.": "B46326641",
+    "Electrodomésticos Hogarum, S.A.": "A46437752",
+    "Detergentes Brisamar, S.L.": "B46548863",
+    "Cafés Montcabrer, S.L.": "B03659976"
+  }
+}

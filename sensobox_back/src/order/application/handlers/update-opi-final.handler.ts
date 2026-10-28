@@ -4,6 +4,7 @@ import { UpdateOpiFinalCommand } from '../commands/update-opi-final.command';
 import { OrderRepository } from '../../infrastructure/persistence/order.repository';
 import { differenceInMilliseconds } from 'date-fns';
 import { Logger, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { facturarOrden } from '../billing/enlace-fiscal';
 
 @CommandHandler(UpdateOpiFinalCommand)
 export class UpdateOpiFinalHandler implements ICommandHandler<UpdateOpiFinalCommand> {
@@ -50,6 +51,14 @@ export class UpdateOpiFinalHandler implements ICommandHandler<UpdateOpiFinalComm
       });
 
       this.logger.log(`Final process of OPI with ID: ${id} successfully updated`);
+      // Orden cerrada: su factura va a la carpeta vigilada de Enlace Fiscal (si está activado); un fallo aquí no para la OPI
+      try {
+        const f = facturarOrden({ orderNumber: order.orderNumber, clientName: order.clientName, workName: order.workName, workType: order.workType,
+          productionQuantity: order.productionQuantity, finalQuantity: opiFinalDTO.finalQuantity, processingDateFinal: opiFinalDTO.processingDateFinal });
+        if (f.estado !== 'desactivada') this.logger.log(`Enlace Fiscal: ${JSON.stringify(f)}`);
+      } catch (e) {
+        this.logger.error(`Enlace Fiscal: no se ha podido dejar la factura de la orden ${order.orderNumber}: ${(e as Error).message}`);
+      }
     } catch (error) {
       this.logger.error(`Error during final process update of OPI with ID: ${id}`, error.stack);
       throw new InternalServerErrorException(tr('errors.orderUpdateFailed'));

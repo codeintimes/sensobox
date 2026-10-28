@@ -32,6 +32,7 @@ import { CalculateEcoEmissionsQuery } from '../../application/queries/get-eco-em
 import { UpdateMaterialInfoCommand } from '../../application/commands/update-material-info.command'; // Importa el comando correspondiente
 import { UpdateQuantityProcessedCommand } from '../../application/commands/update-quantity-processed.command';
 import { GetAllOrdersTechnicianQuery } from '../../application/queries/get-all-orders-technician.query';
+import { facturarOrden } from '../../application/billing/enlace-fiscal';
 import { GetOrdersByCompanyNameQuery } from '../../application/queries/get-orders-by-company-name.query';
 
 
@@ -171,6 +172,14 @@ export class OrderController {
   async update(@Param('id') id: string, @Body() dto: OrderUpdateDto) {
     console.log("555555", dto);
     return this.commandBus.execute(new UpdateOrderCommand(id, dto));
+  }
+
+  @Post(':id/invoice')
+  @ApiOperation({ summary: 'Deja la factura de la orden en la carpeta vigilada de Enlace Fiscal (Verifactu)' })
+  async invoice(@Param('id') id: string) {
+    const order = await this.queryBus.execute(new GetOrderByIdQuery(id));
+    if (!order) throw new NotFoundException(tr('errors.orderNotFound', { id }));
+    return facturarOrden(order);
   }
 
   @Patch('final/:id')
