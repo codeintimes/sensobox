@@ -7,6 +7,7 @@ import { tr } from '../../i18n/i18n';
 import { Lang, LANGS } from '../../i18n/messages';
 import { Calendar, comparePlans, loadByDay, PlanOrder, Resource, schedule, workingWindows } from '../domain/scheduler';
 import { ordersAtRisk } from '../domain/risk';
+import { DEMO_STOCK, materialsByOf, ofNumber, OfInput } from '../domain/materials';
 import { ARTICLES, CLIENTS, DEMO_ORDERS, demoArticles, demoCalendars, demoResources, demoText } from './demo';
 
 const OPEN_STATUSES = [1, 2]; // pendiente y en proceso
@@ -321,6 +322,46 @@ export class PlanningService {
         status: new Date(op.start) <= now ? 'running' : 'planned',
       };
     });
+  }
+
+  // ---------- Integración con Acopia (compras): materiales de cada OF ----------
+  /** OF abiertas con su material pendiente, por orden de inicio del plan; las existencias se reservan en ese orden. */
+  private async ofMaterials() {
+    if ((await this.operations.countDocuments()) === 0) await this.replan();
+    const [orders, links, articles, ops] = await Promise.all([
+      this.orders.find({ status: { $in: OPEN_STATUSES } }).lean(),
+      this.links.find().lean(),
+      this.articles.find().lean(),
+      this.operations.find().sort({ start: 1 }).lean(),
+    ]);
+    const linkByOrder = new Map(links.map((l: any) => [l.orderId, l]));
+    const artByCode = new Map(articles.map((a: any) => [a.code, a]));
+    const startByOrder = new Map<string, Date>();
+    for (const op of ops as any[]) if (!startByOrder.has(op.orderId)) startByOrder.set(op.orderId, new Date(op.start));
+    const ofs: (OfInput & { orderNumber: number })[] = [];
+    for (const o of orders as any[]) {
+      const l: any = linkByOrder.get(String(o._id));
+      if (!l) continue;
+      ofs.push({ ref: `OF-${o.orderNumber}`, orderNumber: o.orderNumber, articleCode: l.articleCode, product: (artByCode.get(l.articleCode) as any)?.name ?? o.workName,
+        pending: Math.max(0, (o.productionQuantity ?? 0) - (l.producedGood ?? 0)), start: startByOrder.get(String(o._id)) ?? null });
+    }
+    return { ofs, materials: materialsByOf(ofs, DEMO_STOCK) };
+  }
+
+  /** `GET /api/of/{ref}/materiales` para Acopia: { ref, producto, inicio, materiales: [{ codigo, descripcion, cantidad, unidad, falta }] }. */
+  async ofMaterialsFor(ref: string) {
+    const num = ofNumber(ref);
+    const { ofs, materials } = await this.ofMaterials();
+    const of = ofs.find((x) => x.orderNumber === num);
+    if (!of) throw new NotFoundException(tr('errors.planning.notFound'));
+    return { ref: of.ref, producto: of.product, inicio: (of.start ?? new Date()).toISOString().slice(0, 10), materiales: materials.get(of.ref) ?? [] };
+  }
+
+  /** OF abiertas a las que les falta material (para elegir en Acopia). */
+  async ofsWithShortage() {
+    const { ofs, materials } = await this.ofMaterials();
+    return ofs.map((of) => ({ ref: of.ref, producto: of.product, inicio: (of.start ?? new Date()).toISOString().slice(0, 10), faltan: (materials.get(of.ref) ?? []).filter((m) => m.falta > 0).length }))
+      .filter((x) => x.faltan > 0).sort((a, b) => a.inicio.localeCompare(b.inicio));
   }
 
   /** Piezas fabricadas por OF que manda Ritmia: actualiza el avance y la «cantidad procesada» del pedido. */

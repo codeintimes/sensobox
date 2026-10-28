@@ -34,5 +34,11 @@ Si se recargan los datos de los vídeos de Sensobox (`videos-guiones/sensobox/gu
 Planta 3D (gemelo digital), misma cabecera: `GET /planning/integration/orders-at-risk?marginHours=24` → pedidos retrasados,
 sin plan o con menos de 24 h de holgura, para su panel de dirección; la OF en curso por máquina sale de `dispatch`.
 
+Acopia (compras con IA), misma clave como `Authorization: Bearer <INTEGRATION_KEY>` o `x-api-key`:
+`GET /api/of` → OF abiertas a las que les falta material (`[{ ref, producto, inicio, faltan }]`) y
+`GET /api/of/{ref}/materiales` → `{ ref, producto, inicio, materiales: [{ codigo, descripcion, cantidad, unidad, falta }] }`.
+La lista de materiales por artículo y las existencias de la demo están en `src/planning/domain/materials.ts` (códigos de
+compra de Envases Turia, los mismos que en Acopia); las existencias se reservan por orden de inicio del plan.
+
 ## Tests
-`cd sensobox_back && npx jest --config jest.config.ts src/planning` (8 tests del planificador).
+`cd sensobox_back && npx jest --config jest.config.ts src/planning` (planificador, riesgo y materiales de las OF).

@@ -5,6 +5,7 @@ import { AuthModule } from '../auth/auth.module';
 import { PlanningArticleSchema, PlanningCalendarSchema, PlanningOperationSchema, PlanningOrderSchema, PlanningResourceSchema } from './domain/schemas';
 import { PlanningService } from './application/planning.service';
 import { PlanningController } from './infrastructure/planning.controller';
+import { OfController } from './infrastructure/of.controller';
 import './i18n';
 
 // Planifica: planificación de producción y capacidad dentro de Sensobox.
@@ -20,7 +21,7 @@ import './i18n';
       { name: 'PlanningOperation', schema: PlanningOperationSchema },
     ]),
   ],
-  controllers: [PlanningController],
+  controllers: [PlanningController, OfController],
   providers: [PlanningService],
 })
 export class PlanningModule {}
